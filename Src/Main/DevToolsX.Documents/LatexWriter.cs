@@ -8,6 +8,8 @@ namespace DevToolsX.Documents
 {
     public class LatexWriter : TextDocumentWriter
     {
+        private bool isInCode = false;
+
         public LatexWriter(string path)
             : base(path)
         {
@@ -83,15 +85,17 @@ namespace DevToolsX.Documents
                     Writer.Write(@"\textbf{");
                     break;
             }
+            if (!string.IsNullOrWhiteSpace(label))
+            {
+                Writer.Write(@"\texorpdfstring{\protect");
+                this.AddLabel(label);
+                Writer.Write(@"}{}");
+            }
         }
 
         public override void EndSectionTitle(int level, string label)
         {
             Writer.WriteLine(@"}");
-            if (!string.IsNullOrWhiteSpace(label))
-            {
-                this.AddLabel(label);
-            }
         }
 
         public override void BeginParagraph()
@@ -105,13 +109,27 @@ namespace DevToolsX.Documents
 
         public override void WriteLine()
         {
-            Writer.WriteLine(@"\newline");
+            if (this.isInCode)
+            {
+                Writer.WriteLine();
+            }
+            else
+            {
+                Writer.WriteLine(@"\newline");
+            }
         }
 
         public override void EndParagraph()
         {
-            Writer.WriteLine();
-            Writer.WriteLine();
+            if (this.isInCode)
+            {
+                Writer.WriteLine();
+            }
+            else
+            {
+                Writer.WriteLine();
+                Writer.WriteLine();
+            }
         }
 
         public override void BeginMarkup(DocumentMarkupKind markupKind)
@@ -135,10 +153,14 @@ namespace DevToolsX.Documents
                     Writer.WriteLine(@"\begin{verbatim}");
                     break;
                 case DocumentMarkupKind.CodeInline:
-                    Writer.Write(@"\|");
+                    Writer.Write(@"\verb|");
                     break;
                 default:
                     throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+            }
+            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            {
+                this.isInCode = true;
             }
         }
 
@@ -157,16 +179,20 @@ namespace DevToolsX.Documents
                     Writer.WriteLine();
                     break;
                 case DocumentMarkupKind.CodeInline:
-                    Writer.Write(@"\|");
+                    Writer.Write(@"|");
                     break;
                 default:
                     throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+            }
+            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            {
+                this.isInCode = false;
             }
         }
 
         public override void AddLabel(string id)
         {
-            Writer.WriteLine(@"\hypertarget{" + this.EscapeText(id) + "}{}");
+            Writer.Write(@"\hypertarget{" + this.EscapeText(id) + "}{}");
         }
 
         public override void BeginReference(string document, string id)
@@ -187,6 +213,7 @@ namespace DevToolsX.Documents
         public override void EndList(int level, ListKind listKind)
         {
             Writer.WriteLine(@"\end{itemize}");
+            Writer.WriteLine();
         }
 
         public override void BeginListItem(int level, int index, string title)
@@ -213,7 +240,7 @@ namespace DevToolsX.Documents
             string sep = " ";
             if (colCount < 2)
             {
-                Writer.Write("|" + sep);
+                Writer.Write("|" + sep + "l" + sep);
             }
             else
             {
@@ -221,11 +248,11 @@ namespace DevToolsX.Documents
                 {
                     if (i == 0)
                     {
-                        Writer.Write("|" + sep);
+                        Writer.Write("|" + sep + "l" + sep);
                     }
                     else
                     {
-                        Writer.Write("|" + sep);
+                        Writer.Write("|" + sep + "l" + sep);
                     }
                 }
             }
@@ -275,6 +302,7 @@ namespace DevToolsX.Documents
             Writer.WriteLine(@"\hline");
             Writer.WriteLine(@"\end{longtable}");
             Writer.WriteLine(@"\end{center}");
+            Writer.WriteLine();
         }
 
         public override void PageBreak()

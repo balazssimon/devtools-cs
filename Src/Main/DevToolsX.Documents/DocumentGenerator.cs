@@ -53,6 +53,8 @@ namespace DevToolsX.Documents
         private bool isInParagraph = false;
         private bool appendSpace = false;
         private bool disposing = false;
+
+        private bool isInCode = false;
         private int listLevel = 0;
 
         private List<Begin> beginStack = new List<Begin>();
@@ -323,10 +325,25 @@ namespace DevToolsX.Documents
             this.EndParagraphIfNecessary();
         }
 
-        public void ForceNewParagraph()
+        public void NewParagraph()
         {
-            this.EndParagraphIfNecessary();
-            this.BeginParagraphIfNecessary();
+            if (this.isInParagraph)
+            {
+                this.EndParagraphIfNecessary();
+                this.BeginParagraphIfNecessary();
+            }
+            else
+            {
+                this.EndParagraphIfNecessary();
+                this.BeginParagraphIfNecessary();
+                this.EndParagraphIfNecessary();
+                this.BeginParagraphIfNecessary();
+            }
+        }
+
+        public void NewPage()
+        {
+            this.writer.PageBreak();
         }
 
         private void BeginParagraphIfNecessary()
@@ -395,6 +412,12 @@ namespace DevToolsX.Documents
 
         public void BeginMarkup(DocumentMarkupKind markupKind)
         {
+            if (markupKind == DocumentMarkupKind.Code)
+            {
+                this.EndParagraphIfNecessary();
+                this.isInCode = true;
+                this.appendSpace = false;
+            }
             this.beginStack.Add(new MarkupBegin() { MarkupKind = markupKind });
         }
 
@@ -404,6 +427,13 @@ namespace DevToolsX.Documents
             if (begin.IsFlushed)
             {
                 this.writer.EndMarkup(begin.MarkupKind);
+            }
+            if (begin.MarkupKind == DocumentMarkupKind.Code)
+            {
+                this.isInCode = false;
+                this.isInParagraph = false;
+                this.newParagraph = true;
+                this.appendSpace = false;
             }
         }
 

@@ -13,9 +13,9 @@ namespace DevToolsX
         {
             try
             {
-                //Program.GenerateDocument(new LatexWriter("hello.tex", Encoding.UTF8));
-                //Program.GenerateDocument(new HtmlWriter("hello.html", Encoding.UTF8));
-                Program.GenerateDocument(new WordWriter("Doc1.docx", true));
+                Program.GenerateDocument(new LatexWriter("hello.tex", Encoding.UTF8));
+                Program.GenerateDocument(new HtmlWriter("hello.html", Encoding.UTF8));
+                Program.GenerateDocument(new WordWriter("Doc1.docx", false));
             }
             catch (Exception ex)
             {
@@ -40,16 +40,19 @@ namespace DevToolsX
                 doc.BeginMarkup(DocumentMarkupKind.Italic);
                 doc.Write("two");
                 doc.Write("three");
-                doc.EndMarkup();
-                doc.Write("four");
                 doc.BeginMarkup(DocumentMarkupKind.Bold);
+                doc.Write("four");
                 doc.Write("two");
+                doc.EndMarkup();
                 doc.Write("three");
                 doc.EndMarkup();
                 doc.WriteLine("five");
                 doc.WriteLine("One");
                 doc.WriteLine("One");
                 doc.WriteLine("One");
+                doc.NewParagraph();
+                doc.Write("abc");
+                doc.NewParagraph();
                 doc.WriteLine("One");
                 doc.WriteLine("One");
                 doc.WriteLine("One");
@@ -58,6 +61,7 @@ namespace DevToolsX
                 doc.WriteLine("One");
                 doc.WriteLine("One");
                 doc.WriteLine("One");
+                doc.NewParagraph();
                 doc.EndMarkup();
                 doc.WriteLine("One");
                 doc.Write("One");
@@ -175,8 +179,8 @@ namespace DevToolsX
                         doc.Write(j);
                         doc.Write("=");
                         doc.Write(i * j);
-                        doc.LineBreak();
-                        doc.Write("Aaa");
+                        /*doc.LineBreak();
+                        doc.Write("Aaa");*/
                     }
                 }
                 doc.EndTable();

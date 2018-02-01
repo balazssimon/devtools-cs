@@ -22,6 +22,8 @@ namespace DevToolsX.Documents
         private List<Table> tableStack;
         private Table table;
 
+        private DocumentMarkupKind lastMarkup = DocumentMarkupKind.None;
+
         public WordWriter(string document, bool debug = false)
         {
             try
@@ -230,7 +232,6 @@ namespace DevToolsX.Documents
             switch (markupKind)
             {
                 case DocumentMarkupKind.None:
-                    range.Style = this.normalStyle;
                     break;
                 case DocumentMarkupKind.Bold:
                     range.Font.Bold = true;
@@ -245,12 +246,54 @@ namespace DevToolsX.Documents
                     range.Font.Superscript = true;
                     break;
                 case DocumentMarkupKind.Code:
+                    range.Font.Name = "Courier New";
+                    range.Font.Size = this.normalStyle.Font.Size - 2;
+                    foreach (Paragraph par in range.Paragraphs)
+                    {
+                        par.SpaceBefore = 0;
+                        par.SpaceAfter = 0;
+                    }
+                    break;
                 case DocumentMarkupKind.CodeInline:
                     range.Font.Name = "Courier New";
                     range.Font.Size = this.normalStyle.Font.Size - 2;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Invalid DocumentMarkupKind: " + markupKind);
+            }
+            this.lastMarkup = markupKind;
+        }
+
+        private void ResetMarkup(DocumentMarkupKind markupKind, dynamic range)
+        {
+            switch (markupKind)
+            {
+                case DocumentMarkupKind.None:
+                    break;
+                case DocumentMarkupKind.Bold:
+                    range.Font.Bold = false;
+                    break;
+                case DocumentMarkupKind.Italic:
+                    range.Font.Italic = false;
+                    break;
+                case DocumentMarkupKind.SubScript:
+                    range.Font.Subscript = false;
+                    break;
+                case DocumentMarkupKind.SuperScript:
+                    range.Font.Superscript = false;
+                    break;
+                case DocumentMarkupKind.Code:
+                    range.Font.Name = this.normalStyle.Font.Name;
+                    range.Font.Size = this.normalStyle.Font.Size;
+                    range.ParagraphFormat.SpaceBefore = this.normalStyle.ParagraphFormat.SpaceBefore;
+                    range.ParagraphFormat.SpaceAfter = this.normalStyle.ParagraphFormat.SpaceAfter;
+                    break;
+                case DocumentMarkupKind.CodeInline:
+                    range.Font.Name = this.normalStyle.Font.Name;
+                    range.Font.Size = this.normalStyle.Font.Size;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -313,11 +356,19 @@ namespace DevToolsX.Documents
 
         public void Write(string text)
         {
-            int start = this.word.Selection.End;
-            this.word.Selection.TypeText(text);
-            int end = this.word.Selection.End;
-            dynamic range = this.document.Range(start, end);
-            range.Style = this.normalStyle;
+            if (this.lastMarkup != DocumentMarkupKind.None)
+            {
+                int start = this.word.Selection.End;
+                this.word.Selection.TypeText(text);
+                int end = this.word.Selection.End;
+                dynamic range = this.document.Range(start, end);
+                this.ResetMarkup(this.lastMarkup, range);
+                this.lastMarkup = DocumentMarkupKind.None;
+            }
+            else
+            {
+                this.word.Selection.TypeText(text);
+            }
         }
 
         public void WriteLine()

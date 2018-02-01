@@ -9,6 +9,8 @@ namespace DevToolsX.Documents
 {
     public class HtmlWriter : TextDocumentWriter
     {
+        private bool isInCode;
+
         public HtmlWriter(string path)
             : base(path)
         {
@@ -115,7 +117,10 @@ namespace DevToolsX.Documents
 
         public override void BeginParagraph()
         {
-            Writer.WriteLine(@"<p>");
+            if (!this.isInCode)
+            {
+                Writer.WriteLine(@"<p>");
+            }
         }
 
         public override void Write(string text)
@@ -125,13 +130,27 @@ namespace DevToolsX.Documents
 
         public override void WriteLine()
         {
-            Writer.WriteLine(@"<br/>");
+            if (this.isInCode)
+            {
+                Writer.WriteLine();
+            }
+            else
+            {
+                Writer.WriteLine(@"<br/>");
+            }
         }
 
         public override void EndParagraph()
         {
-            Writer.WriteLine();
-            Writer.WriteLine(@"</p>");
+            if (this.isInCode)
+            {
+                Writer.WriteLine();
+            }
+            else
+            {
+                Writer.WriteLine();
+                Writer.WriteLine(@"</p>");
+            }
         }
 
         public override void BeginMarkup(DocumentMarkupKind markupKind)
@@ -154,6 +173,10 @@ namespace DevToolsX.Documents
                 default:
                     throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
             }
+            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            {
+                this.isInCode = true;
+            }
         }
 
         public override void EndMarkup(DocumentMarkupKind markupKind)
@@ -175,6 +198,10 @@ namespace DevToolsX.Documents
                     break;
                 default:
                     throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+            }
+            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            {
+                this.isInCode = false;
             }
         }
 
