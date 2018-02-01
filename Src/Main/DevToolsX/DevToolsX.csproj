@@ -4,16 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F4C414E2-5C1D-45DC-8311-C32C2C2969FF}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{193EE3A0-D450-4F48-838A-B2BFEA3A3579}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevToolsX.DocumentParsers</RootNamespace>
-    <AssemblyName>DevToolsX.DocumentParsers</AssemblyName>
+    <RootNamespace>DevToolsX</RootNamespace>
+    <AssemblyName>DevToolsX</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,12 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="MediaWiki\MediaWikiLexer.g4" />
-    <None Include="MediaWiki\MediaWikiParser.g4" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevToolsX.Documents.MsOffice\DevToolsX.Documents.MsOffice.csproj">
+      <Project>{688175a2-c961-45f5-8960-fb3222b970bc}</Project>
+      <Name>DevToolsX.Documents.MsOffice</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DevToolsX.Documents\DevToolsX.Documents.csproj">
+      <Project>{5cf3710d-ca04-4e99-b439-8096b107b39e}</Project>
+      <Name>DevToolsX.Documents</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

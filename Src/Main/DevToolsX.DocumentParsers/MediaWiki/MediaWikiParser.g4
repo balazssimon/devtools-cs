@@ -5,7 +5,7 @@ options
     tokenVocab = MediaWikiLexer;
 }
 
-
+/*
 // Java:
 @parser::members {
     boolean isSpecialToken() {
@@ -17,9 +17,9 @@ options
         return false;
     }
 }
+*/
 
 
-/*
 // C#:
 @parser::members {
     bool isSpecialToken() {
@@ -31,7 +31,7 @@ options
         return false;
     }
 }
-*/
+
 
 main : specialBlockOrParagraph*;
 
