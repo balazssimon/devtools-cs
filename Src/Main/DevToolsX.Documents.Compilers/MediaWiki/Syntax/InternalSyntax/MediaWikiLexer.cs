@@ -1273,3 +1273,4 @@ public partial class MediaWikiLexer : Lexer {
 
 }
 } // namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
+

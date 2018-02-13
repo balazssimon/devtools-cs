@@ -761,3 +761,4 @@ public interface IMediaWikiParserListener : IParseTreeListener {
 	void ExitWhitespace([NotNull] MediaWikiParser.WhitespaceContext context);
 }
 } // namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
+

@@ -760,3 +760,4 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	public virtual Result VisitWhitespace([NotNull] MediaWikiParser.WhitespaceContext context) { return VisitChildren(context); }
 }
 } // namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
+

@@ -25,7 +25,7 @@ options
 @parser::members {
     bool isSpecialToken() {
     	String name = this.CurrentToken.Text;
-    	if (name.StartsWith("-") || name.StartsWith("=") || name.StartsWith("#") ||
+    	if (name == " " || name.StartsWith("-") || name.StartsWith("=") || name.StartsWith("#") ||
     	    name.StartsWith("*") || name.StartsWith(":") || name.StartsWith(";") || name.StartsWith("{|") ||
     	    name.StartsWith("|+") || name.StartsWith("|-") || name.StartsWith("|}") || name.StartsWith("|") ||
     	    name.StartsWith("!")) return true;

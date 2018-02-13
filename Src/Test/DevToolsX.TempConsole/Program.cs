@@ -10,7 +10,14 @@ namespace DevToolsX.TempConsole
     {
         static void Main(string[] args)
         {
-            MediaWikiSyntaxTree tree = MediaWikiSyntaxTree.ParseText("= Hello =\r\nWorld\r\nWorld2\r\n\r\nWorld3\r\n== Bello ==\r\nRorld");
+            MediaWikiSyntaxTree tree = MediaWikiSyntaxTree.ParseText(
+@"= Hello =
+World
+*World2
+*World3
+World4
+== Bello ==
+Rorld");
             Console.WriteLine(tree);
             var root = tree.GetRoot();
             Console.WriteLine("----");
@@ -45,6 +52,12 @@ namespace DevToolsX.TempConsole
             Console.WriteLine("Heading level: "+node.HeadingStart.GetText().Length);
             Console.WriteLine("Heading text: "+node.HeadingText.GetText());
             base.VisitHeading(node);
+        }
+
+        public override void VisitListItem(ListItemSyntax node)
+        {
+            Console.WriteLine("List item: " + node.GetText());
+            base.VisitListItem(node);
         }
     }
 }

@@ -470,3 +470,4 @@ public interface IMediaWikiParserVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitWhitespace([NotNull] MediaWikiParser.WhitespaceContext context);
 }
 } // namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
+

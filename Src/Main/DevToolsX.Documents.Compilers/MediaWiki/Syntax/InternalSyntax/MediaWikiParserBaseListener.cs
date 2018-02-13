@@ -922,3 +922,4 @@ public partial class MediaWikiParserBaseListener : IMediaWikiParserListener {
 	public virtual void VisitErrorNode([NotNull] IErrorNode node) { }
 }
 } // namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
+
