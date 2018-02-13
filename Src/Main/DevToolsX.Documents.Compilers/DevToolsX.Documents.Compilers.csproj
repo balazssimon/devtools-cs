@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DevToolsX.Documents\DevToolsX.Documents.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="MetaDslx.Compiler.Antlr4">
       <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Compiler.Antlr4.dll</HintPath>
     </Reference>

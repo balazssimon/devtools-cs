@@ -4,4 +4,25 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="MetaDslx.Core">
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Symbols\DocumentModel.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DocumentModel.mm</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Symbols\DocumentModel.mm">
+      <Generator>MetaGenerator</Generator>
+      <LastGenOutput>DocumentModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -33,7 +33,7 @@ options
     }
 }
 
-
+//$Root(Document)
 main : specialBlockOrParagraph* EOF;
 
 specialBlockOrParagraph
