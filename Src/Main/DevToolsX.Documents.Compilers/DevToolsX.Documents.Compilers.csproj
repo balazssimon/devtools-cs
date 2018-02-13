@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.7.1.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MetaDslx.Compiler.Antlr4">
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Compiler.Antlr4.dll</HintPath>
+    </Reference>
+    <Reference Include="MetaDslx.Core">
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MediaWiki\Syntax\InternalSyntax\MediaWikiLexer.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>MediaWikiLexer.g4</LastGenOutput>
+      <CustomToolNamespace>DevToolsX.Documents.Compilers.MediaWiki</CustomToolNamespace>
+    </None>
+    <None Update="MediaWiki\Syntax\InternalSyntax\MediaWikiLexer.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediaWikiLexer.ag4</DependentUpon>
+    </None>
+    <None Update="MediaWiki\Syntax\InternalSyntax\MediaWikiParser.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>MediaWikiParser.g4</LastGenOutput>
+      <CustomToolNamespace>DevToolsX.Documents.Compilers.MediaWiki</CustomToolNamespace>
+    </None>
+    <None Update="MediaWiki\Syntax\InternalSyntax\MediaWikiParser.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediaWikiParser.ag4</DependentUpon>
+    </None>
+  </ItemGroup>
+
+</Project>

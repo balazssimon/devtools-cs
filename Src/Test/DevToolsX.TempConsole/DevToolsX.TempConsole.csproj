@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Compilers\DevToolsX.Documents.Compilers.csproj" />
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Office\DevToolsX.Documents.Office.csproj" />
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents\DevToolsX.Documents.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MetaDslx.Compiler.Antlr4">
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Compiler.Antlr4.dll</HintPath>
+    </Reference>
+    <Reference Include="MetaDslx.Core">
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
