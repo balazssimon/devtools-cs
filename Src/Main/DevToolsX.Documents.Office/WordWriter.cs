@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Word;
+﻿using DevToolsX.Documents.Symbols;
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace DevToolsX.Documents.Office
     public class WordWriter : IDocumentWriter, IDisposable
     {
         private Application word;
-        private Document document;
+        private Microsoft.Office.Interop.Word.Document document;
 
         private Style normalStyle;
         private ListGallery bulletListGallery;
@@ -19,10 +20,10 @@ namespace DevToolsX.Documents.Office
 
         private List<int> positionStack;
         private List<ListGallery> listStack;
-        private List<Table> tableStack;
-        private Table table;
+        private List<Microsoft.Office.Interop.Word.Table> tableStack;
+        private Microsoft.Office.Interop.Word.Table table;
 
-        private DocumentMarkupKind lastMarkup = DocumentMarkupKind.None;
+        private MarkupKind lastMarkup = MarkupKind.None;
 
         public WordWriter(string document, bool debug = false)
         {
@@ -39,7 +40,7 @@ namespace DevToolsX.Documents.Office
             {
                 foreach (var item in word.Documents)
                 {
-                    Document doc = (Document)item;
+                    Microsoft.Office.Interop.Word.Document doc = (Microsoft.Office.Interop.Word.Document)item;
                     if (doc.Name == document)
                     {
                         this.document = doc;
@@ -67,7 +68,7 @@ namespace DevToolsX.Documents.Office
                 this.word.CheckLanguage = false;
                 this.positionStack = new List<int>();
                 this.listStack = new List<ListGallery>();
-                this.tableStack = new List<Table>();
+                this.tableStack = new List<Microsoft.Office.Interop.Word.Table>();
                 this.normalStyle = this.document.Styles[WdBuiltinStyle.wdStyleNormal];
                 this.bulletListGallery = word.ListGalleries[WdListGalleryType.wdBulletGallery];
                 this.numberedListGallery = word.ListGalleries[WdListGalleryType.wdNumberGallery];
@@ -148,13 +149,13 @@ namespace DevToolsX.Documents.Office
             this.PushPosition();
             if (!string.IsNullOrEmpty(title))
             {
-                this.BeginMarkup(DocumentMarkupKind.Bold);
+                this.BeginMarkup(MarkupKind.Bold);
                 this.Write(title);
-                this.EndMarkup(DocumentMarkupKind.Bold);
+                this.EndMarkup(MarkupKind.Bold);
             }
         }
 
-        public void BeginMarkup(DocumentMarkupKind markupKind)
+        public void BeginMarkup(MarkupKind markupKind)
         {
             this.PushPosition();
         }
@@ -226,69 +227,69 @@ namespace DevToolsX.Documents.Office
             this.word.Selection.TypeParagraph();
         }
 
-        public void EndMarkup(DocumentMarkupKind markupKind)
+        public void EndMarkup(MarkupKind markupKind)
         {
             dynamic range = this.PopPosition();
             switch (markupKind)
             {
-                case DocumentMarkupKind.None:
+                case MarkupKind.None:
                     break;
-                case DocumentMarkupKind.Bold:
+                case MarkupKind.Bold:
                     range.Font.Bold = true;
                     break;
-                case DocumentMarkupKind.Italic:
+                case MarkupKind.Italic:
                     range.Font.Italic = true;
                     break;
-                case DocumentMarkupKind.SubScript:
+                case MarkupKind.SubScript:
                     range.Font.Subscript = true;
                     break;
-                case DocumentMarkupKind.SuperScript:
+                case MarkupKind.SuperScript:
                     range.Font.Superscript = true;
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     range.Font.Name = "Courier New";
                     range.Font.Size = this.normalStyle.Font.Size - 2;
-                    foreach (Paragraph par in range.Paragraphs)
+                    foreach (Microsoft.Office.Interop.Word.Paragraph par in range.Paragraphs)
                     {
                         par.SpaceBefore = 0;
                         par.SpaceAfter = 0;
                     }
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     range.Font.Name = "Courier New";
                     range.Font.Size = this.normalStyle.Font.Size - 2;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Invalid DocumentMarkupKind: " + markupKind);
+                    throw new ArgumentOutOfRangeException("Invalid MarkupKind: " + markupKind);
             }
             this.lastMarkup = markupKind;
         }
 
-        private void ResetMarkup(DocumentMarkupKind markupKind, dynamic range)
+        private void ResetMarkup(MarkupKind markupKind, dynamic range)
         {
             switch (markupKind)
             {
-                case DocumentMarkupKind.None:
+                case MarkupKind.None:
                     break;
-                case DocumentMarkupKind.Bold:
+                case MarkupKind.Bold:
                     range.Font.Bold = false;
                     break;
-                case DocumentMarkupKind.Italic:
+                case MarkupKind.Italic:
                     range.Font.Italic = false;
                     break;
-                case DocumentMarkupKind.SubScript:
+                case MarkupKind.SubScript:
                     range.Font.Subscript = false;
                     break;
-                case DocumentMarkupKind.SuperScript:
+                case MarkupKind.SuperScript:
                     range.Font.Superscript = false;
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     range.Font.Name = this.normalStyle.Font.Name;
                     range.Font.Size = this.normalStyle.Font.Size;
                     range.ParagraphFormat.SpaceBefore = this.normalStyle.ParagraphFormat.SpaceBefore;
                     range.ParagraphFormat.SpaceAfter = this.normalStyle.ParagraphFormat.SpaceAfter;
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     range.Font.Name = this.normalStyle.Font.Name;
                     range.Font.Size = this.normalStyle.Font.Size;
                     break;
@@ -356,14 +357,14 @@ namespace DevToolsX.Documents.Office
 
         public void Write(string text)
         {
-            if (this.lastMarkup != DocumentMarkupKind.None)
+            if (this.lastMarkup != MarkupKind.None)
             {
                 int start = this.word.Selection.End;
                 this.word.Selection.TypeText(text);
                 int end = this.word.Selection.End;
                 dynamic range = this.document.Range(start, end);
                 this.ResetMarkup(this.lastMarkup, range);
-                this.lastMarkup = DocumentMarkupKind.None;
+                this.lastMarkup = MarkupKind.None;
             }
             else
             {

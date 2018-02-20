@@ -2,17 +2,10 @@
 {
 	metamodel DocumentModel(Uri="http://devtoolsx.documents.documentmodel/1.0"); 
 
-	class Document
+	class Document : ContentContainer
 	{
+		[Name]
 		string Title;
-		list<Section> Sections;
-	}
-
-	class Section
-	{
-		string Title;
-		list<Section> Subsections;
-		list<Paragraph> Paragraphs;
 	}
 
 	enum MarkupKind
@@ -37,52 +30,80 @@
         Right
     }
 
+	enum VerticalAlignment
+    {
+        Default,
+        Top,
+        Center,
+        Bottom
+    }
+
+    enum ListKind
+    {
+        None,
+		Indent,
+        Bullets,
+        Numbers,
+        RomanNumbers,
+        CapitalLetters,
+        SmallLetters
+    }
+
+
 	abstract class Content
 	{
 	}
 
-	class ContentList : Content
+	abstract class ContentContainer : Content
 	{
-		list<Content> Items;
+		list<Content> Text;
 	}
 
-	class Paragraph : Content
+	class SectionTitle : Content
+	{
+		int Level;
+		[Name]
+		string Title;
+		Label Label;
+	}
+
+	class Paragraph : ContentContainer
 	{
 		HorizontalAlignment Alignment;
-		Content Text;
 	}
 
 	class Text : Content
 	{
+		[Name]
 		string Text;
 	}
 
 	class Label : Content
 	{
+		[Name]
 		string Name;
 	}
 
-	class Reference : Content
+	class Reference : ContentContainer
 	{
 		Label Target;
-		Content Text;
 	}
 
-	class Markup : Content
+	class Markup : ContentContainer
 	{
 		MarkupKind Kind;
-		Content Text;
 	}
 
 	class List : Content
 	{
+		ListKind Kind;
 		list<ListItem> Items;
 	}
 
-	class ListItem
+	class ListItem : ContentContainer
 	{
+		[Name]
 		string Title;
-		Content Text;
 	}
 
 	class Table : Content
@@ -94,17 +115,21 @@
 		list<Cell> Cells;
 	}
 
-	class Cell
+	class Cell : ContentContainer
 	{
-		Content Text;
 	}
 
 	class Image : Content
 	{
+		[Name]
 		string FilePath;
 	}
 
 	class PageBreak : Content
+	{
+	}
+
+	class TableOfContents : Content
 	{
 	}
 }

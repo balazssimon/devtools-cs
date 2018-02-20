@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using DevToolsX.Documents.Symbols;
 
 namespace DevToolsX.Documents
 {
@@ -132,59 +133,59 @@ namespace DevToolsX.Documents
             }
         }
 
-        public override void BeginMarkup(DocumentMarkupKind markupKind)
+        public override void BeginMarkup(MarkupKind markupKind)
         {
             switch (markupKind)
             {
-                case DocumentMarkupKind.Bold:
+                case MarkupKind.Bold:
                     Writer.Write(@"\textbf{");
                     break;
-                case DocumentMarkupKind.Italic:
+                case MarkupKind.Italic:
                     Writer.Write(@"\emph{");
                     break;
-                case DocumentMarkupKind.SubScript:
+                case MarkupKind.SubScript:
                     Writer.Write(@"_{");
                     break;
-                case DocumentMarkupKind.SuperScript:
+                case MarkupKind.SuperScript:
                     Writer.Write(@"^{");
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     Writer.WriteLine();
                     Writer.WriteLine(@"\begin{verbatim}");
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     Writer.Write(@"\verb|");
                     break;
                 default:
-                    throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
             }
-            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
             {
                 this.isInCode = true;
             }
         }
 
-        public override void EndMarkup(DocumentMarkupKind markupKind)
+        public override void EndMarkup(MarkupKind markupKind)
         {
             switch (markupKind)
             {
-                case DocumentMarkupKind.Bold:
-                case DocumentMarkupKind.Italic:
-                case DocumentMarkupKind.SubScript:
-                case DocumentMarkupKind.SuperScript:
+                case MarkupKind.Bold:
+                case MarkupKind.Italic:
+                case MarkupKind.SubScript:
+                case MarkupKind.SuperScript:
                     Writer.Write(@"}");
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     Writer.WriteLine(@"\end{verbatim}");
                     Writer.WriteLine();
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     Writer.Write(@"|");
                     break;
                 default:
-                    throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
             }
-            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
             {
                 this.isInCode = false;
             }

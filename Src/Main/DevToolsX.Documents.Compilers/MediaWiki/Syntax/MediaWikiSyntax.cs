@@ -386,9 +386,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	{
 	    private HeadingSyntax heading;
 	    private HorizontalRuleSyntax horizontalRule;
-	    private SpaceBlockSyntax spaceBlock;
-	    private ListItemSyntax listItem;
-	    private TableSyntax table;
+	    private CodeBlockSyntax codeBlock;
+	    private WikiListSyntax wikiList;
+	    private WikiTableSyntax wikiTable;
 	
 	    public SpecialBlockSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
@@ -408,17 +408,17 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get { return this.GetRed(ref this.horizontalRule, 1); } 
 		}
-	    public SpaceBlockSyntax SpaceBlock 
+	    public CodeBlockSyntax CodeBlock 
 		{ 
-			get { return this.GetRed(ref this.spaceBlock, 2); } 
+			get { return this.GetRed(ref this.codeBlock, 2); } 
 		}
-	    public ListItemSyntax ListItem 
+	    public WikiListSyntax WikiList 
 		{ 
-			get { return this.GetRed(ref this.listItem, 3); } 
+			get { return this.GetRed(ref this.wikiList, 3); } 
 		}
-	    public TableSyntax Table 
+	    public WikiTableSyntax WikiTable 
 		{ 
-			get { return this.GetRed(ref this.table, 4); } 
+			get { return this.GetRed(ref this.wikiTable, 4); } 
 		}
 	
 	    public override SyntaxNode GetNodeSlot(int index)
@@ -427,9 +427,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        {
 				case 0: return this.GetRed(ref this.heading, 0);
 				case 1: return this.GetRed(ref this.horizontalRule, 1);
-				case 2: return this.GetRed(ref this.spaceBlock, 2);
-				case 3: return this.GetRed(ref this.listItem, 3);
-				case 4: return this.GetRed(ref this.table, 4);
+				case 2: return this.GetRed(ref this.codeBlock, 2);
+				case 3: return this.GetRed(ref this.wikiList, 3);
+				case 4: return this.GetRed(ref this.wikiTable, 4);
 				default: return null;
 	        }
 	    }
@@ -440,9 +440,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        {
 				case 0: return this.heading;
 				case 1: return this.horizontalRule;
-				case 2: return this.spaceBlock;
-				case 3: return this.listItem;
-				case 4: return this.table;
+				case 2: return this.codeBlock;
+				case 3: return this.wikiList;
+				case 4: return this.wikiTable;
 				default: return null;
 	        }
 	    }
@@ -457,19 +457,19 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 			return this.Update(horizontalRule);
 		}
 	
-	    public SpecialBlockSyntax WithSpaceBlock(SpaceBlockSyntax spaceBlock)
+	    public SpecialBlockSyntax WithCodeBlock(CodeBlockSyntax codeBlock)
 		{
-			return this.Update(spaceBlock);
+			return this.Update(codeBlock);
 		}
 	
-	    public SpecialBlockSyntax WithListItem(ListItemSyntax listItem)
+	    public SpecialBlockSyntax WithWikiList(WikiListSyntax wikiList)
 		{
-			return this.Update(listItem);
+			return this.Update(wikiList);
 		}
 	
-	    public SpecialBlockSyntax WithTable(TableSyntax table)
+	    public SpecialBlockSyntax WithWikiTable(WikiTableSyntax wikiTable)
 		{
-			return this.Update(table);
+			return this.Update(wikiTable);
 		}
 	
 	    public SpecialBlockSyntax Update(HeadingSyntax heading)
@@ -498,11 +498,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        return this;
 	    }
 	
-	    public SpecialBlockSyntax Update(SpaceBlockSyntax spaceBlock)
+	    public SpecialBlockSyntax Update(CodeBlockSyntax codeBlock)
 	    {
-	        if (this.SpaceBlock != spaceBlock)
+	        if (this.CodeBlock != codeBlock)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(spaceBlock);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(codeBlock);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -511,11 +511,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        return this;
 	    }
 	
-	    public SpecialBlockSyntax Update(ListItemSyntax listItem)
+	    public SpecialBlockSyntax Update(WikiListSyntax wikiList)
 	    {
-	        if (this.ListItem != listItem)
+	        if (this.WikiList != wikiList)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(listItem);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(wikiList);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -524,11 +524,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        return this;
 	    }
 	
-	    public SpecialBlockSyntax Update(TableSyntax table)
+	    public SpecialBlockSyntax Update(WikiTableSyntax wikiTable)
 	    {
-	        if (this.Table != table)
+	        if (this.WikiTable != wikiTable)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(table);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.SpecialBlock(wikiTable);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -802,6 +802,85 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	    }
 	}
 	
+	public sealed class CodeBlockSyntax : MediaWikiSyntaxNode
+	{
+	    private SeparatedSyntaxNodeList spaceBlock;
+	
+	    public CodeBlockSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public CodeBlockSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public SeparatedSyntaxNodeList<SpaceBlockSyntax> SpaceBlock 
+		{ 
+			get
+			{
+				var red = this.GetRed(ref this.spaceBlock, 0);
+				if (red != null)
+				{
+					return new SeparatedSyntaxNodeList<SpaceBlockSyntax>(red);
+				}
+				return null;
+			} 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.GetRed(ref this.spaceBlock, 0);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.spaceBlock;
+				default: return null;
+	        }
+	    }
+	
+	    public CodeBlockSyntax WithSpaceBlock(SeparatedSyntaxNodeList<SpaceBlockSyntax> spaceBlock)
+		{
+			return this.Update(SpaceBlock);
+		}
+	
+	    public CodeBlockSyntax AddSpaceBlock(params SpaceBlockSyntax[] spaceBlock)
+		{
+			return this.WithSpaceBlock(this.SpaceBlock.AddRange(spaceBlock));
+		}
+	
+	    public CodeBlockSyntax Update(SeparatedSyntaxNodeList<SpaceBlockSyntax> spaceBlock)
+	    {
+	        if (this.SpaceBlock.Node != spaceBlock.Node)
+	        {
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.CodeBlock(spaceBlock);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (CodeBlockSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(IMediaWikiSyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitCodeBlock(this);
+	    }
+	
+	    public override void Accept(IMediaWikiSyntaxVisitor visitor)
+	    {
+	        visitor.VisitCodeBlock(this);
+	    }
+	}
+	
 	public sealed class SpaceBlockSyntax : MediaWikiSyntaxNode
 	{
 	    private InlineTextSyntax inlineText;
@@ -880,6 +959,85 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	    public override void Accept(IMediaWikiSyntaxVisitor visitor)
 	    {
 	        visitor.VisitSpaceBlock(this);
+	    }
+	}
+	
+	public sealed class WikiListSyntax : MediaWikiSyntaxNode
+	{
+	    private SeparatedSyntaxNodeList listItem;
+	
+	    public WikiListSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public WikiListSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public SeparatedSyntaxNodeList<ListItemSyntax> ListItem 
+		{ 
+			get
+			{
+				var red = this.GetRed(ref this.listItem, 0);
+				if (red != null)
+				{
+					return new SeparatedSyntaxNodeList<ListItemSyntax>(red);
+				}
+				return null;
+			} 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.GetRed(ref this.listItem, 0);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.listItem;
+				default: return null;
+	        }
+	    }
+	
+	    public WikiListSyntax WithListItem(SeparatedSyntaxNodeList<ListItemSyntax> listItem)
+		{
+			return this.Update(ListItem);
+		}
+	
+	    public WikiListSyntax AddListItem(params ListItemSyntax[] listItem)
+		{
+			return this.WithListItem(this.ListItem.AddRange(listItem));
+		}
+	
+	    public WikiListSyntax Update(SeparatedSyntaxNodeList<ListItemSyntax> listItem)
+	    {
+	        if (this.ListItem.Node != listItem.Node)
+	        {
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.WikiList(listItem);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (WikiListSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(IMediaWikiSyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitWikiList(this);
+	    }
+	
+	    public override void Accept(IMediaWikiSyntaxVisitor visitor)
+	    {
+	        visitor.VisitWikiList(this);
 	    }
 	}
 	
@@ -1164,19 +1322,19 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	    }
 	}
 	
-	public sealed class TableSyntax : MediaWikiSyntaxNode
+	public sealed class WikiTableSyntax : MediaWikiSyntaxNode
 	{
 	    private InlineTextSyntax leadingInlineText;
 	    private TableCaptionSyntax tableCaption;
 	    private TableRowsSyntax tableRows;
 	    private InlineTextSyntax trailingInlineText;
 	
-	    public TableSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	    public WikiTableSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
 	    {
 	    }
 	
-	    public TableSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	    public WikiTableSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
 	        : base(green, parent, position)
 	    {
 	    }
@@ -1185,7 +1343,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get 
 			{ 
-				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.TableGreen)this.Green;
+				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.WikiTableGreen)this.Green;
 				var greenToken = green.TTableStart;
 				return greenToken == null ? null : new MediaWikiSyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
 			}
@@ -1198,7 +1356,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get 
 			{ 
-				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.TableGreen)this.Green;
+				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.WikiTableGreen)this.Green;
 				var greenToken = green.CRLF;
 				return greenToken == null ? null : new MediaWikiSyntaxToken(greenToken, this, this.GetChildPosition(2), this.GetChildIndex(2)); 
 			}
@@ -1215,7 +1373,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get 
 			{ 
-				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.TableGreen)this.Green;
+				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.WikiTableGreen)this.Green;
 				var greenToken = green.TTableEnd;
 				return greenToken == null ? null : new MediaWikiSyntaxToken(greenToken, this, this.GetChildPosition(5), this.GetChildIndex(5)); 
 			}
@@ -1249,42 +1407,42 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        }
 	    }
 	
-	    public TableSyntax WithTTableStart(SyntaxToken tTableStart)
+	    public WikiTableSyntax WithTTableStart(SyntaxToken tTableStart)
 		{
 			return this.Update(TTableStart, this.LeadingInlineText, this.CRLF, this.TableCaption, this.TableRows, this.TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithLeadingInlineText(InlineTextSyntax leadingInlineText)
+	    public WikiTableSyntax WithLeadingInlineText(InlineTextSyntax leadingInlineText)
 		{
 			return this.Update(this.TTableStart, LeadingInlineText, this.CRLF, this.TableCaption, this.TableRows, this.TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithCRLF(SyntaxToken crlf)
+	    public WikiTableSyntax WithCRLF(SyntaxToken crlf)
 		{
 			return this.Update(this.TTableStart, this.LeadingInlineText, CRLF, this.TableCaption, this.TableRows, this.TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithTableCaption(TableCaptionSyntax tableCaption)
+	    public WikiTableSyntax WithTableCaption(TableCaptionSyntax tableCaption)
 		{
 			return this.Update(this.TTableStart, this.LeadingInlineText, this.CRLF, TableCaption, this.TableRows, this.TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithTableRows(TableRowsSyntax tableRows)
+	    public WikiTableSyntax WithTableRows(TableRowsSyntax tableRows)
 		{
 			return this.Update(this.TTableStart, this.LeadingInlineText, this.CRLF, this.TableCaption, TableRows, this.TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithTTableEnd(SyntaxToken tTableEnd)
+	    public WikiTableSyntax WithTTableEnd(SyntaxToken tTableEnd)
 		{
 			return this.Update(this.TTableStart, this.LeadingInlineText, this.CRLF, this.TableCaption, this.TableRows, TTableEnd, this.TrailingInlineText);
 		}
 	
-	    public TableSyntax WithTrailingInlineText(InlineTextSyntax trailingInlineText)
+	    public WikiTableSyntax WithTrailingInlineText(InlineTextSyntax trailingInlineText)
 		{
 			return this.Update(this.TTableStart, this.LeadingInlineText, this.CRLF, this.TableCaption, this.TableRows, this.TTableEnd, TrailingInlineText);
 		}
 	
-	    public TableSyntax Update(SyntaxToken tTableStart, InlineTextSyntax leadingInlineText, SyntaxToken crlf, TableCaptionSyntax tableCaption, TableRowsSyntax tableRows, SyntaxToken tTableEnd, InlineTextSyntax trailingInlineText)
+	    public WikiTableSyntax Update(SyntaxToken tTableStart, InlineTextSyntax leadingInlineText, SyntaxToken crlf, TableCaptionSyntax tableCaption, TableRowsSyntax tableRows, SyntaxToken tTableEnd, InlineTextSyntax trailingInlineText)
 	    {
 	        if (this.TTableStart != tTableStart ||
 				this.LeadingInlineText != leadingInlineText ||
@@ -1294,23 +1452,23 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 				this.TTableEnd != tTableEnd ||
 				this.TrailingInlineText != trailingInlineText)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.Table(tTableStart, leadingInlineText, crlf, tableCaption, tableRows, tTableEnd, trailingInlineText);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.WikiTable(tTableStart, leadingInlineText, crlf, tableCaption, tableRows, tTableEnd, trailingInlineText);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
-				return (TableSyntax)newNode;
+				return (WikiTableSyntax)newNode;
 	        }
 	        return this;
 	    }
 	
 	    public override TResult Accept<TResult>(IMediaWikiSyntaxVisitor<TResult> visitor)
 	    {
-	        return visitor.VisitTable(this);
+	        return visitor.VisitWikiTable(this);
 	    }
 	
 	    public override void Accept(IMediaWikiSyntaxVisitor visitor)
 	    {
-	        visitor.VisitTable(this);
+	        visitor.VisitWikiTable(this);
 	    }
 	}
 	
@@ -2387,7 +2545,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	public sealed class TableCellSyntax : MediaWikiSyntaxNode
 	{
 	    private CellTextSyntax cellText;
-	    private SyntaxNodeList cellTextOpt;
+	    private CellValueSyntax cellValue;
 	
 	    public TableCellSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
@@ -2403,17 +2561,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get { return this.GetRed(ref this.cellText, 0); } 
 		}
-	    public SyntaxNodeList<CellTextOptSyntax> CellTextOpt 
+	    public CellValueSyntax CellValue 
 		{ 
-			get
-			{
-				var red = this.GetRed(ref this.cellTextOpt, 1);
-				if (red != null)
-				{
-					return new SyntaxNodeList<CellTextOptSyntax>(red);
-				}
-				return null;
-			} 
+			get { return this.GetRed(ref this.cellValue, 1); } 
 		}
 	
 	    public override SyntaxNode GetNodeSlot(int index)
@@ -2421,7 +2571,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        switch (index)
 	        {
 				case 0: return this.GetRed(ref this.cellText, 0);
-				case 1: return this.GetRed(ref this.cellTextOpt, 1);
+				case 1: return this.GetRed(ref this.cellValue, 1);
 				default: return null;
 	        }
 	    }
@@ -2431,32 +2581,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        switch (index)
 	        {
 				case 0: return this.cellText;
-				case 1: return this.cellTextOpt;
+				case 1: return this.cellValue;
 				default: return null;
 	        }
 	    }
 	
 	    public TableCellSyntax WithCellText(CellTextSyntax cellText)
 		{
-			return this.Update(CellText, this.CellTextOpt);
+			return this.Update(CellText, this.CellValue);
 		}
 	
-	    public TableCellSyntax WithCellTextOpt(SyntaxNodeList<CellTextOptSyntax> cellTextOpt)
+	    public TableCellSyntax WithCellValue(CellValueSyntax cellValue)
 		{
-			return this.Update(this.CellText, CellTextOpt);
+			return this.Update(this.CellText, CellValue);
 		}
 	
-	    public TableCellSyntax AddCellTextOpt(params CellTextOptSyntax[] cellTextOpt)
-		{
-			return this.WithCellTextOpt(this.CellTextOpt.AddRange(cellTextOpt));
-		}
-	
-	    public TableCellSyntax Update(CellTextSyntax cellText, SyntaxNodeList<CellTextOptSyntax> cellTextOpt)
+	    public TableCellSyntax Update(CellTextSyntax cellText, CellValueSyntax cellValue)
 	    {
 	        if (this.CellText != cellText ||
-				this.CellTextOpt.Node != cellTextOpt.Node)
+				this.CellValue != cellValue)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.TableCell(cellText, cellTextOpt);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.TableCell(cellText, cellValue);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -2476,16 +2621,16 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	    }
 	}
 	
-	public sealed class CellTextOptSyntax : MediaWikiSyntaxNode
+	public sealed class CellValueSyntax : MediaWikiSyntaxNode
 	{
 	    private CellTextSyntax cellText;
 	
-	    public CellTextOptSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	    public CellValueSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
 	    {
 	    }
 	
-	    public CellTextOptSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	    public CellValueSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
 	        : base(green, parent, position)
 	    {
 	    }
@@ -2494,7 +2639,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 		{ 
 			get 
 			{ 
-				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.CellTextOptGreen)this.Green;
+				var green = (global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax.CellValueGreen)this.Green;
 				var greenToken = green.TBar;
 				return greenToken == null ? null : new MediaWikiSyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
 			}
@@ -2522,38 +2667,38 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax
 	        }
 	    }
 	
-	    public CellTextOptSyntax WithTBar(SyntaxToken tBar)
+	    public CellValueSyntax WithTBar(SyntaxToken tBar)
 		{
 			return this.Update(TBar, this.CellText);
 		}
 	
-	    public CellTextOptSyntax WithCellText(CellTextSyntax cellText)
+	    public CellValueSyntax WithCellText(CellTextSyntax cellText)
 		{
 			return this.Update(this.TBar, CellText);
 		}
 	
-	    public CellTextOptSyntax Update(SyntaxToken tBar, CellTextSyntax cellText)
+	    public CellValueSyntax Update(SyntaxToken tBar, CellTextSyntax cellText)
 	    {
 	        if (this.TBar != tBar ||
 				this.CellText != cellText)
 	        {
-	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.CellTextOpt(tBar, cellText);
+	            SyntaxNode newNode = MediaWikiLanguage.Instance.SyntaxFactory.CellValue(tBar, cellText);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
-				return (CellTextOptSyntax)newNode;
+				return (CellValueSyntax)newNode;
 	        }
 	        return this;
 	    }
 	
 	    public override TResult Accept<TResult>(IMediaWikiSyntaxVisitor<TResult> visitor)
 	    {
-	        return visitor.VisitCellTextOpt(this);
+	        return visitor.VisitCellValue(this);
 	    }
 	
 	    public override void Accept(IMediaWikiSyntaxVisitor visitor)
 	    {
-	        visitor.VisitCellTextOpt(this);
+	        visitor.VisitCellValue(this);
 	    }
 	}
 	
@@ -7141,7 +7286,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		void VisitHorizontalRule(HorizontalRuleSyntax node);
 		
+		void VisitCodeBlock(CodeBlockSyntax node);
+		
 		void VisitSpaceBlock(SpaceBlockSyntax node);
+		
+		void VisitWikiList(WikiListSyntax node);
 		
 		void VisitListItem(ListItemSyntax node);
 		
@@ -7149,7 +7298,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		void VisitDefinitionItem(DefinitionItemSyntax node);
 		
-		void VisitTable(TableSyntax node);
+		void VisitWikiTable(WikiTableSyntax node);
 		
 		void VisitTableCaption(TableCaptionSyntax node);
 		
@@ -7171,7 +7320,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		void VisitTableCell(TableCellSyntax node);
 		
-		void VisitCellTextOpt(CellTextOptSyntax node);
+		void VisitCellValue(CellValueSyntax node);
 		
 		void VisitParagraph(ParagraphSyntax node);
 		
@@ -7310,7 +7459,17 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    this.DefaultVisit(node);
 		}
 		
+		public virtual void VisitCodeBlock(CodeBlockSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
 		public virtual void VisitSpaceBlock(SpaceBlockSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitWikiList(WikiListSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
@@ -7330,7 +7489,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    this.DefaultVisit(node);
 		}
 		
-		public virtual void VisitTable(TableSyntax node)
+		public virtual void VisitWikiTable(WikiTableSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
@@ -7385,7 +7544,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    this.DefaultVisit(node);
 		}
 		
-		public virtual void VisitCellTextOpt(CellTextOptSyntax node)
+		public virtual void VisitCellValue(CellValueSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
@@ -7667,9 +7826,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		{
 			this.Visit(node.Heading);
 			this.Visit(node.HorizontalRule);
-			this.Visit(node.SpaceBlock);
-			this.Visit(node.ListItem);
-			this.Visit(node.Table);
+			this.Visit(node.CodeBlock);
+			this.Visit(node.WikiList);
+			this.Visit(node.WikiTable);
 		}
 		
 		public virtual void VisitHeading(HeadingSyntax node)
@@ -7691,10 +7850,20 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			this.Visit(node.InlineText);
 		}
 		
+		public virtual void VisitCodeBlock(CodeBlockSyntax node)
+		{
+			this.VisitList(node.SpaceBlock);
+		}
+		
 		public virtual void VisitSpaceBlock(SpaceBlockSyntax node)
 		{
 			this.VisitToken(node.TSpaceBlockStart);
 			this.Visit(node.InlineText);
+		}
+		
+		public virtual void VisitWikiList(WikiListSyntax node)
+		{
+			this.VisitList(node.ListItem);
 		}
 		
 		public virtual void VisitListItem(ListItemSyntax node)
@@ -7717,7 +7886,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			this.Visit(node.InlineText);
 		}
 		
-		public virtual void VisitTable(TableSyntax node)
+		public virtual void VisitWikiTable(WikiTableSyntax node)
 		{
 			this.VisitToken(node.TTableStart);
 			this.Visit(node.LeadingInlineText);
@@ -7798,10 +7967,10 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		public virtual void VisitTableCell(TableCellSyntax node)
 		{
 			this.Visit(node.CellText);
-			this.VisitList(node.CellTextOpt);
+			this.Visit(node.CellValue);
 		}
 		
-		public virtual void VisitCellTextOpt(CellTextOptSyntax node)
+		public virtual void VisitCellValue(CellValueSyntax node)
 		{
 			this.VisitToken(node.TBar);
 			this.Visit(node.CellText);
@@ -8134,7 +8303,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		TResult VisitHorizontalRule(HorizontalRuleSyntax node);
 		
+		TResult VisitCodeBlock(CodeBlockSyntax node);
+		
 		TResult VisitSpaceBlock(SpaceBlockSyntax node);
+		
+		TResult VisitWikiList(WikiListSyntax node);
 		
 		TResult VisitListItem(ListItemSyntax node);
 		
@@ -8142,7 +8315,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		TResult VisitDefinitionItem(DefinitionItemSyntax node);
 		
-		TResult VisitTable(TableSyntax node);
+		TResult VisitWikiTable(WikiTableSyntax node);
 		
 		TResult VisitTableCaption(TableCaptionSyntax node);
 		
@@ -8164,7 +8337,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		
 		TResult VisitTableCell(TableCellSyntax node);
 		
-		TResult VisitCellTextOpt(CellTextOptSyntax node);
+		TResult VisitCellValue(CellValueSyntax node);
 		
 		TResult VisitParagraph(ParagraphSyntax node);
 		
@@ -8303,7 +8476,17 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    return this.DefaultVisit(node);
 		}
 		
+		public virtual TResult VisitCodeBlock(CodeBlockSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
 		public virtual TResult VisitSpaceBlock(SpaceBlockSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitWikiList(WikiListSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
@@ -8323,7 +8506,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    return this.DefaultVisit(node);
 		}
 		
-		public virtual TResult VisitTable(TableSyntax node)
+		public virtual TResult VisitWikiTable(WikiTableSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
@@ -8378,7 +8561,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    return this.DefaultVisit(node);
 		}
 		
-		public virtual TResult VisitCellTextOpt(CellTextOptSyntax node)
+		public virtual TResult VisitCellValue(CellValueSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
@@ -8683,23 +8866,23 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			    var newHorizontalRule = (HorizontalRuleSyntax)this.Visit(oldHorizontalRule);
 				return node.Update(newHorizontalRule);
 			}
-			var oldSpaceBlock = node.SpaceBlock;
-			if (oldSpaceBlock != null)
+			var oldCodeBlock = node.CodeBlock;
+			if (oldCodeBlock != null)
 			{
-			    var newSpaceBlock = (SpaceBlockSyntax)this.Visit(oldSpaceBlock);
-				return node.Update(newSpaceBlock);
+			    var newCodeBlock = (CodeBlockSyntax)this.Visit(oldCodeBlock);
+				return node.Update(newCodeBlock);
 			}
-			var oldListItem = node.ListItem;
-			if (oldListItem != null)
+			var oldWikiList = node.WikiList;
+			if (oldWikiList != null)
 			{
-			    var newListItem = (ListItemSyntax)this.Visit(oldListItem);
-				return node.Update(newListItem);
+			    var newWikiList = (WikiListSyntax)this.Visit(oldWikiList);
+				return node.Update(newWikiList);
 			}
-			var oldTable = node.Table;
-			if (oldTable != null)
+			var oldWikiTable = node.WikiTable;
+			if (oldWikiTable != null)
 			{
-			    var newTable = (TableSyntax)this.Visit(oldTable);
-				return node.Update(newTable);
+			    var newWikiTable = (WikiTableSyntax)this.Visit(oldWikiTable);
+				return node.Update(newWikiTable);
 			}
 			return node;   
 		}
@@ -8726,11 +8909,23 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			return node.Update(tHorizontalLine, inlineText);
 		}
 		
+		public virtual SyntaxNode VisitCodeBlock(CodeBlockSyntax node)
+		{
+		    var spaceBlock = this.VisitList(node.SpaceBlock);
+			return node.Update(spaceBlock);
+		}
+		
 		public virtual SyntaxNode VisitSpaceBlock(SpaceBlockSyntax node)
 		{
 		    var tSpaceBlockStart = this.VisitToken(node.TSpaceBlockStart);
 		    var inlineText = (InlineTextSyntax)this.Visit(node.InlineText);
 			return node.Update(tSpaceBlockStart, inlineText);
+		}
+		
+		public virtual SyntaxNode VisitWikiList(WikiListSyntax node)
+		{
+		    var listItem = this.VisitList(node.ListItem);
+			return node.Update(listItem);
 		}
 		
 		public virtual SyntaxNode VisitListItem(ListItemSyntax node)
@@ -8766,7 +8961,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			return node.Update(tDefinitionStart, definitionText, tColon, inlineText);
 		}
 		
-		public virtual SyntaxNode VisitTable(TableSyntax node)
+		public virtual SyntaxNode VisitWikiTable(WikiTableSyntax node)
 		{
 		    var tTableStart = this.VisitToken(node.TTableStart);
 		    var leadingInlineText = (InlineTextSyntax)this.Visit(node.LeadingInlineText);
@@ -8877,11 +9072,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		public virtual SyntaxNode VisitTableCell(TableCellSyntax node)
 		{
 		    var cellText = (CellTextSyntax)this.Visit(node.CellText);
-		    var cellTextOpt = this.VisitList(node.CellTextOpt);
-			return node.Update(cellText, cellTextOpt);
+		    var cellValue = (CellValueSyntax)this.Visit(node.CellValue);
+			return node.Update(cellText, cellValue);
 		}
 		
-		public virtual SyntaxNode VisitCellTextOpt(CellTextOptSyntax node)
+		public virtual SyntaxNode VisitCellValue(CellValueSyntax node)
 		{
 		    var tBar = this.VisitToken(node.TBar);
 		    var cellText = (CellTextSyntax)this.Visit(node.CellText);
@@ -9888,22 +10083,22 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.HorizontalRuleGreen)horizontalRule.Green).CreateRed();
 		}
 		
-		public SpecialBlockSyntax SpecialBlock(SpaceBlockSyntax spaceBlock)
+		public SpecialBlockSyntax SpecialBlock(CodeBlockSyntax codeBlock)
 		{
-		    if (spaceBlock == null) throw new ArgumentNullException(nameof(spaceBlock));
-		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.SpaceBlockGreen)spaceBlock.Green).CreateRed();
+		    if (codeBlock == null) throw new ArgumentNullException(nameof(codeBlock));
+		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.CodeBlockGreen)codeBlock.Green).CreateRed();
 		}
 		
-		public SpecialBlockSyntax SpecialBlock(ListItemSyntax listItem)
+		public SpecialBlockSyntax SpecialBlock(WikiListSyntax wikiList)
 		{
-		    if (listItem == null) throw new ArgumentNullException(nameof(listItem));
-		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.ListItemGreen)listItem.Green).CreateRed();
+		    if (wikiList == null) throw new ArgumentNullException(nameof(wikiList));
+		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.WikiListGreen)wikiList.Green).CreateRed();
 		}
 		
-		public SpecialBlockSyntax SpecialBlock(TableSyntax table)
+		public SpecialBlockSyntax SpecialBlock(WikiTableSyntax wikiTable)
 		{
-		    if (table == null) throw new ArgumentNullException(nameof(table));
-		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.TableGreen)table.Green).CreateRed();
+		    if (wikiTable == null) throw new ArgumentNullException(nameof(wikiTable));
+		    return (SpecialBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.SpecialBlock((Syntax.InternalSyntax.WikiTableGreen)wikiTable.Green).CreateRed();
 		}
 		
 		public HeadingSyntax Heading(HeadingLevelSyntax headingStart, HeadingTextSyntax headingText, HeadingLevelSyntax headingEnd, InlineTextSyntax inlineText)
@@ -9938,6 +10133,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			return this.HorizontalRule(tHorizontalLine, null);
 		}
 		
+		public CodeBlockSyntax CodeBlock(SeparatedSyntaxNodeList<SpaceBlockSyntax> spaceBlock)
+		{
+		    if (spaceBlock == null) throw new ArgumentNullException(nameof(spaceBlock));
+		    return (CodeBlockSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.CodeBlock(spaceBlock.Green).CreateRed();
+		}
+		
 		public SpaceBlockSyntax SpaceBlock(SyntaxToken tSpaceBlockStart, InlineTextSyntax inlineText)
 		{
 		    if (tSpaceBlockStart == null) throw new ArgumentNullException(nameof(tSpaceBlockStart));
@@ -9948,6 +10149,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		public SpaceBlockSyntax SpaceBlock()
 		{
 			return this.SpaceBlock(this.Token(MediaWikiSyntaxKind.TSpaceBlockStart), null);
+		}
+		
+		public WikiListSyntax WikiList(SeparatedSyntaxNodeList<ListItemSyntax> listItem)
+		{
+		    if (listItem == null) throw new ArgumentNullException(nameof(listItem));
+		    return (WikiListSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.WikiList(listItem.Green).CreateRed();
 		}
 		
 		public ListItemSyntax ListItem(NormalListItemSyntax normalListItem)
@@ -9989,7 +10196,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			return this.DefinitionItem(tDefinitionStart, null, this.Token(MediaWikiSyntaxKind.TColon), inlineText);
 		}
 		
-		public TableSyntax Table(SyntaxToken tTableStart, InlineTextSyntax leadingInlineText, SyntaxToken crlf, TableCaptionSyntax tableCaption, TableRowsSyntax tableRows, SyntaxToken tTableEnd, InlineTextSyntax trailingInlineText)
+		public WikiTableSyntax WikiTable(SyntaxToken tTableStart, InlineTextSyntax leadingInlineText, SyntaxToken crlf, TableCaptionSyntax tableCaption, TableRowsSyntax tableRows, SyntaxToken tTableEnd, InlineTextSyntax trailingInlineText)
 		{
 		    if (tTableStart == null) throw new ArgumentNullException(nameof(tTableStart));
 		    if (tTableStart.RawKind != (int)MediaWikiSyntaxKind.TTableStart) throw new ArgumentException(nameof(tTableStart));
@@ -9998,12 +10205,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		    if (tableRows == null) throw new ArgumentNullException(nameof(tableRows));
 		    if (tTableEnd == null) throw new ArgumentNullException(nameof(tTableEnd));
 		    if (tTableEnd.RawKind != (int)MediaWikiSyntaxKind.TTableEnd) throw new ArgumentException(nameof(tTableEnd));
-		    return (TableSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.Table((InternalSyntaxToken)tTableStart.Green, leadingInlineText == null ? null : (Syntax.InternalSyntax.InlineTextGreen)leadingInlineText.Green, (InternalSyntaxToken)crlf.Green, tableCaption == null ? null : (Syntax.InternalSyntax.TableCaptionGreen)tableCaption.Green, (Syntax.InternalSyntax.TableRowsGreen)tableRows.Green, (InternalSyntaxToken)tTableEnd.Green, trailingInlineText == null ? null : (Syntax.InternalSyntax.InlineTextGreen)trailingInlineText.Green).CreateRed();
+		    return (WikiTableSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.WikiTable((InternalSyntaxToken)tTableStart.Green, leadingInlineText == null ? null : (Syntax.InternalSyntax.InlineTextGreen)leadingInlineText.Green, (InternalSyntaxToken)crlf.Green, tableCaption == null ? null : (Syntax.InternalSyntax.TableCaptionGreen)tableCaption.Green, (Syntax.InternalSyntax.TableRowsGreen)tableRows.Green, (InternalSyntaxToken)tTableEnd.Green, trailingInlineText == null ? null : (Syntax.InternalSyntax.InlineTextGreen)trailingInlineText.Green).CreateRed();
 		}
 		
-		public TableSyntax Table(SyntaxToken tTableStart, SyntaxToken crlf, TableRowsSyntax tableRows)
+		public WikiTableSyntax WikiTable(SyntaxToken tTableStart, SyntaxToken crlf, TableRowsSyntax tableRows)
 		{
-			return this.Table(tTableStart, null, crlf, null, tableRows, this.Token(MediaWikiSyntaxKind.TTableEnd), null);
+			return this.WikiTable(tTableStart, null, crlf, null, tableRows, this.Token(MediaWikiSyntaxKind.TTableEnd), null);
 		}
 		
 		public TableCaptionSyntax TableCaption(SyntaxToken tTableCaptionStart, InlineTextSyntax inlineText, SyntaxToken crlf, SyntaxNodeList<SpecialBlockOrParagraphSyntax> specialBlockOrParagraph)
@@ -10137,27 +10344,26 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 			return this.TableCells(tBar, tableCell, crlf, null);
 		}
 		
-		public TableCellSyntax TableCell(CellTextSyntax cellText, SyntaxNodeList<CellTextOptSyntax> cellTextOpt)
+		public TableCellSyntax TableCell(CellTextSyntax cellText, CellValueSyntax cellValue)
 		{
-		    if (cellText == null) throw new ArgumentNullException(nameof(cellText));
-		    return (TableCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableCell((Syntax.InternalSyntax.CellTextGreen)cellText.Green, cellTextOpt == null ? null : cellTextOpt.Green).CreateRed();
+		    return (TableCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableCell(cellText == null ? null : (Syntax.InternalSyntax.CellTextGreen)cellText.Green, cellValue == null ? null : (Syntax.InternalSyntax.CellValueGreen)cellValue.Green).CreateRed();
 		}
 		
-		public TableCellSyntax TableCell(CellTextSyntax cellText)
+		public TableCellSyntax TableCell()
 		{
-			return this.TableCell(cellText, null);
+			return this.TableCell(null, null);
 		}
 		
-		public CellTextOptSyntax CellTextOpt(SyntaxToken tBar, CellTextSyntax cellText)
+		public CellValueSyntax CellValue(SyntaxToken tBar, CellTextSyntax cellText)
 		{
 		    if (tBar == null) throw new ArgumentNullException(nameof(tBar));
 		    if (tBar.RawKind != (int)MediaWikiSyntaxKind.TBar) throw new ArgumentException(nameof(tBar));
-		    return (CellTextOptSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.CellTextOpt((InternalSyntaxToken)tBar.Green, cellText == null ? null : (Syntax.InternalSyntax.CellTextGreen)cellText.Green).CreateRed();
+		    return (CellValueSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.CellValue((InternalSyntaxToken)tBar.Green, cellText == null ? null : (Syntax.InternalSyntax.CellTextGreen)cellText.Green).CreateRed();
 		}
 		
-		public CellTextOptSyntax CellTextOpt(SyntaxToken tBar)
+		public CellValueSyntax CellValue(SyntaxToken tBar)
 		{
-			return this.CellTextOpt(tBar, null);
+			return this.CellValue(tBar, null);
 		}
 		
 		public ParagraphSyntax Paragraph(SyntaxNodeList<TextLineSyntax> textLine)
@@ -10674,11 +10880,13 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 				typeof(HeadingSyntax),
 				typeof(HeadingLevelSyntax),
 				typeof(HorizontalRuleSyntax),
+				typeof(CodeBlockSyntax),
 				typeof(SpaceBlockSyntax),
+				typeof(WikiListSyntax),
 				typeof(ListItemSyntax),
 				typeof(NormalListItemSyntax),
 				typeof(DefinitionItemSyntax),
-				typeof(TableSyntax),
+				typeof(WikiTableSyntax),
 				typeof(TableCaptionSyntax),
 				typeof(TableRowsSyntax),
 				typeof(TableFirstRowSyntax),
@@ -10689,7 +10897,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 				typeof(TableSingleCellSyntax),
 				typeof(TableCellsSyntax),
 				typeof(TableCellSyntax),
-				typeof(CellTextOptSyntax),
+				typeof(CellValueSyntax),
 				typeof(ParagraphSyntax),
 				typeof(TextLineInlineElementsWithCommentSyntax),
 				typeof(TextLineCommentSyntax),

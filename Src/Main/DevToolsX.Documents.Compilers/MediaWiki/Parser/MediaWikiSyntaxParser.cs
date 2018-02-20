@@ -59,22 +59,18 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			private MediaWikiGreenFactory factory;
             private MediaWikiSyntaxParser syntaxParser;
 			private IList<IToken> tokens;
-            private IToken lastToken;
+            private IToken lastTokenOrTrivia;
             public Antlr4ToRoslynVisitor(MediaWikiSyntaxParser syntaxParser)
             {
                 this.language = MediaWikiLanguage.Instance;
 				this.factory = language.InternalSyntaxFactory;
                 this.syntaxParser = syntaxParser;
 				this.tokens = this.syntaxParser.CommonTokenStream.GetTokens();
-                this.lastToken = null;
+                this.lastTokenOrTrivia = null;
             }
             public override GreenNode VisitTerminal(ITerminalNode node)
             {
-                GreenNode result = this.syntaxParser.VisitTerminal(node, ref this.lastToken);
-                if (result != null && !result.IsMissing)
-                {
-                    this.lastToken = node.Symbol;
-                }
+                GreenNode result = this.syntaxParser.VisitTerminal(node, ref this.lastTokenOrTrivia);
                 return result;
             }
 			
@@ -146,20 +142,20 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				{
 					return this.factory.SpecialBlock((HorizontalRuleGreen)this.Visit(horizontalRuleContext), true);
 				}
-				MediaWikiParser.SpaceBlockContext spaceBlockContext = context.spaceBlock();
-				if (spaceBlockContext != null) 
+				MediaWikiParser.CodeBlockContext codeBlockContext = context.codeBlock();
+				if (codeBlockContext != null) 
 				{
-					return this.factory.SpecialBlock((SpaceBlockGreen)this.Visit(spaceBlockContext), true);
+					return this.factory.SpecialBlock((CodeBlockGreen)this.Visit(codeBlockContext), true);
 				}
-				MediaWikiParser.ListItemContext listItemContext = context.listItem();
-				if (listItemContext != null) 
+				MediaWikiParser.WikiListContext wikiListContext = context.wikiList();
+				if (wikiListContext != null) 
 				{
-					return this.factory.SpecialBlock((ListItemGreen)this.Visit(listItemContext), true);
+					return this.factory.SpecialBlock((WikiListGreen)this.Visit(wikiListContext), true);
 				}
-				MediaWikiParser.TableContext tableContext = context.table();
-				if (tableContext != null) 
+				MediaWikiParser.WikiTableContext wikiTableContext = context.wikiTable();
+				if (wikiTableContext != null) 
 				{
-					return this.factory.SpecialBlock((TableGreen)this.Visit(tableContext), true);
+					return this.factory.SpecialBlock((WikiTableGreen)this.Visit(wikiTableContext), true);
 				}
 				return null;
 			}
@@ -214,6 +210,24 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				return this.factory.HorizontalRule(tHorizontalLine, inlineText, true);
 			}
 			
+			public override GreenNode VisitCodeBlock(MediaWikiParser.CodeBlockContext context)
+			{
+				if (context == null) return null;
+			    MediaWikiParser.SpaceBlockContext[] spaceBlockContext = context.spaceBlock();
+			    ITerminalNode[] crlfContext = context.CRLF();
+			    ArrayBuilder<GreenNode> spaceBlockBuilder = ArrayBuilder<GreenNode>.GetInstance(spaceBlockContext.Length+crlfContext.Length);
+			    for (int i = 0; i < spaceBlockContext.Length; i++)
+			    {
+			        spaceBlockBuilder.Add((SpaceBlockGreen)this.Visit(spaceBlockContext[i]));
+			        if (i < crlfContext.Length)
+			        {
+			            spaceBlockBuilder.Add((InternalSyntaxToken)this.VisitTerminal(crlfContext[i]));
+			        }
+			    }
+				InternalSeparatedSyntaxNodeList spaceBlock = InternalSeparatedSyntaxNodeList.Create(spaceBlockBuilder.ToArrayAndFree());
+				return this.factory.CodeBlock(spaceBlock, true);
+			}
+			
 			public override GreenNode VisitSpaceBlock(MediaWikiParser.SpaceBlockContext context)
 			{
 				if (context == null) return null;
@@ -225,6 +239,24 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 					inlineText = (InlineTextGreen)this.Visit(inlineTextContext);
 				}
 				return this.factory.SpaceBlock(tSpaceBlockStart, inlineText, true);
+			}
+			
+			public override GreenNode VisitWikiList(MediaWikiParser.WikiListContext context)
+			{
+				if (context == null) return null;
+			    MediaWikiParser.ListItemContext[] listItemContext = context.listItem();
+			    ITerminalNode[] crlfContext = context.CRLF();
+			    ArrayBuilder<GreenNode> listItemBuilder = ArrayBuilder<GreenNode>.GetInstance(listItemContext.Length+crlfContext.Length);
+			    for (int i = 0; i < listItemContext.Length; i++)
+			    {
+			        listItemBuilder.Add((ListItemGreen)this.Visit(listItemContext[i]));
+			        if (i < crlfContext.Length)
+			        {
+			            listItemBuilder.Add((InternalSyntaxToken)this.VisitTerminal(crlfContext[i]));
+			        }
+			    }
+				InternalSeparatedSyntaxNodeList listItem = InternalSeparatedSyntaxNodeList.Create(listItemBuilder.ToArrayAndFree());
+				return this.factory.WikiList(listItem, true);
 			}
 			
 			public override GreenNode VisitListItem(MediaWikiParser.ListItemContext context)
@@ -276,7 +308,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				return this.factory.DefinitionItem(tDefinitionStart, definitionText, tColon, inlineText, true);
 			}
 			
-			public override GreenNode VisitTable(MediaWikiParser.TableContext context)
+			public override GreenNode VisitWikiTable(MediaWikiParser.WikiTableContext context)
 			{
 				if (context == null) return null;
 				InternalSyntaxToken tTableStart = (InternalSyntaxToken)this.VisitTerminal(context.TTableStart());
@@ -306,7 +338,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				{
 					trailingInlineText = (InlineTextGreen)this.Visit(trailingInlineTextContext);
 				}
-				return this.factory.Table(tTableStart, leadingInlineText, crlf, tableCaption, tableRows, tTableEnd, trailingInlineText, true);
+				return this.factory.WikiTable(tTableStart, leadingInlineText, crlf, tableCaption, tableRows, tTableEnd, trailingInlineText, true);
 			}
 			
 			public override GreenNode VisitTableCaption(MediaWikiParser.TableCaptionContext context)
@@ -514,17 +546,16 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				{
 					cellText = (CellTextGreen)this.Visit(cellTextContext);
 				}
-			    MediaWikiParser.CellTextOptContext[] cellTextOptContext = context.cellTextOpt();
-			    ArrayBuilder<CellTextOptGreen> cellTextOptBuilder = ArrayBuilder<CellTextOptGreen>.GetInstance(cellTextOptContext.Length);
-			    for (int i = 0; i < cellTextOptContext.Length; i++)
-			    {
-			        cellTextOptBuilder.Add((CellTextOptGreen)this.Visit(cellTextOptContext[i]));
-			    }
-				InternalSyntaxNodeList cellTextOpt = InternalSyntaxNodeList.Create(cellTextOptBuilder.ToArrayAndFree());
-				return this.factory.TableCell(cellText, cellTextOpt, true);
+				MediaWikiParser.CellValueContext cellValueContext = context.cellValue();
+				CellValueGreen cellValue = null;
+				if (cellValueContext != null)
+				{
+					cellValue = (CellValueGreen)this.Visit(cellValueContext);
+				}
+				return this.factory.TableCell(cellText, cellValue, true);
 			}
 			
-			public override GreenNode VisitCellTextOpt(MediaWikiParser.CellTextOptContext context)
+			public override GreenNode VisitCellValue(MediaWikiParser.CellValueContext context)
 			{
 				if (context == null) return null;
 				InternalSyntaxToken tBar = (InternalSyntaxToken)this.VisitTerminal(context.TBar());
@@ -534,7 +565,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				{
 					cellText = (CellTextGreen)this.Visit(cellTextContext);
 				}
-				return this.factory.CellTextOpt(tBar, cellText, true);
+				return this.factory.CellValue(tBar, cellText, true);
 			}
 			
 			public override GreenNode VisitParagraph(MediaWikiParser.ParagraphContext context)

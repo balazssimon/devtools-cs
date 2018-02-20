@@ -47,9 +47,9 @@ specialBlockWithComment
 specialBlock
     : heading
     | horizontalRule
-    | spaceBlock
-    | listItem
-    | table
+    | codeBlock
+    | wikiList
+    | wikiTable
     ;
 
 heading : headingStart=headingLevel (headingText headingEnd=headingLevel)? inlineText?;
@@ -58,17 +58,18 @@ headingLevel : THeading;
 
 horizontalRule : THorizontalLine inlineText?;
 
+codeBlock : spaceBlock (CRLF spaceBlock)*;
 spaceBlock : TSpaceBlockStart inlineText?;
 
+wikiList : listItem (CRLF listItem)*;
 listItem
     : normalListItem
     | definitionItem;
-
 normalListItem : TListStart inlineText?;
 definitionItem : TDefinitionStart definitionText? (TColon inlineText)?;
 
 
-table : TTableStart leadingInlineText=inlineText? CRLF tableCaption? tableRows TTableEnd trailingInlineText=inlineText?;
+wikiTable : TTableStart leadingInlineText=inlineText? CRLF tableCaption? tableRows TTableEnd trailingInlineText=inlineText?;
 
 tableCaption : TTableCaptionStart inlineText? CRLF specialBlockOrParagraph*;
 tableRows : tableFirstRow tableRow*;
@@ -84,9 +85,9 @@ tableSingleHeaderCell : TExclamation tableCell? CRLF specialBlockOrParagraph*;
 tableHeaderCells : TExclamation tableCell (TExclExcl tableCell)* CRLF specialBlockOrParagraph*;
 tableSingleCell : TBar tableCell? CRLF specialBlockOrParagraph*;
 tableCells : TBar tableCell (TBarBar tableCell)* CRLF specialBlockOrParagraph*;
-tableCell : cellText cellTextOpt*;
+tableCell : cellText? cellValue?;
 
-cellTextOpt : TBar cellText?;
+cellValue : TBar cellText?;
 
 paragraph : textLine+;
 textLine

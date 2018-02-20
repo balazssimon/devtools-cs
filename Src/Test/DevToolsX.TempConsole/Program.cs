@@ -1,8 +1,14 @@
-﻿using DevToolsX.Documents.Compilers.MediaWiki;
+﻿using DevToolsX.Documents;
+using DevToolsX.Documents.Compilers.MediaWiki;
 using DevToolsX.Documents.Compilers.MediaWiki.Syntax;
+using DevToolsX.Documents.Office;
+using DevToolsX.Documents.Symbols;
 using MetaDslx.Compiler.Syntax;
 using MetaDslx.Compiler.Text;
+using MetaDslx.Core;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DevToolsX.TempConsole
 {
@@ -10,54 +16,52 @@ namespace DevToolsX.TempConsole
     {
         static void Main(string[] args)
         {
-            MediaWikiSyntaxTree tree = MediaWikiSyntaxTree.ParseText(
-@"= Hello =
-World
+            try
+            {
+                string text =
+    @"= Hello =
+World ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65;
 *World2
 *World3
+*#AAA
+*#BBB
+***CCC
+*#DDD
+*#EEE
+*FFF
+*;aaa
+*:bbb
+*;ccc
+*:ddd
+*:eee
+;xxx
+:yyy
+;zzz
+:www
+:ttt
 World4
+ code
+ block
 == Bello ==
-Rorld");
-            Console.WriteLine(tree);
-            var root = tree.GetRoot();
-            Console.WriteLine("----");
-            var mwvt = new MediaWikiVisitorTest();
-            root.Accept(mwvt);
-        }
-    }
-
-    class MediaWikiVisitorTest : MediaWikiSyntaxVisitor
-    {
-        public override void DefaultVisit(SyntaxNode node)
-        {
-            foreach (var child in node.ChildNodes())
-            {
-                child.Accept(this);
+Rorld";
+                ImmutableModel model = MediaWikiToDocumentModel.Compile(text);
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
+                {
+                    printer.Print();
+                }
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateLatexDocument("test.tex")))
+                {
+                    printer.Print();
+                }
+                /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx"))))
+                {
+                    printer.Print();
+                }*/
             }
-        }
-
-        public override void VisitMain(MainSyntax node)
-        {
-            base.VisitMain(node);
-        }
-
-        public override void VisitParagraph(ParagraphSyntax node)
-        {
-            Console.WriteLine("Paragraph text: "+node.GetText());
-            base.VisitParagraph(node);
-        }
-
-        public override void VisitHeading(HeadingSyntax node)
-        {
-            Console.WriteLine("Heading level: "+node.HeadingStart.GetText().Length);
-            Console.WriteLine("Heading text: "+node.HeadingText.GetText());
-            base.VisitHeading(node);
-        }
-
-        public override void VisitListItem(ListItemSyntax node)
-        {
-            Console.WriteLine("List item: " + node.GetText());
-            base.VisitListItem(node);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 

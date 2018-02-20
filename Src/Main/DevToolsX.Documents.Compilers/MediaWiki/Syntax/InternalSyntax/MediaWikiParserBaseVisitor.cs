@@ -105,6 +105,16 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// <return>The visitor result.</return>
 	public virtual Result VisitHorizontalRule([NotNull] MediaWikiParser.HorizontalRuleContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.codeBlock"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitCodeBlock([NotNull] MediaWikiParser.CodeBlockContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.spaceBlock"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -114,6 +124,16 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitSpaceBlock([NotNull] MediaWikiParser.SpaceBlockContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.wikiList"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitWikiList([NotNull] MediaWikiParser.WikiListContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.listItem"/>.
 	/// <para>
@@ -145,7 +165,7 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// <return>The visitor result.</return>
 	public virtual Result VisitDefinitionItem([NotNull] MediaWikiParser.DefinitionItemContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MediaWikiParser.table"/>.
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.wikiTable"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -153,7 +173,7 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTable([NotNull] MediaWikiParser.TableContext context) { return VisitChildren(context); }
+	public virtual Result VisitWikiTable([NotNull] MediaWikiParser.WikiTableContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.tableCaption"/>.
 	/// <para>
@@ -255,7 +275,7 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// <return>The visitor result.</return>
 	public virtual Result VisitTableCell([NotNull] MediaWikiParser.TableCellContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MediaWikiParser.cellTextOpt"/>.
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -263,7 +283,7 @@ public partial class MediaWikiParserBaseVisitor<Result> : AbstractParseTreeVisit
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCellTextOpt([NotNull] MediaWikiParser.CellTextOptContext context) { return VisitChildren(context); }
+	public virtual Result VisitCellValue([NotNull] MediaWikiParser.CellValueContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.paragraph"/>.
 	/// <para>

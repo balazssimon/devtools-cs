@@ -6,5 +6,6 @@ namespace DevToolsX.Documents.Symbols
 {
     internal class DocumentModelImplementation : Internal.DocumentModelImplementationBase
     {
+
     }
 }

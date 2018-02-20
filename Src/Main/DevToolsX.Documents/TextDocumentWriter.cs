@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevToolsX.Documents.Symbols;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,8 +50,8 @@ namespace DevToolsX.Documents
         public abstract void Write(string text);
         public abstract void WriteLine();
         public abstract void EndParagraph();
-        public abstract void BeginMarkup(DocumentMarkupKind markupKind);
-        public abstract void EndMarkup(DocumentMarkupKind markupKind);
+        public abstract void BeginMarkup(MarkupKind markupKind);
+        public abstract void EndMarkup(MarkupKind markupKind);
         public abstract void AddLabel(string id);
         public abstract void BeginReference(string document, string id);
         public abstract void EndReference(string document, string id);

@@ -56,7 +56,15 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 		{
 		}
 		
+		public virtual void VisitCodeBlock(CodeBlockSyntax node)
+		{
+		}
+		
 		public virtual void VisitSpaceBlock(SpaceBlockSyntax node)
+		{
+		}
+		
+		public virtual void VisitWikiList(WikiListSyntax node)
 		{
 		}
 		
@@ -72,7 +80,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 		{
 		}
 		
-		public virtual void VisitTable(TableSyntax node)
+		public virtual void VisitWikiTable(WikiTableSyntax node)
 		{
 		}
 		
@@ -116,7 +124,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 		{
 		}
 		
-		public virtual void VisitCellTextOpt(CellTextOptSyntax node)
+		public virtual void VisitCellValue(CellValueSyntax node)
 		{
 		}
 		

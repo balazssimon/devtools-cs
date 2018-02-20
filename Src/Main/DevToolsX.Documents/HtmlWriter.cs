@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using DevToolsX.Documents.Symbols;
 
 namespace DevToolsX.Documents
 {
@@ -153,53 +154,53 @@ namespace DevToolsX.Documents
             }
         }
 
-        public override void BeginMarkup(DocumentMarkupKind markupKind)
+        public override void BeginMarkup(MarkupKind markupKind)
         {
             switch (markupKind)
             {
-                case DocumentMarkupKind.Bold:
+                case MarkupKind.Bold:
                     Writer.Write(@"<b>");
                     break;
-                case DocumentMarkupKind.Italic:
+                case MarkupKind.Italic:
                     Writer.Write(@"<i>");
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     Writer.WriteLine();
                     Writer.WriteLine(@"<pre><code>");
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     Writer.Write(@"<code>");
                     break;
                 default:
-                    throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
             }
-            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
             {
                 this.isInCode = true;
             }
         }
 
-        public override void EndMarkup(DocumentMarkupKind markupKind)
+        public override void EndMarkup(MarkupKind markupKind)
         {
             switch (markupKind)
             {
-                case DocumentMarkupKind.Bold:
+                case MarkupKind.Bold:
                     Writer.Write(@"</b>");
                     break;
-                case DocumentMarkupKind.Italic:
+                case MarkupKind.Italic:
                     Writer.Write(@"</i>");
                     break;
-                case DocumentMarkupKind.Code:
+                case MarkupKind.Code:
                     Writer.WriteLine(@"</code></pre>");
                     Writer.WriteLine();
                     break;
-                case DocumentMarkupKind.CodeInline:
+                case MarkupKind.CodeInline:
                     Writer.Write(@"</code>");
                     break;
                 default:
-                    throw new DocumentException("Invalid DocumentMarkupKind: " + markupKind);
+                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
             }
-            if (markupKind == DocumentMarkupKind.Code || markupKind == DocumentMarkupKind.CodeInline)
+            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
             {
                 this.isInCode = false;
             }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Symbols\DocumentModel.mm~RF1f00e0a3.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="MetaDslx.Core">
       <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
     </Reference>

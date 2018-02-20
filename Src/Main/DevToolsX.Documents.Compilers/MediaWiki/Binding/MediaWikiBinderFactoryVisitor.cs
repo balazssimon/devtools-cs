@@ -147,7 +147,41 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 			return resultBinder;
 		}
 		
+		public Binder VisitCodeBlock(CodeBlockSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
 		public Binder VisitSpaceBlock(SpaceBlockSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitWikiList(WikiListSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
 		    if (!node.FullSpan.Contains(this.Position))
@@ -215,7 +249,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 			return resultBinder;
 		}
 		
-		public Binder VisitTable(TableSyntax node)
+		public Binder VisitWikiTable(WikiTableSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
 		    if (!node.FullSpan.Contains(this.Position))
@@ -402,7 +436,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 			return resultBinder;
 		}
 		
-		public Binder VisitCellTextOpt(CellTextOptSyntax node)
+		public Binder VisitCellValue(CellValueSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
 		    if (!node.FullSpan.Contains(this.Position))

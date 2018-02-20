@@ -26,32 +26,28 @@ namespace DevToolsX.Documents.Symbols
 	
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Document;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Document_Title;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Document_Sections;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Section;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Section_Title;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Section_Subsections;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Section_Paragraphs;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Content;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass ContentList;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty ContentList_Items;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass ContentContainer;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty ContentContainer_Text;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass SectionTitle;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty SectionTitle_Level;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty SectionTitle_Title;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty SectionTitle_Label;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Paragraph;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Paragraph_Alignment;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Paragraph_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Text_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Label;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Label_Name;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Reference;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Reference_Target;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Reference_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Markup;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Markup_Kind;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Markup_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass List;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty List_Kind;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty List_Items;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass ListItem;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty ListItem_Title;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty ListItem_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Table;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Table_HeadColumnCount;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Table_HeadRowCount;
@@ -59,10 +55,10 @@ namespace DevToolsX.Documents.Symbols
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Table_RowCount;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Table_Cells;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Cell;
-		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Cell_Text;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Image;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Image_FilePath;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass PageBreak;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass TableOfContents;
 	
 		static DocumentModelInstance()
 		{
@@ -74,32 +70,28 @@ namespace DevToolsX.Documents.Symbols
 	
 			Document = DocumentModelBuilderInstance.instance.Document.ToImmutable(Model);
 			Document_Title = DocumentModelBuilderInstance.instance.Document_Title.ToImmutable(Model);
-			Document_Sections = DocumentModelBuilderInstance.instance.Document_Sections.ToImmutable(Model);
-			Section = DocumentModelBuilderInstance.instance.Section.ToImmutable(Model);
-			Section_Title = DocumentModelBuilderInstance.instance.Section_Title.ToImmutable(Model);
-			Section_Subsections = DocumentModelBuilderInstance.instance.Section_Subsections.ToImmutable(Model);
-			Section_Paragraphs = DocumentModelBuilderInstance.instance.Section_Paragraphs.ToImmutable(Model);
 			Content = DocumentModelBuilderInstance.instance.Content.ToImmutable(Model);
-			ContentList = DocumentModelBuilderInstance.instance.ContentList.ToImmutable(Model);
-			ContentList_Items = DocumentModelBuilderInstance.instance.ContentList_Items.ToImmutable(Model);
+			ContentContainer = DocumentModelBuilderInstance.instance.ContentContainer.ToImmutable(Model);
+			ContentContainer_Text = DocumentModelBuilderInstance.instance.ContentContainer_Text.ToImmutable(Model);
+			SectionTitle = DocumentModelBuilderInstance.instance.SectionTitle.ToImmutable(Model);
+			SectionTitle_Level = DocumentModelBuilderInstance.instance.SectionTitle_Level.ToImmutable(Model);
+			SectionTitle_Title = DocumentModelBuilderInstance.instance.SectionTitle_Title.ToImmutable(Model);
+			SectionTitle_Label = DocumentModelBuilderInstance.instance.SectionTitle_Label.ToImmutable(Model);
 			Paragraph = DocumentModelBuilderInstance.instance.Paragraph.ToImmutable(Model);
 			Paragraph_Alignment = DocumentModelBuilderInstance.instance.Paragraph_Alignment.ToImmutable(Model);
-			Paragraph_Text = DocumentModelBuilderInstance.instance.Paragraph_Text.ToImmutable(Model);
 			Text = DocumentModelBuilderInstance.instance.Text.ToImmutable(Model);
 			Text_Text = DocumentModelBuilderInstance.instance.Text_Text.ToImmutable(Model);
 			Label = DocumentModelBuilderInstance.instance.Label.ToImmutable(Model);
 			Label_Name = DocumentModelBuilderInstance.instance.Label_Name.ToImmutable(Model);
 			Reference = DocumentModelBuilderInstance.instance.Reference.ToImmutable(Model);
 			Reference_Target = DocumentModelBuilderInstance.instance.Reference_Target.ToImmutable(Model);
-			Reference_Text = DocumentModelBuilderInstance.instance.Reference_Text.ToImmutable(Model);
 			Markup = DocumentModelBuilderInstance.instance.Markup.ToImmutable(Model);
 			Markup_Kind = DocumentModelBuilderInstance.instance.Markup_Kind.ToImmutable(Model);
-			Markup_Text = DocumentModelBuilderInstance.instance.Markup_Text.ToImmutable(Model);
 			List = DocumentModelBuilderInstance.instance.List.ToImmutable(Model);
+			List_Kind = DocumentModelBuilderInstance.instance.List_Kind.ToImmutable(Model);
 			List_Items = DocumentModelBuilderInstance.instance.List_Items.ToImmutable(Model);
 			ListItem = DocumentModelBuilderInstance.instance.ListItem.ToImmutable(Model);
 			ListItem_Title = DocumentModelBuilderInstance.instance.ListItem_Title.ToImmutable(Model);
-			ListItem_Text = DocumentModelBuilderInstance.instance.ListItem_Text.ToImmutable(Model);
 			Table = DocumentModelBuilderInstance.instance.Table.ToImmutable(Model);
 			Table_HeadColumnCount = DocumentModelBuilderInstance.instance.Table_HeadColumnCount.ToImmutable(Model);
 			Table_HeadRowCount = DocumentModelBuilderInstance.instance.Table_HeadRowCount.ToImmutable(Model);
@@ -107,10 +99,10 @@ namespace DevToolsX.Documents.Symbols
 			Table_RowCount = DocumentModelBuilderInstance.instance.Table_RowCount.ToImmutable(Model);
 			Table_Cells = DocumentModelBuilderInstance.instance.Table_Cells.ToImmutable(Model);
 			Cell = DocumentModelBuilderInstance.instance.Cell.ToImmutable(Model);
-			Cell_Text = DocumentModelBuilderInstance.instance.Cell_Text.ToImmutable(Model);
 			Image = DocumentModelBuilderInstance.instance.Image.ToImmutable(Model);
 			Image_FilePath = DocumentModelBuilderInstance.instance.Image_FilePath.ToImmutable(Model);
 			PageBreak = DocumentModelBuilderInstance.instance.PageBreak.ToImmutable(Model);
+			TableOfContents = DocumentModelBuilderInstance.instance.TableOfContents.ToImmutable(Model);
 	
 			DocumentModelInstance.initialized = true;
 		}
@@ -132,8 +124,7 @@ namespace DevToolsX.Documents.Symbols
 			switch (type)
 			{
 				case "Document": return this.Document();
-				case "Section": return this.Section();
-				case "ContentList": return this.ContentList();
+				case "SectionTitle": return this.SectionTitle();
 				case "Paragraph": return this.Paragraph();
 				case "Text": return this.Text();
 				case "Label": return this.Label();
@@ -145,6 +136,7 @@ namespace DevToolsX.Documents.Symbols
 				case "Cell": return this.Cell();
 				case "Image": return this.Image();
 				case "PageBreak": return this.PageBreak();
+				case "TableOfContents": return this.TableOfContents();
 				default:
 					throw new global::MetaDslx.Core.ModelException(global::MetaDslx.Compiler.Diagnostics.Location.None, new global::MetaDslx.Compiler.Diagnostics.DiagnosticInfo(global::MetaDslx.Core.ModelErrorCode.ERR_UnknownTypeName, type));
 			}
@@ -160,21 +152,12 @@ namespace DevToolsX.Documents.Symbols
 		}
 	
 		/// <summary>
-		/// Creates a new instance of Section.
+		/// Creates a new instance of SectionTitle.
 		/// </summary>
-		public SectionBuilder Section()
+		public SectionTitleBuilder SectionTitle()
 		{
-			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new SectionId());
-			return (SectionBuilder)symbol;
-		}
-	
-		/// <summary>
-		/// Creates a new instance of ContentList.
-		/// </summary>
-		public ContentListBuilder ContentList()
-		{
-			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new ContentListId());
-			return (ContentListBuilder)symbol;
+			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new SectionTitleId());
+			return (SectionTitleBuilder)symbol;
 		}
 	
 		/// <summary>
@@ -275,6 +258,15 @@ namespace DevToolsX.Documents.Symbols
 			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new PageBreakId());
 			return (PageBreakBuilder)symbol;
 		}
+	
+		/// <summary>
+		/// Creates a new instance of TableOfContents.
+		/// </summary>
+		public TableOfContentsBuilder TableOfContents()
+		{
+			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new TableOfContentsId());
+			return (TableOfContentsBuilder)symbol;
+		}
 	}
 	
 
@@ -309,46 +301,49 @@ namespace DevToolsX.Documents.Symbols
 	{
 	}
 	
-	public interface Document : global::MetaDslx.Core.ImmutableSymbol
+	public enum VerticalAlignment
+	{
+		Default,
+		Top,
+		Center,
+		Bottom
+	}
+	
+	public static class VerticalAlignmentExtensions
+	{
+	}
+	
+	public enum ListKind
+	{
+		None,
+		Indent,
+		Bullets,
+		Numbers,
+		RomanNumbers,
+		CapitalLetters,
+		SmallLetters
+	}
+	
+	public static class ListKindExtensions
+	{
+	}
+	
+	public interface Document : ContentContainer
 	{
 		string Title { get; }
-		global::MetaDslx.Core.ImmutableModelList<Section> Sections { get; }
 	
 	
 		new DocumentBuilder ToMutable();
 		new DocumentBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface DocumentBuilder : global::MetaDslx.Core.MutableSymbol
+	public interface DocumentBuilder : ContentContainerBuilder
 	{
 		string Title { get; set; }
 		Func<string> TitleLazy { get; set; }
-		global::MetaDslx.Core.MutableModelList<SectionBuilder> Sections { get; }
 	
 		new Document ToImmutable();
 		new Document ToImmutable(global::MetaDslx.Core.ImmutableModel model);
-	}
-	
-	public interface Section : global::MetaDslx.Core.ImmutableSymbol
-	{
-		string Title { get; }
-		global::MetaDslx.Core.ImmutableModelList<Section> Subsections { get; }
-		global::MetaDslx.Core.ImmutableModelList<Paragraph> Paragraphs { get; }
-	
-	
-		new SectionBuilder ToMutable();
-		new SectionBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
-	}
-	
-	public interface SectionBuilder : global::MetaDslx.Core.MutableSymbol
-	{
-		string Title { get; set; }
-		Func<string> TitleLazy { get; set; }
-		global::MetaDslx.Core.MutableModelList<SectionBuilder> Subsections { get; }
-		global::MetaDslx.Core.MutableModelList<ParagraphBuilder> Paragraphs { get; }
-	
-		new Section ToImmutable();
-		new Section ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
 	public interface Content : global::MetaDslx.Core.ImmutableSymbol
@@ -366,39 +361,60 @@ namespace DevToolsX.Documents.Symbols
 		new Content ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface ContentList : Content
+	public interface ContentContainer : Content
 	{
-		global::MetaDslx.Core.ImmutableModelList<Content> Items { get; }
+		global::MetaDslx.Core.ImmutableModelList<Content> Text { get; }
 	
 	
-		new ContentListBuilder ToMutable();
-		new ContentListBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
+		new ContentContainerBuilder ToMutable();
+		new ContentContainerBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface ContentListBuilder : ContentBuilder
+	public interface ContentContainerBuilder : ContentBuilder
 	{
-		global::MetaDslx.Core.MutableModelList<ContentBuilder> Items { get; }
+		global::MetaDslx.Core.MutableModelList<ContentBuilder> Text { get; }
 	
-		new ContentList ToImmutable();
-		new ContentList ToImmutable(global::MetaDslx.Core.ImmutableModel model);
+		new ContentContainer ToImmutable();
+		new ContentContainer ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface Paragraph : Content
+	public interface SectionTitle : Content
+	{
+		int Level { get; }
+		string Title { get; }
+		Label Label { get; }
+	
+	
+		new SectionTitleBuilder ToMutable();
+		new SectionTitleBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
+	}
+	
+	public interface SectionTitleBuilder : ContentBuilder
+	{
+		int Level { get; set; }
+		Func<int> LevelLazy { get; set; }
+		string Title { get; set; }
+		Func<string> TitleLazy { get; set; }
+		LabelBuilder Label { get; set; }
+		Func<LabelBuilder> LabelLazy { get; set; }
+	
+		new SectionTitle ToImmutable();
+		new SectionTitle ToImmutable(global::MetaDslx.Core.ImmutableModel model);
+	}
+	
+	public interface Paragraph : ContentContainer
 	{
 		HorizontalAlignment Alignment { get; }
-		Content Text { get; }
 	
 	
 		new ParagraphBuilder ToMutable();
 		new ParagraphBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface ParagraphBuilder : ContentBuilder
+	public interface ParagraphBuilder : ContentContainerBuilder
 	{
 		HorizontalAlignment Alignment { get; set; }
 		Func<HorizontalAlignment> AlignmentLazy { get; set; }
-		ContentBuilder Text { get; set; }
-		Func<ContentBuilder> TextLazy { get; set; }
 	
 		new Paragraph ToImmutable();
 		new Paragraph ToImmutable(global::MetaDslx.Core.ImmutableModel model);
@@ -440,43 +456,37 @@ namespace DevToolsX.Documents.Symbols
 		new Label ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface Reference : Content
+	public interface Reference : ContentContainer
 	{
 		Label Target { get; }
-		Content Text { get; }
 	
 	
 		new ReferenceBuilder ToMutable();
 		new ReferenceBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface ReferenceBuilder : ContentBuilder
+	public interface ReferenceBuilder : ContentContainerBuilder
 	{
 		LabelBuilder Target { get; set; }
 		Func<LabelBuilder> TargetLazy { get; set; }
-		ContentBuilder Text { get; set; }
-		Func<ContentBuilder> TextLazy { get; set; }
 	
 		new Reference ToImmutable();
 		new Reference ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface Markup : Content
+	public interface Markup : ContentContainer
 	{
 		MarkupKind Kind { get; }
-		Content Text { get; }
 	
 	
 		new MarkupBuilder ToMutable();
 		new MarkupBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface MarkupBuilder : ContentBuilder
+	public interface MarkupBuilder : ContentContainerBuilder
 	{
 		MarkupKind Kind { get; set; }
 		Func<MarkupKind> KindLazy { get; set; }
-		ContentBuilder Text { get; set; }
-		Func<ContentBuilder> TextLazy { get; set; }
 	
 		new Markup ToImmutable();
 		new Markup ToImmutable(global::MetaDslx.Core.ImmutableModel model);
@@ -484,6 +494,7 @@ namespace DevToolsX.Documents.Symbols
 	
 	public interface List : Content
 	{
+		ListKind Kind { get; }
 		global::MetaDslx.Core.ImmutableModelList<ListItem> Items { get; }
 	
 	
@@ -493,28 +504,27 @@ namespace DevToolsX.Documents.Symbols
 	
 	public interface ListBuilder : ContentBuilder
 	{
+		ListKind Kind { get; set; }
+		Func<ListKind> KindLazy { get; set; }
 		global::MetaDslx.Core.MutableModelList<ListItemBuilder> Items { get; }
 	
 		new List ToImmutable();
 		new List ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface ListItem : global::MetaDslx.Core.ImmutableSymbol
+	public interface ListItem : ContentContainer
 	{
 		string Title { get; }
-		Content Text { get; }
 	
 	
 		new ListItemBuilder ToMutable();
 		new ListItemBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface ListItemBuilder : global::MetaDslx.Core.MutableSymbol
+	public interface ListItemBuilder : ContentContainerBuilder
 	{
 		string Title { get; set; }
 		Func<string> TitleLazy { get; set; }
-		ContentBuilder Text { get; set; }
-		Func<ContentBuilder> TextLazy { get; set; }
 	
 		new ListItem ToImmutable();
 		new ListItem ToImmutable(global::MetaDslx.Core.ImmutableModel model);
@@ -549,19 +559,16 @@ namespace DevToolsX.Documents.Symbols
 		new Table ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
-	public interface Cell : global::MetaDslx.Core.ImmutableSymbol
+	public interface Cell : ContentContainer
 	{
-		Content Text { get; }
 	
 	
 		new CellBuilder ToMutable();
 		new CellBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
 	}
 	
-	public interface CellBuilder : global::MetaDslx.Core.MutableSymbol
+	public interface CellBuilder : ContentContainerBuilder
 	{
-		ContentBuilder Text { get; set; }
-		Func<ContentBuilder> TextLazy { get; set; }
 	
 		new Cell ToImmutable();
 		new Cell ToImmutable(global::MetaDslx.Core.ImmutableModel model);
@@ -599,6 +606,21 @@ namespace DevToolsX.Documents.Symbols
 		new PageBreak ToImmutable();
 		new PageBreak ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
+	
+	public interface TableOfContents : Content
+	{
+	
+	
+		new TableOfContentsBuilder ToMutable();
+		new TableOfContentsBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
+	}
+	
+	public interface TableOfContentsBuilder : ContentBuilder
+	{
+	
+		new TableOfContents ToImmutable();
+		new TableOfContents ToImmutable(global::MetaDslx.Core.ImmutableModel model);
+	}
 
 	public static class DocumentModelDescriptor
 	{
@@ -608,9 +630,9 @@ namespace DevToolsX.Documents.Symbols
 		{
 			properties = new global::System.Collections.Generic.List<global::MetaDslx.Core.ModelProperty>();
 			Document.Initialize();
-			Section.Initialize();
 			Content.Initialize();
-			ContentList.Initialize();
+			ContentContainer.Initialize();
+			SectionTitle.Initialize();
 			Paragraph.Initialize();
 			Text.Initialize();
 			Label.Initialize();
@@ -622,29 +644,25 @@ namespace DevToolsX.Documents.Symbols
 			Cell.Initialize();
 			Image.Initialize();
 			PageBreak.Initialize();
+			TableOfContents.Initialize();
 			properties.Add(DocumentModelDescriptor.Document.TitleProperty);
-			properties.Add(DocumentModelDescriptor.Document.SectionsProperty);
-			properties.Add(DocumentModelDescriptor.Section.TitleProperty);
-			properties.Add(DocumentModelDescriptor.Section.SubsectionsProperty);
-			properties.Add(DocumentModelDescriptor.Section.ParagraphsProperty);
-			properties.Add(DocumentModelDescriptor.ContentList.ItemsProperty);
+			properties.Add(DocumentModelDescriptor.ContentContainer.TextProperty);
+			properties.Add(DocumentModelDescriptor.SectionTitle.LevelProperty);
+			properties.Add(DocumentModelDescriptor.SectionTitle.TitleProperty);
+			properties.Add(DocumentModelDescriptor.SectionTitle.LabelProperty);
 			properties.Add(DocumentModelDescriptor.Paragraph.AlignmentProperty);
-			properties.Add(DocumentModelDescriptor.Paragraph.TextProperty);
 			properties.Add(DocumentModelDescriptor.Text.TextProperty);
 			properties.Add(DocumentModelDescriptor.Label.NameProperty);
 			properties.Add(DocumentModelDescriptor.Reference.TargetProperty);
-			properties.Add(DocumentModelDescriptor.Reference.TextProperty);
 			properties.Add(DocumentModelDescriptor.Markup.KindProperty);
-			properties.Add(DocumentModelDescriptor.Markup.TextProperty);
+			properties.Add(DocumentModelDescriptor.List.KindProperty);
 			properties.Add(DocumentModelDescriptor.List.ItemsProperty);
 			properties.Add(DocumentModelDescriptor.ListItem.TitleProperty);
-			properties.Add(DocumentModelDescriptor.ListItem.TextProperty);
 			properties.Add(DocumentModelDescriptor.Table.HeadColumnCountProperty);
 			properties.Add(DocumentModelDescriptor.Table.HeadRowCountProperty);
 			properties.Add(DocumentModelDescriptor.Table.ColumnCountProperty);
 			properties.Add(DocumentModelDescriptor.Table.RowCountProperty);
 			properties.Add(DocumentModelDescriptor.Table.CellsProperty);
-			properties.Add(DocumentModelDescriptor.Cell.TextProperty);
 			properties.Add(DocumentModelDescriptor.Image.FilePathProperty);
 		}
 	
@@ -654,7 +672,7 @@ namespace DevToolsX.Documents.Symbols
 	
 		public const string Uri = "http://devtoolsx.documents.documentmodel/1.0";
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Document), typeof(global::DevToolsX.Documents.Symbols.DocumentBuilder))]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Document), typeof(global::DevToolsX.Documents.Symbols.DocumentBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Document
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -678,60 +696,12 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Document; }
 			}
 			
+			[global::MetaDslx.Core.NameAttribute]
 			public static readonly global::MetaDslx.Core.ModelProperty TitleProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(Document), "Title",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Document_Title);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty SectionsProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Document), "Sections",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Section), typeof(global::MetaDslx.Core.ImmutableModelList<global::DevToolsX.Documents.Symbols.Section>)),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.SectionBuilder), typeof(global::MetaDslx.Core.MutableModelList<global::DevToolsX.Documents.Symbols.SectionBuilder>)),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Document_Sections);
-		}
-	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Section), typeof(global::DevToolsX.Documents.Symbols.SectionBuilder))]
-		public static class Section
-		{
-			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
-		
-			static Section()
-			{
-				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(Section));
-			}
-		
-			internal static void Initialize()
-			{
-			}
-		
-			public static global::MetaDslx.Core.ModelSymbolInfo SymbolInfo
-			{
-				get { return modelSymbolInfo; }
-			}
-		
-			public static global::MetaDslx.Languages.Meta.Symbols.MetaClass MetaClass
-			{
-				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Section; }
-			}
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TitleProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Section), "Title",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Section_Title);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty SubsectionsProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Section), "Subsections",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Section), typeof(global::MetaDslx.Core.ImmutableModelList<global::DevToolsX.Documents.Symbols.Section>)),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.SectionBuilder), typeof(global::MetaDslx.Core.MutableModelList<global::DevToolsX.Documents.Symbols.SectionBuilder>)),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Section_Subsections);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty ParagraphsProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Section), "Paragraphs",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Paragraph), typeof(global::MetaDslx.Core.ImmutableModelList<global::DevToolsX.Documents.Symbols.Paragraph>)),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ParagraphBuilder), typeof(global::MetaDslx.Core.MutableModelList<global::DevToolsX.Documents.Symbols.ParagraphBuilder>)),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Section_Paragraphs);
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Content), typeof(global::DevToolsX.Documents.Symbols.ContentBuilder))]
@@ -759,14 +729,14 @@ namespace DevToolsX.Documents.Symbols
 			}
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.ContentList), typeof(global::DevToolsX.Documents.Symbols.ContentListBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
-		public static class ContentList
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.ContentContainer), typeof(global::DevToolsX.Documents.Symbols.ContentContainerBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		public static class ContentContainer
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
 		
-			static ContentList()
+			static ContentContainer()
 			{
-				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(ContentList));
+				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(ContentContainer));
 			}
 		
 			internal static void Initialize()
@@ -780,17 +750,61 @@ namespace DevToolsX.Documents.Symbols
 		
 			public static global::MetaDslx.Languages.Meta.Symbols.MetaClass MetaClass
 			{
-				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.ContentList; }
+				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.ContentContainer; }
 			}
 			
-			public static readonly global::MetaDslx.Core.ModelProperty ItemsProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(ContentList), "Items",
+			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
+			    global::MetaDslx.Core.ModelProperty.Register(typeof(ContentContainer), "Text",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), typeof(global::MetaDslx.Core.ImmutableModelList<global::DevToolsX.Documents.Symbols.Content>)),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), typeof(global::MetaDslx.Core.MutableModelList<global::DevToolsX.Documents.Symbols.ContentBuilder>)),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.ContentList_Items);
+					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.ContentContainer_Text);
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Paragraph), typeof(global::DevToolsX.Documents.Symbols.ParagraphBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.SectionTitle), typeof(global::DevToolsX.Documents.Symbols.SectionTitleBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		public static class SectionTitle
+		{
+			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
+		
+			static SectionTitle()
+			{
+				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(SectionTitle));
+			}
+		
+			internal static void Initialize()
+			{
+			}
+		
+			public static global::MetaDslx.Core.ModelSymbolInfo SymbolInfo
+			{
+				get { return modelSymbolInfo; }
+			}
+		
+			public static global::MetaDslx.Languages.Meta.Symbols.MetaClass MetaClass
+			{
+				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.SectionTitle; }
+			}
+			
+			public static readonly global::MetaDslx.Core.ModelProperty LevelProperty =
+			    global::MetaDslx.Core.ModelProperty.Register(typeof(SectionTitle), "Level",
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(int), null),
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(int), null),
+					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.SectionTitle_Level);
+			
+			[global::MetaDslx.Core.NameAttribute]
+			public static readonly global::MetaDslx.Core.ModelProperty TitleProperty =
+			    global::MetaDslx.Core.ModelProperty.Register(typeof(SectionTitle), "Title",
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
+					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.SectionTitle_Title);
+			
+			public static readonly global::MetaDslx.Core.ModelProperty LabelProperty =
+			    global::MetaDslx.Core.ModelProperty.Register(typeof(SectionTitle), "Label",
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Label), null),
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.LabelBuilder), null),
+					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.SectionTitle_Label);
+		}
+	
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Paragraph), typeof(global::DevToolsX.Documents.Symbols.ParagraphBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Paragraph
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -819,12 +833,6 @@ namespace DevToolsX.Documents.Symbols
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.HorizontalAlignment), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.HorizontalAlignment), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Paragraph_Alignment);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Paragraph), "Text",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Paragraph_Text);
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Text), typeof(global::DevToolsX.Documents.Symbols.TextBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
@@ -851,6 +859,7 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Text; }
 			}
 			
+			[global::MetaDslx.Core.NameAttribute]
 			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(Text), "Text",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
@@ -882,6 +891,7 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Label; }
 			}
 			
+			[global::MetaDslx.Core.NameAttribute]
 			public static readonly global::MetaDslx.Core.ModelProperty NameProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(Label), "Name",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
@@ -889,7 +899,7 @@ namespace DevToolsX.Documents.Symbols
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Label_Name);
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Reference), typeof(global::DevToolsX.Documents.Symbols.ReferenceBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Reference), typeof(global::DevToolsX.Documents.Symbols.ReferenceBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Reference
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -918,15 +928,9 @@ namespace DevToolsX.Documents.Symbols
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Label), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.LabelBuilder), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Reference_Target);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Reference), "Text",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Reference_Text);
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Markup), typeof(global::DevToolsX.Documents.Symbols.MarkupBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Markup), typeof(global::DevToolsX.Documents.Symbols.MarkupBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Markup
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -955,12 +959,6 @@ namespace DevToolsX.Documents.Symbols
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.MarkupKind), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.MarkupKind), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Markup_Kind);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Markup), "Text",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Markup_Text);
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.List), typeof(global::DevToolsX.Documents.Symbols.ListBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
@@ -987,6 +985,12 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.List; }
 			}
 			
+			public static readonly global::MetaDslx.Core.ModelProperty KindProperty =
+			    global::MetaDslx.Core.ModelProperty.Register(typeof(List), "Kind",
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ListKind), null),
+			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ListKind), null),
+					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.List_Kind);
+			
 			public static readonly global::MetaDslx.Core.ModelProperty ItemsProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(List), "Items",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ListItem), typeof(global::MetaDslx.Core.ImmutableModelList<global::DevToolsX.Documents.Symbols.ListItem>)),
@@ -994,7 +998,7 @@ namespace DevToolsX.Documents.Symbols
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.List_Items);
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.ListItem), typeof(global::DevToolsX.Documents.Symbols.ListItemBuilder))]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.ListItem), typeof(global::DevToolsX.Documents.Symbols.ListItemBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class ListItem
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -1018,17 +1022,12 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.ListItem; }
 			}
 			
+			[global::MetaDslx.Core.NameAttribute]
 			public static readonly global::MetaDslx.Core.ModelProperty TitleProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(ListItem), "Title",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.ListItem_Title);
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(ListItem), "Text",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.ListItem_Text);
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Table), typeof(global::DevToolsX.Documents.Symbols.TableBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
@@ -1087,7 +1086,7 @@ namespace DevToolsX.Documents.Symbols
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Table_Cells);
 		}
 	
-		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Cell), typeof(global::DevToolsX.Documents.Symbols.CellBuilder))]
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Cell), typeof(global::DevToolsX.Documents.Symbols.CellBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Cell
 		{
 			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
@@ -1110,12 +1109,6 @@ namespace DevToolsX.Documents.Symbols
 			{
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Cell; }
 			}
-			
-			public static readonly global::MetaDslx.Core.ModelProperty TextProperty =
-			    global::MetaDslx.Core.ModelProperty.Register(typeof(Cell), "Text",
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.Content), null),
-			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(global::DevToolsX.Documents.Symbols.ContentBuilder), null),
-					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Cell_Text);
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Image), typeof(global::DevToolsX.Documents.Symbols.ImageBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
@@ -1142,6 +1135,7 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.Image; }
 			}
 			
+			[global::MetaDslx.Core.NameAttribute]
 			public static readonly global::MetaDslx.Core.ModelProperty FilePathProperty =
 			    global::MetaDslx.Core.ModelProperty.Register(typeof(Image), "FilePath",
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
@@ -1173,6 +1167,31 @@ namespace DevToolsX.Documents.Symbols
 				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.PageBreak; }
 			}
 		}
+	
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.TableOfContents), typeof(global::DevToolsX.Documents.Symbols.TableOfContentsBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		public static class TableOfContents
+		{
+			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
+		
+			static TableOfContents()
+			{
+				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(TableOfContents));
+			}
+		
+			internal static void Initialize()
+			{
+			}
+		
+			public static global::MetaDslx.Core.ModelSymbolInfo SymbolInfo
+			{
+				get { return modelSymbolInfo; }
+			}
+		
+			public static global::MetaDslx.Languages.Meta.Symbols.MetaClass MetaClass
+			{
+				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.TableOfContents; }
+			}
+		}
 	}
 }
 
@@ -1199,7 +1218,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private string title0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private global::MetaDslx.Core.ImmutableModelList<Section> sections0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal DocumentImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -1226,6 +1245,26 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (DocumentBuilder)base.ToMutable(model);
 		}
 	
+		ContentContainerBuilder ContentContainer.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
 		
 		public string Title
 		{
@@ -1233,15 +1272,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public global::MetaDslx.Core.ImmutableModelList<Section> Sections
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetList<Section>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Document.SectionsProperty, ref sections0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class DocumentBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, DocumentBuilder
 	{
-		private global::MetaDslx.Core.MutableModelList<SectionBuilder> sections0;
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal DocumentBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -1273,6 +1312,26 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (Document)base.ToImmutable(model);
 		}
 	
+		ContentContainer ContentContainerBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
 		
 		public string Title
 		{
@@ -1287,138 +1346,9 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public global::MetaDslx.Core.MutableModelList<SectionBuilder> Sections
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetList<SectionBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Document.SectionsProperty, ref sections0); }
-		}
-	}
-	
-	internal class SectionId : global::MetaDslx.Core.SymbolId
-	{
-		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.SymbolInfo; } }
-	
-		public override global::MetaDslx.Core.ImmutableSymbolBase CreateImmutable(global::MetaDslx.Core.ImmutableModel model)
-		{
-			return new SectionImpl(this, model);
-		}
-	
-		public override global::MetaDslx.Core.MutableSymbolBase CreateMutable(global::MetaDslx.Core.MutableModel model, bool creating)
-		{
-			return new SectionBuilderImpl(this, model, creating);
-		}
-	}
-	
-	internal class SectionImpl : global::MetaDslx.Core.ImmutableSymbolBase, Section
-	{
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private string title0;
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private global::MetaDslx.Core.ImmutableModelList<Section> subsections0;
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private global::MetaDslx.Core.ImmutableModelList<Paragraph> paragraphs0;
-	
-		internal SectionImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
-			: base(id, model)
-		{
-		}
-	
-		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
-		{
-			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
-		}
-	
-		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
-		{
-			get { return DocumentModelInstance.Section; }
-		}
-	
-		public new SectionBuilder ToMutable()
-		{
-			return (SectionBuilder)base.ToMutable();
-		}
-	
-		public new SectionBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
-		{
-			return (SectionBuilder)base.ToMutable(model);
-		}
-	
-		
-		public string Title
-		{
-		    get { return this.GetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.TitleProperty, ref title0); }
-		}
-	
-		
-		public global::MetaDslx.Core.ImmutableModelList<Section> Subsections
-		{
-		    get { return this.GetList<Section>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.SubsectionsProperty, ref subsections0); }
-		}
-	
-		
-		public global::MetaDslx.Core.ImmutableModelList<Paragraph> Paragraphs
-		{
-		    get { return this.GetList<Paragraph>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.ParagraphsProperty, ref paragraphs0); }
-		}
-	}
-	
-	internal class SectionBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, SectionBuilder
-	{
-		private global::MetaDslx.Core.MutableModelList<SectionBuilder> subsections0;
-		private global::MetaDslx.Core.MutableModelList<ParagraphBuilder> paragraphs0;
-	
-		internal SectionBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
-			: base(id, model, creating)
-		{
-		}
-	
-		protected override void MInit()
-		{
-			DocumentModelImplementationProvider.Implementation.Section(this);
-		}
-	
-		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
-		{
-			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
-		}
-	
-		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
-		{
-			get { return DocumentModelInstance.Section; }
-		}
-	
-		public new Section ToImmutable()
-		{
-			return (Section)base.ToImmutable();
-		}
-	
-		public new Section ToImmutable(global::MetaDslx.Core.ImmutableModel model)
-		{
-			return (Section)base.ToImmutable(model);
-		}
-	
-		
-		public string Title
-		{
-			get { return this.GetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.TitleProperty); }
-			set { this.SetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.TitleProperty, value); }
-		}
-		
-		public Func<string> TitleLazy
-		{
-			get { return this.GetLazyReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.TitleProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.Section.TitleProperty, value); }
-		}
-	
-		
-		public global::MetaDslx.Core.MutableModelList<SectionBuilder> Subsections
-		{
-			get { return this.GetList<SectionBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.SubsectionsProperty, ref subsections0); }
-		}
-	
-		
-		public global::MetaDslx.Core.MutableModelList<ParagraphBuilder> Paragraphs
-		{
-			get { return this.GetList<ParagraphBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Section.ParagraphsProperty, ref paragraphs0); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -1500,27 +1430,27 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	}
 	
-	internal class ContentListId : global::MetaDslx.Core.SymbolId
+	internal class ContentContainerId : global::MetaDslx.Core.SymbolId
 	{
-		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentList.SymbolInfo; } }
+		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.SymbolInfo; } }
 	
 		public override global::MetaDslx.Core.ImmutableSymbolBase CreateImmutable(global::MetaDslx.Core.ImmutableModel model)
 		{
-			return new ContentListImpl(this, model);
+			return new ContentContainerImpl(this, model);
 		}
 	
 		public override global::MetaDslx.Core.MutableSymbolBase CreateMutable(global::MetaDslx.Core.MutableModel model, bool creating)
 		{
-			return new ContentListBuilderImpl(this, model, creating);
+			return new ContentContainerBuilderImpl(this, model, creating);
 		}
 	}
 	
-	internal class ContentListImpl : global::MetaDslx.Core.ImmutableSymbolBase, ContentList
+	internal class ContentContainerImpl : global::MetaDslx.Core.ImmutableSymbolBase, ContentContainer
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private global::MetaDslx.Core.ImmutableModelList<Content> items0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
-		internal ContentListImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
+		internal ContentContainerImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
 		{
 		}
@@ -1532,17 +1462,17 @@ namespace DevToolsX.Documents.Symbols.Internal
 	
 		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
 		{
-			get { return DocumentModelInstance.ContentList; }
+			get { return DocumentModelInstance.ContentContainer; }
 		}
 	
-		public new ContentListBuilder ToMutable()
+		public new ContentContainerBuilder ToMutable()
 		{
-			return (ContentListBuilder)base.ToMutable();
+			return (ContentContainerBuilder)base.ToMutable();
 		}
 	
-		public new ContentListBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
+		public new ContentContainerBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
 		{
-			return (ContentListBuilder)base.ToMutable(model);
+			return (ContentContainerBuilder)base.ToMutable(model);
 		}
 	
 		ContentBuilder Content.ToMutable()
@@ -1556,24 +1486,24 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public global::MetaDslx.Core.ImmutableModelList<Content> Items
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentList.ItemsProperty, ref items0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
-	internal class ContentListBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, ContentListBuilder
+	internal class ContentContainerBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, ContentContainerBuilder
 	{
-		private global::MetaDslx.Core.MutableModelList<ContentBuilder> items0;
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
-		internal ContentListBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
+		internal ContentContainerBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
 		{
 		}
 	
 		protected override void MInit()
 		{
-			DocumentModelImplementationProvider.Implementation.ContentList(this);
+			DocumentModelImplementationProvider.Implementation.ContentContainer(this);
 		}
 	
 		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
@@ -1583,17 +1513,17 @@ namespace DevToolsX.Documents.Symbols.Internal
 	
 		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
 		{
-			get { return DocumentModelInstance.ContentList; }
+			get { return DocumentModelInstance.ContentContainer; }
 		}
 	
-		public new ContentList ToImmutable()
+		public new ContentContainer ToImmutable()
 		{
-			return (ContentList)base.ToImmutable();
+			return (ContentContainer)base.ToImmutable();
 		}
 	
-		public new ContentList ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		public new ContentContainer ToImmutable(global::MetaDslx.Core.ImmutableModel model)
 		{
-			return (ContentList)base.ToImmutable(model);
+			return (ContentContainer)base.ToImmutable(model);
 		}
 	
 		Content ContentBuilder.ToImmutable()
@@ -1607,9 +1537,170 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Items
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentList.ItemsProperty, ref items0); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
+		}
+	}
+	
+	internal class SectionTitleId : global::MetaDslx.Core.SymbolId
+	{
+		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.SymbolInfo; } }
+	
+		public override global::MetaDslx.Core.ImmutableSymbolBase CreateImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return new SectionTitleImpl(this, model);
+		}
+	
+		public override global::MetaDslx.Core.MutableSymbolBase CreateMutable(global::MetaDslx.Core.MutableModel model, bool creating)
+		{
+			return new SectionTitleBuilderImpl(this, model, creating);
+		}
+	}
+	
+	internal class SectionTitleImpl : global::MetaDslx.Core.ImmutableSymbolBase, SectionTitle
+	{
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		private int level0;
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		private string title0;
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		private Label label0;
+	
+		internal SectionTitleImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
+			: base(id, model)
+		{
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.SectionTitle; }
+		}
+	
+		public new SectionTitleBuilder ToMutable()
+		{
+			return (SectionTitleBuilder)base.ToMutable();
+		}
+	
+		public new SectionTitleBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return (SectionTitleBuilder)base.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
+		
+		public int Level
+		{
+		    get { return this.GetValue<int>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LevelProperty, ref level0); }
+		}
+	
+		
+		public string Title
+		{
+		    get { return this.GetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.TitleProperty, ref title0); }
+		}
+	
+		
+		public Label Label
+		{
+		    get { return this.GetReference<Label>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LabelProperty, ref label0); }
+		}
+	}
+	
+	internal class SectionTitleBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, SectionTitleBuilder
+	{
+	
+		internal SectionTitleBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
+			: base(id, model, creating)
+		{
+		}
+	
+		protected override void MInit()
+		{
+			DocumentModelImplementationProvider.Implementation.SectionTitle(this);
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.SectionTitle; }
+		}
+	
+		public new SectionTitle ToImmutable()
+		{
+			return (SectionTitle)base.ToImmutable();
+		}
+	
+		public new SectionTitle ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return (SectionTitle)base.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
+		
+		public int Level
+		{
+			get { return this.GetValue<int>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LevelProperty); }
+			set { this.SetValue<int>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LevelProperty, value); }
+		}
+		
+		public Func<int> LevelLazy
+		{
+			get { return this.GetLazyValue<int>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LevelProperty); }
+			set { this.SetLazyValue(DocumentModelDescriptor.SectionTitle.LevelProperty, value); }
+		}
+	
+		
+		public string Title
+		{
+			get { return this.GetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.TitleProperty); }
+			set { this.SetReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.TitleProperty, value); }
+		}
+		
+		public Func<string> TitleLazy
+		{
+			get { return this.GetLazyReference<string>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.TitleProperty); }
+			set { this.SetLazyReference(DocumentModelDescriptor.SectionTitle.TitleProperty, value); }
+		}
+	
+		
+		public LabelBuilder Label
+		{
+			get { return this.GetReference<LabelBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LabelProperty); }
+			set { this.SetReference<LabelBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LabelProperty, value); }
+		}
+		
+		public Func<LabelBuilder> LabelLazy
+		{
+			get { return this.GetLazyReference<LabelBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.SectionTitle.LabelProperty); }
+			set { this.SetLazyReference(DocumentModelDescriptor.SectionTitle.LabelProperty, value); }
 		}
 	}
 	
@@ -1633,7 +1724,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private HorizontalAlignment alignment0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private Content text0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal ParagraphImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -1660,6 +1751,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (ParagraphBuilder)base.ToMutable(model);
 		}
 	
+		ContentContainerBuilder ContentContainer.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
 		ContentBuilder Content.ToMutable()
 		{
 			return this.ToMutable();
@@ -1677,14 +1778,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public Content Text
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetReference<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Paragraph.TextProperty, ref text0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class ParagraphBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, ParagraphBuilder
 	{
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal ParagraphBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -1716,6 +1818,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (Paragraph)base.ToImmutable(model);
 		}
 	
+		ContentContainer ContentContainerBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
 		Content ContentBuilder.ToImmutable()
 		{
 			return this.ToImmutable();
@@ -1740,16 +1852,9 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public ContentBuilder Text
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Paragraph.TextProperty); }
-			set { this.SetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Paragraph.TextProperty, value); }
-		}
-		
-		public Func<ContentBuilder> TextLazy
-		{
-			get { return this.GetLazyReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Paragraph.TextProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.Paragraph.TextProperty, value); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -2011,7 +2116,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private Label target0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private Content text0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal ReferenceImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -2038,6 +2143,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (ReferenceBuilder)base.ToMutable(model);
 		}
 	
+		ContentContainerBuilder ContentContainer.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
 		ContentBuilder Content.ToMutable()
 		{
 			return this.ToMutable();
@@ -2055,14 +2170,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public Content Text
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetReference<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Reference.TextProperty, ref text0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class ReferenceBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, ReferenceBuilder
 	{
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal ReferenceBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -2094,6 +2210,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (Reference)base.ToImmutable(model);
 		}
 	
+		ContentContainer ContentContainerBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
 		Content ContentBuilder.ToImmutable()
 		{
 			return this.ToImmutable();
@@ -2118,16 +2244,9 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public ContentBuilder Text
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Reference.TextProperty); }
-			set { this.SetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Reference.TextProperty, value); }
-		}
-		
-		public Func<ContentBuilder> TextLazy
-		{
-			get { return this.GetLazyReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Reference.TextProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.Reference.TextProperty, value); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -2151,7 +2270,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private MarkupKind kind0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private Content text0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal MarkupImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -2178,6 +2297,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (MarkupBuilder)base.ToMutable(model);
 		}
 	
+		ContentContainerBuilder ContentContainer.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
 		ContentBuilder Content.ToMutable()
 		{
 			return this.ToMutable();
@@ -2195,14 +2324,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public Content Text
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetReference<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Markup.TextProperty, ref text0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class MarkupBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, MarkupBuilder
 	{
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal MarkupBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -2234,6 +2364,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (Markup)base.ToImmutable(model);
 		}
 	
+		ContentContainer ContentContainerBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
 		Content ContentBuilder.ToImmutable()
 		{
 			return this.ToImmutable();
@@ -2258,16 +2398,9 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public ContentBuilder Text
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Markup.TextProperty); }
-			set { this.SetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Markup.TextProperty, value); }
-		}
-		
-		public Func<ContentBuilder> TextLazy
-		{
-			get { return this.GetLazyReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Markup.TextProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.Markup.TextProperty, value); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -2288,6 +2421,8 @@ namespace DevToolsX.Documents.Symbols.Internal
 	
 	internal class ListImpl : global::MetaDslx.Core.ImmutableSymbolBase, List
 	{
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		private ListKind kind0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private global::MetaDslx.Core.ImmutableModelList<ListItem> items0;
 	
@@ -2324,6 +2459,12 @@ namespace DevToolsX.Documents.Symbols.Internal
 		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
 		{
 			return this.ToMutable(model);
+		}
+	
+		
+		public ListKind Kind
+		{
+		    get { return this.GetValue<ListKind>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.List.KindProperty, ref kind0); }
 		}
 	
 		
@@ -2378,6 +2519,19 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
+		public ListKind Kind
+		{
+			get { return this.GetValue<ListKind>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.List.KindProperty); }
+			set { this.SetValue<ListKind>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.List.KindProperty, value); }
+		}
+		
+		public Func<ListKind> KindLazy
+		{
+			get { return this.GetLazyValue<ListKind>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.List.KindProperty); }
+			set { this.SetLazyValue(DocumentModelDescriptor.List.KindProperty, value); }
+		}
+	
+		
 		public global::MetaDslx.Core.MutableModelList<ListItemBuilder> Items
 		{
 			get { return this.GetList<ListItemBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.List.ItemsProperty, ref items0); }
@@ -2404,7 +2558,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private string title0;
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private Content text0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal ListItemImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -2431,6 +2585,26 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (ListItemBuilder)base.ToMutable(model);
 		}
 	
+		ContentContainerBuilder ContentContainer.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
 		
 		public string Title
 		{
@@ -2438,14 +2612,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public Content Text
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
 		{
-		    get { return this.GetReference<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ListItem.TextProperty, ref text0); }
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class ListItemBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, ListItemBuilder
 	{
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal ListItemBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -2477,6 +2652,26 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (ListItem)base.ToImmutable(model);
 		}
 	
+		ContentContainer ContentContainerBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
 		
 		public string Title
 		{
@@ -2491,16 +2686,9 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	
 		
-		public ContentBuilder Text
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
 		{
-			get { return this.GetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ListItem.TextProperty); }
-			set { this.SetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ListItem.TextProperty, value); }
-		}
-		
-		public Func<ContentBuilder> TextLazy
-		{
-			get { return this.GetLazyReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ListItem.TextProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.ListItem.TextProperty, value); }
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -2718,7 +2906,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 	internal class CellImpl : global::MetaDslx.Core.ImmutableSymbolBase, Cell
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		private Content text0;
+		private global::MetaDslx.Core.ImmutableModelList<Content> text0;
 	
 		internal CellImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
 			: base(id, model)
@@ -2745,15 +2933,36 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (CellBuilder)base.ToMutable(model);
 		}
 	
-		
-		public Content Text
+		ContentContainerBuilder ContentContainer.ToMutable()
 		{
-		    get { return this.GetReference<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Cell.TextProperty, ref text0); }
+			return this.ToMutable();
+		}
+	
+		ContentContainerBuilder ContentContainer.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	
+		
+		public global::MetaDslx.Core.ImmutableModelList<Content> Text
+		{
+		    get { return this.GetList<Content>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
 	internal class CellBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, CellBuilder
 	{
+		private global::MetaDslx.Core.MutableModelList<ContentBuilder> text0;
 	
 		internal CellBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
 			: base(id, model, creating)
@@ -2785,17 +2994,30 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return (Cell)base.ToImmutable(model);
 		}
 	
-		
-		public ContentBuilder Text
+		ContentContainer ContentContainerBuilder.ToImmutable()
 		{
-			get { return this.GetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Cell.TextProperty); }
-			set { this.SetReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Cell.TextProperty, value); }
+			return this.ToImmutable();
 		}
-		
-		public Func<ContentBuilder> TextLazy
+	
+		ContentContainer ContentContainerBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
 		{
-			get { return this.GetLazyReference<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.Cell.TextProperty); }
-			set { this.SetLazyReference(DocumentModelDescriptor.Cell.TextProperty, value); }
+			return this.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	
+		
+		public global::MetaDslx.Core.MutableModelList<ContentBuilder> Text
+		{
+			get { return this.GetList<ContentBuilder>(global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.ContentContainer.TextProperty, ref text0); }
 		}
 	}
 	
@@ -3015,6 +3237,104 @@ namespace DevToolsX.Documents.Symbols.Internal
 			return this.ToImmutable(model);
 		}
 	}
+	
+	internal class TableOfContentsId : global::MetaDslx.Core.SymbolId
+	{
+		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.TableOfContents.SymbolInfo; } }
+	
+		public override global::MetaDslx.Core.ImmutableSymbolBase CreateImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return new TableOfContentsImpl(this, model);
+		}
+	
+		public override global::MetaDslx.Core.MutableSymbolBase CreateMutable(global::MetaDslx.Core.MutableModel model, bool creating)
+		{
+			return new TableOfContentsBuilderImpl(this, model, creating);
+		}
+	}
+	
+	internal class TableOfContentsImpl : global::MetaDslx.Core.ImmutableSymbolBase, TableOfContents
+	{
+	
+		internal TableOfContentsImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
+			: base(id, model)
+		{
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.TableOfContents; }
+		}
+	
+		public new TableOfContentsBuilder ToMutable()
+		{
+			return (TableOfContentsBuilder)base.ToMutable();
+		}
+	
+		public new TableOfContentsBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return (TableOfContentsBuilder)base.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	}
+	
+	internal class TableOfContentsBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, TableOfContentsBuilder
+	{
+	
+		internal TableOfContentsBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
+			: base(id, model, creating)
+		{
+		}
+	
+		protected override void MInit()
+		{
+			DocumentModelImplementationProvider.Implementation.TableOfContents(this);
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.TableOfContents; }
+		}
+	
+		public new TableOfContents ToImmutable()
+		{
+			return (TableOfContents)base.ToImmutable();
+		}
+	
+		public new TableOfContents ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return (TableOfContents)base.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	}
 
 	internal class DocumentModelBuilderInstance
 	{
@@ -3033,11 +3353,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		private global::MetaDslx.Languages.Meta.Symbols.MetaModelBuilder __tmp4;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Document;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Document_Title;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Document_Sections;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Section;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Section_Title;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Section_Subsections;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Section_Paragraphs;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp35;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaEnumBuilder MarkupKind;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp5;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp6;
@@ -3054,27 +3370,45 @@ namespace DevToolsX.Documents.Symbols.Internal
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp16;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp17;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp18;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaEnumBuilder VerticalAlignment;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp19;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp20;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp21;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp22;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaEnumBuilder ListKind;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp23;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp24;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp25;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp26;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp27;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp28;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp29;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Content;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder ContentList;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ContentList_Items;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder ContentContainer;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ContentContainer_Text;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder SectionTitle;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Level;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Title;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp38;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Paragraph;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Paragraph_Alignment;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Paragraph_Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Text_Text;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp37;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Label_Name;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp30;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Reference;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_Target;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Markup;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Markup_Kind;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Markup_Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder List;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder List_Kind;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder List_Items;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder ListItem;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ListItem_Title;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ListItem_Text;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp34;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Table;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadColumnCount;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadRowCount;
@@ -3082,16 +3416,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_RowCount;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_Cells;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Cell;
-		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Cell_Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Image;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Image_FilePath;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp32;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder PageBreak;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp19;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp20;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp21;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp22;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp23;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp24;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder TableOfContents;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp31;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp33;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp36;
 	
 		internal DocumentModelBuilderInstance()
 		{
@@ -3132,11 +3464,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			MetaModel = __tmp4;
 			Document = factory.MetaClass();
 			Document_Title = factory.MetaProperty();
-			Document_Sections = factory.MetaProperty();
-			Section = factory.MetaClass();
-			Section_Title = factory.MetaProperty();
-			Section_Subsections = factory.MetaProperty();
-			Section_Paragraphs = factory.MetaProperty();
+			__tmp35 = factory.MetaAnnotation();
 			MarkupKind = factory.MetaEnum();
 			__tmp5 = factory.MetaEnumLiteral();
 			__tmp6 = factory.MetaEnumLiteral();
@@ -3153,27 +3481,45 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp16 = factory.MetaEnumLiteral();
 			__tmp17 = factory.MetaEnumLiteral();
 			__tmp18 = factory.MetaEnumLiteral();
+			VerticalAlignment = factory.MetaEnum();
+			__tmp19 = factory.MetaEnumLiteral();
+			__tmp20 = factory.MetaEnumLiteral();
+			__tmp21 = factory.MetaEnumLiteral();
+			__tmp22 = factory.MetaEnumLiteral();
+			ListKind = factory.MetaEnum();
+			__tmp23 = factory.MetaEnumLiteral();
+			__tmp24 = factory.MetaEnumLiteral();
+			__tmp25 = factory.MetaEnumLiteral();
+			__tmp26 = factory.MetaEnumLiteral();
+			__tmp27 = factory.MetaEnumLiteral();
+			__tmp28 = factory.MetaEnumLiteral();
+			__tmp29 = factory.MetaEnumLiteral();
 			Content = factory.MetaClass();
-			ContentList = factory.MetaClass();
-			ContentList_Items = factory.MetaProperty();
+			ContentContainer = factory.MetaClass();
+			ContentContainer_Text = factory.MetaProperty();
+			SectionTitle = factory.MetaClass();
+			SectionTitle_Level = factory.MetaProperty();
+			SectionTitle_Title = factory.MetaProperty();
+			__tmp38 = factory.MetaAnnotation();
+			SectionTitle_Label = factory.MetaProperty();
 			Paragraph = factory.MetaClass();
 			Paragraph_Alignment = factory.MetaProperty();
-			Paragraph_Text = factory.MetaProperty();
 			Text = factory.MetaClass();
 			Text_Text = factory.MetaProperty();
+			__tmp37 = factory.MetaAnnotation();
 			Label = factory.MetaClass();
 			Label_Name = factory.MetaProperty();
+			__tmp30 = factory.MetaAnnotation();
 			Reference = factory.MetaClass();
 			Reference_Target = factory.MetaProperty();
-			Reference_Text = factory.MetaProperty();
 			Markup = factory.MetaClass();
 			Markup_Kind = factory.MetaProperty();
-			Markup_Text = factory.MetaProperty();
 			List = factory.MetaClass();
+			List_Kind = factory.MetaProperty();
 			List_Items = factory.MetaProperty();
 			ListItem = factory.MetaClass();
 			ListItem_Title = factory.MetaProperty();
-			ListItem_Text = factory.MetaProperty();
+			__tmp34 = factory.MetaAnnotation();
 			Table = factory.MetaClass();
 			Table_HeadColumnCount = factory.MetaProperty();
 			Table_HeadRowCount = factory.MetaProperty();
@@ -3181,16 +3527,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Table_RowCount = factory.MetaProperty();
 			Table_Cells = factory.MetaProperty();
 			Cell = factory.MetaClass();
-			Cell_Text = factory.MetaProperty();
 			Image = factory.MetaClass();
 			Image_FilePath = factory.MetaProperty();
+			__tmp32 = factory.MetaAnnotation();
 			PageBreak = factory.MetaClass();
-			__tmp19 = factory.MetaCollectionType();
-			__tmp20 = factory.MetaCollectionType();
-			__tmp21 = factory.MetaCollectionType();
-			__tmp22 = factory.MetaCollectionType();
-			__tmp23 = factory.MetaCollectionType();
-			__tmp24 = factory.MetaCollectionType();
+			TableOfContents = factory.MetaClass();
+			__tmp31 = factory.MetaCollectionType();
+			__tmp33 = factory.MetaCollectionType();
+			__tmp36 = factory.MetaCollectionType();
 	
 			// __tmp1.MetaModel = null;
 			// __tmp1.Namespace = null;
@@ -3210,11 +3554,13 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp3.Name = "Symbols";
 			__tmp3.MetaModelLazy = () => __tmp4;
 			__tmp3.Declarations.AddLazy(() => Document);
-			__tmp3.Declarations.AddLazy(() => Section);
 			__tmp3.Declarations.AddLazy(() => MarkupKind);
 			__tmp3.Declarations.AddLazy(() => HorizontalAlignment);
+			__tmp3.Declarations.AddLazy(() => VerticalAlignment);
+			__tmp3.Declarations.AddLazy(() => ListKind);
 			__tmp3.Declarations.AddLazy(() => Content);
-			__tmp3.Declarations.AddLazy(() => ContentList);
+			__tmp3.Declarations.AddLazy(() => ContentContainer);
+			__tmp3.Declarations.AddLazy(() => SectionTitle);
 			__tmp3.Declarations.AddLazy(() => Paragraph);
 			__tmp3.Declarations.AddLazy(() => Text);
 			__tmp3.Declarations.AddLazy(() => Label);
@@ -3226,6 +3572,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp3.Declarations.AddLazy(() => Cell);
 			__tmp3.Declarations.AddLazy(() => Image);
 			__tmp3.Declarations.AddLazy(() => PageBreak);
+			__tmp3.Declarations.AddLazy(() => TableOfContents);
 			__tmp4.Name = "DocumentModel";
 			__tmp4.Documentation = null;
 			__tmp4.Uri = "http://devtoolsx.documents.documentmodel/1.0";
@@ -3235,41 +3582,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Document.Documentation = null;
 			Document.Name = "Document";
 			// Document.IsAbstract = null;
+			Document.SuperClasses.AddLazy(() => ContentContainer);
 			Document.Properties.AddLazy(() => Document_Title);
-			Document.Properties.AddLazy(() => Document_Sections);
+			Document_Title.Annotations.AddLazy(() => __tmp35);
 			Document_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Document_Title.Name = "Title";
 			Document_Title.Documentation = null;
 			// Document_Title.Kind = null;
 			Document_Title.ClassLazy = () => Document;
-			Document_Sections.TypeLazy = () => __tmp20;
-			Document_Sections.Name = "Sections";
-			Document_Sections.Documentation = null;
-			// Document_Sections.Kind = null;
-			Document_Sections.ClassLazy = () => Document;
-			Section.MetaModelLazy = () => __tmp4;
-			Section.NamespaceLazy = () => __tmp3;
-			Section.Documentation = null;
-			Section.Name = "Section";
-			// Section.IsAbstract = null;
-			Section.Properties.AddLazy(() => Section_Title);
-			Section.Properties.AddLazy(() => Section_Subsections);
-			Section.Properties.AddLazy(() => Section_Paragraphs);
-			Section_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
-			Section_Title.Name = "Title";
-			Section_Title.Documentation = null;
-			// Section_Title.Kind = null;
-			Section_Title.ClassLazy = () => Section;
-			Section_Subsections.TypeLazy = () => __tmp24;
-			Section_Subsections.Name = "Subsections";
-			Section_Subsections.Documentation = null;
-			// Section_Subsections.Kind = null;
-			Section_Subsections.ClassLazy = () => Section;
-			Section_Paragraphs.TypeLazy = () => __tmp21;
-			Section_Paragraphs.Name = "Paragraphs";
-			Section_Paragraphs.Documentation = null;
-			// Section_Paragraphs.Kind = null;
-			Section_Paragraphs.ClassLazy = () => Section;
+			__tmp35.Name = "Name";
+			__tmp35.Documentation = null;
 			MarkupKind.MetaModelLazy = () => __tmp4;
 			MarkupKind.NamespaceLazy = () => __tmp3;
 			MarkupKind.Documentation = null;
@@ -3348,41 +3670,125 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp18.Name = "Right";
 			__tmp18.Documentation = null;
 			__tmp18.EnumLazy = () => HorizontalAlignment;
+			VerticalAlignment.MetaModelLazy = () => __tmp4;
+			VerticalAlignment.NamespaceLazy = () => __tmp3;
+			VerticalAlignment.Documentation = null;
+			VerticalAlignment.Name = "VerticalAlignment";
+			VerticalAlignment.EnumLiterals.AddLazy(() => __tmp19);
+			VerticalAlignment.EnumLiterals.AddLazy(() => __tmp20);
+			VerticalAlignment.EnumLiterals.AddLazy(() => __tmp21);
+			VerticalAlignment.EnumLiterals.AddLazy(() => __tmp22);
+			__tmp19.TypeLazy = () => VerticalAlignment;
+			__tmp19.Name = "Default";
+			__tmp19.Documentation = null;
+			__tmp19.EnumLazy = () => VerticalAlignment;
+			__tmp20.TypeLazy = () => VerticalAlignment;
+			__tmp20.Name = "Top";
+			__tmp20.Documentation = null;
+			__tmp20.EnumLazy = () => VerticalAlignment;
+			__tmp21.TypeLazy = () => VerticalAlignment;
+			__tmp21.Name = "Center";
+			__tmp21.Documentation = null;
+			__tmp21.EnumLazy = () => VerticalAlignment;
+			__tmp22.TypeLazy = () => VerticalAlignment;
+			__tmp22.Name = "Bottom";
+			__tmp22.Documentation = null;
+			__tmp22.EnumLazy = () => VerticalAlignment;
+			ListKind.MetaModelLazy = () => __tmp4;
+			ListKind.NamespaceLazy = () => __tmp3;
+			ListKind.Documentation = null;
+			ListKind.Name = "ListKind";
+			ListKind.EnumLiterals.AddLazy(() => __tmp23);
+			ListKind.EnumLiterals.AddLazy(() => __tmp24);
+			ListKind.EnumLiterals.AddLazy(() => __tmp25);
+			ListKind.EnumLiterals.AddLazy(() => __tmp26);
+			ListKind.EnumLiterals.AddLazy(() => __tmp27);
+			ListKind.EnumLiterals.AddLazy(() => __tmp28);
+			ListKind.EnumLiterals.AddLazy(() => __tmp29);
+			__tmp23.TypeLazy = () => ListKind;
+			__tmp23.Name = "None";
+			__tmp23.Documentation = null;
+			__tmp23.EnumLazy = () => ListKind;
+			__tmp24.TypeLazy = () => ListKind;
+			__tmp24.Name = "Indent";
+			__tmp24.Documentation = null;
+			__tmp24.EnumLazy = () => ListKind;
+			__tmp25.TypeLazy = () => ListKind;
+			__tmp25.Name = "Bullets";
+			__tmp25.Documentation = null;
+			__tmp25.EnumLazy = () => ListKind;
+			__tmp26.TypeLazy = () => ListKind;
+			__tmp26.Name = "Numbers";
+			__tmp26.Documentation = null;
+			__tmp26.EnumLazy = () => ListKind;
+			__tmp27.TypeLazy = () => ListKind;
+			__tmp27.Name = "RomanNumbers";
+			__tmp27.Documentation = null;
+			__tmp27.EnumLazy = () => ListKind;
+			__tmp28.TypeLazy = () => ListKind;
+			__tmp28.Name = "CapitalLetters";
+			__tmp28.Documentation = null;
+			__tmp28.EnumLazy = () => ListKind;
+			__tmp29.TypeLazy = () => ListKind;
+			__tmp29.Name = "SmallLetters";
+			__tmp29.Documentation = null;
+			__tmp29.EnumLazy = () => ListKind;
 			Content.MetaModelLazy = () => __tmp4;
 			Content.NamespaceLazy = () => __tmp3;
 			Content.Documentation = null;
 			Content.Name = "Content";
 			Content.IsAbstract = true;
-			ContentList.MetaModelLazy = () => __tmp4;
-			ContentList.NamespaceLazy = () => __tmp3;
-			ContentList.Documentation = null;
-			ContentList.Name = "ContentList";
-			// ContentList.IsAbstract = null;
-			ContentList.SuperClasses.AddLazy(() => Content);
-			ContentList.Properties.AddLazy(() => ContentList_Items);
-			ContentList_Items.TypeLazy = () => __tmp23;
-			ContentList_Items.Name = "Items";
-			ContentList_Items.Documentation = null;
-			// ContentList_Items.Kind = null;
-			ContentList_Items.ClassLazy = () => ContentList;
+			ContentContainer.MetaModelLazy = () => __tmp4;
+			ContentContainer.NamespaceLazy = () => __tmp3;
+			ContentContainer.Documentation = null;
+			ContentContainer.Name = "ContentContainer";
+			ContentContainer.IsAbstract = true;
+			ContentContainer.SuperClasses.AddLazy(() => Content);
+			ContentContainer.Properties.AddLazy(() => ContentContainer_Text);
+			ContentContainer_Text.TypeLazy = () => __tmp31;
+			ContentContainer_Text.Name = "Text";
+			ContentContainer_Text.Documentation = null;
+			// ContentContainer_Text.Kind = null;
+			ContentContainer_Text.ClassLazy = () => ContentContainer;
+			SectionTitle.MetaModelLazy = () => __tmp4;
+			SectionTitle.NamespaceLazy = () => __tmp3;
+			SectionTitle.Documentation = null;
+			SectionTitle.Name = "SectionTitle";
+			// SectionTitle.IsAbstract = null;
+			SectionTitle.SuperClasses.AddLazy(() => Content);
+			SectionTitle.Properties.AddLazy(() => SectionTitle_Level);
+			SectionTitle.Properties.AddLazy(() => SectionTitle_Title);
+			SectionTitle.Properties.AddLazy(() => SectionTitle_Label);
+			SectionTitle_Level.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.Int.ToMutable();
+			SectionTitle_Level.Name = "Level";
+			SectionTitle_Level.Documentation = null;
+			// SectionTitle_Level.Kind = null;
+			SectionTitle_Level.ClassLazy = () => SectionTitle;
+			SectionTitle_Title.Annotations.AddLazy(() => __tmp38);
+			SectionTitle_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
+			SectionTitle_Title.Name = "Title";
+			SectionTitle_Title.Documentation = null;
+			// SectionTitle_Title.Kind = null;
+			SectionTitle_Title.ClassLazy = () => SectionTitle;
+			__tmp38.Name = "Name";
+			__tmp38.Documentation = null;
+			SectionTitle_Label.TypeLazy = () => Label;
+			SectionTitle_Label.Name = "Label";
+			SectionTitle_Label.Documentation = null;
+			// SectionTitle_Label.Kind = null;
+			SectionTitle_Label.ClassLazy = () => SectionTitle;
 			Paragraph.MetaModelLazy = () => __tmp4;
 			Paragraph.NamespaceLazy = () => __tmp3;
 			Paragraph.Documentation = null;
 			Paragraph.Name = "Paragraph";
 			// Paragraph.IsAbstract = null;
-			Paragraph.SuperClasses.AddLazy(() => Content);
+			Paragraph.SuperClasses.AddLazy(() => ContentContainer);
 			Paragraph.Properties.AddLazy(() => Paragraph_Alignment);
-			Paragraph.Properties.AddLazy(() => Paragraph_Text);
 			Paragraph_Alignment.TypeLazy = () => HorizontalAlignment;
 			Paragraph_Alignment.Name = "Alignment";
 			Paragraph_Alignment.Documentation = null;
 			// Paragraph_Alignment.Kind = null;
 			Paragraph_Alignment.ClassLazy = () => Paragraph;
-			Paragraph_Text.TypeLazy = () => Content;
-			Paragraph_Text.Name = "Text";
-			Paragraph_Text.Documentation = null;
-			// Paragraph_Text.Kind = null;
-			Paragraph_Text.ClassLazy = () => Paragraph;
 			Text.MetaModelLazy = () => __tmp4;
 			Text.NamespaceLazy = () => __tmp3;
 			Text.Documentation = null;
@@ -3390,11 +3796,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Text.IsAbstract = null;
 			Text.SuperClasses.AddLazy(() => Content);
 			Text.Properties.AddLazy(() => Text_Text);
+			Text_Text.Annotations.AddLazy(() => __tmp37);
 			Text_Text.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Text_Text.Name = "Text";
 			Text_Text.Documentation = null;
 			// Text_Text.Kind = null;
 			Text_Text.ClassLazy = () => Text;
+			__tmp37.Name = "Name";
+			__tmp37.Documentation = null;
 			Label.MetaModelLazy = () => __tmp4;
 			Label.NamespaceLazy = () => __tmp3;
 			Label.Documentation = null;
@@ -3402,55 +3811,52 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Label.IsAbstract = null;
 			Label.SuperClasses.AddLazy(() => Content);
 			Label.Properties.AddLazy(() => Label_Name);
+			Label_Name.Annotations.AddLazy(() => __tmp30);
 			Label_Name.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Label_Name.Name = "Name";
 			Label_Name.Documentation = null;
 			// Label_Name.Kind = null;
 			Label_Name.ClassLazy = () => Label;
+			__tmp30.Name = "Name";
+			__tmp30.Documentation = null;
 			Reference.MetaModelLazy = () => __tmp4;
 			Reference.NamespaceLazy = () => __tmp3;
 			Reference.Documentation = null;
 			Reference.Name = "Reference";
 			// Reference.IsAbstract = null;
-			Reference.SuperClasses.AddLazy(() => Content);
+			Reference.SuperClasses.AddLazy(() => ContentContainer);
 			Reference.Properties.AddLazy(() => Reference_Target);
-			Reference.Properties.AddLazy(() => Reference_Text);
 			Reference_Target.TypeLazy = () => Label;
 			Reference_Target.Name = "Target";
 			Reference_Target.Documentation = null;
 			// Reference_Target.Kind = null;
 			Reference_Target.ClassLazy = () => Reference;
-			Reference_Text.TypeLazy = () => Content;
-			Reference_Text.Name = "Text";
-			Reference_Text.Documentation = null;
-			// Reference_Text.Kind = null;
-			Reference_Text.ClassLazy = () => Reference;
 			Markup.MetaModelLazy = () => __tmp4;
 			Markup.NamespaceLazy = () => __tmp3;
 			Markup.Documentation = null;
 			Markup.Name = "Markup";
 			// Markup.IsAbstract = null;
-			Markup.SuperClasses.AddLazy(() => Content);
+			Markup.SuperClasses.AddLazy(() => ContentContainer);
 			Markup.Properties.AddLazy(() => Markup_Kind);
-			Markup.Properties.AddLazy(() => Markup_Text);
 			Markup_Kind.TypeLazy = () => MarkupKind;
 			Markup_Kind.Name = "Kind";
 			Markup_Kind.Documentation = null;
 			// Markup_Kind.Kind = null;
 			Markup_Kind.ClassLazy = () => Markup;
-			Markup_Text.TypeLazy = () => Content;
-			Markup_Text.Name = "Text";
-			Markup_Text.Documentation = null;
-			// Markup_Text.Kind = null;
-			Markup_Text.ClassLazy = () => Markup;
 			List.MetaModelLazy = () => __tmp4;
 			List.NamespaceLazy = () => __tmp3;
 			List.Documentation = null;
 			List.Name = "List";
 			// List.IsAbstract = null;
 			List.SuperClasses.AddLazy(() => Content);
+			List.Properties.AddLazy(() => List_Kind);
 			List.Properties.AddLazy(() => List_Items);
-			List_Items.TypeLazy = () => __tmp19;
+			List_Kind.TypeLazy = () => ListKind;
+			List_Kind.Name = "Kind";
+			List_Kind.Documentation = null;
+			// List_Kind.Kind = null;
+			List_Kind.ClassLazy = () => List;
+			List_Items.TypeLazy = () => __tmp33;
 			List_Items.Name = "Items";
 			List_Items.Documentation = null;
 			// List_Items.Kind = null;
@@ -3460,18 +3866,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			ListItem.Documentation = null;
 			ListItem.Name = "ListItem";
 			// ListItem.IsAbstract = null;
+			ListItem.SuperClasses.AddLazy(() => ContentContainer);
 			ListItem.Properties.AddLazy(() => ListItem_Title);
-			ListItem.Properties.AddLazy(() => ListItem_Text);
+			ListItem_Title.Annotations.AddLazy(() => __tmp34);
 			ListItem_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			ListItem_Title.Name = "Title";
 			ListItem_Title.Documentation = null;
 			// ListItem_Title.Kind = null;
 			ListItem_Title.ClassLazy = () => ListItem;
-			ListItem_Text.TypeLazy = () => Content;
-			ListItem_Text.Name = "Text";
-			ListItem_Text.Documentation = null;
-			// ListItem_Text.Kind = null;
-			ListItem_Text.ClassLazy = () => ListItem;
+			__tmp34.Name = "Name";
+			__tmp34.Documentation = null;
 			Table.MetaModelLazy = () => __tmp4;
 			Table.NamespaceLazy = () => __tmp3;
 			Table.Documentation = null;
@@ -3503,7 +3907,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Table_RowCount.Documentation = null;
 			Table_RowCount.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaPropertyKind.Derived;
 			Table_RowCount.ClassLazy = () => Table;
-			Table_Cells.TypeLazy = () => __tmp22;
+			Table_Cells.TypeLazy = () => __tmp36;
 			Table_Cells.Name = "Cells";
 			Table_Cells.Documentation = null;
 			// Table_Cells.Kind = null;
@@ -3513,12 +3917,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Cell.Documentation = null;
 			Cell.Name = "Cell";
 			// Cell.IsAbstract = null;
-			Cell.Properties.AddLazy(() => Cell_Text);
-			Cell_Text.TypeLazy = () => Content;
-			Cell_Text.Name = "Text";
-			Cell_Text.Documentation = null;
-			// Cell_Text.Kind = null;
-			Cell_Text.ClassLazy = () => Cell;
+			Cell.SuperClasses.AddLazy(() => ContentContainer);
 			Image.MetaModelLazy = () => __tmp4;
 			Image.NamespaceLazy = () => __tmp3;
 			Image.Documentation = null;
@@ -3526,29 +3925,32 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Image.IsAbstract = null;
 			Image.SuperClasses.AddLazy(() => Content);
 			Image.Properties.AddLazy(() => Image_FilePath);
+			Image_FilePath.Annotations.AddLazy(() => __tmp32);
 			Image_FilePath.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Image_FilePath.Name = "FilePath";
 			Image_FilePath.Documentation = null;
 			// Image_FilePath.Kind = null;
 			Image_FilePath.ClassLazy = () => Image;
+			__tmp32.Name = "Name";
+			__tmp32.Documentation = null;
 			PageBreak.MetaModelLazy = () => __tmp4;
 			PageBreak.NamespaceLazy = () => __tmp3;
 			PageBreak.Documentation = null;
 			PageBreak.Name = "PageBreak";
 			// PageBreak.IsAbstract = null;
 			PageBreak.SuperClasses.AddLazy(() => Content);
-			__tmp19.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp19.InnerTypeLazy = () => ListItem;
-			__tmp20.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp20.InnerTypeLazy = () => Section;
-			__tmp21.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp21.InnerTypeLazy = () => Paragraph;
-			__tmp22.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp22.InnerTypeLazy = () => Cell;
-			__tmp23.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp23.InnerTypeLazy = () => Content;
-			__tmp24.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp24.InnerTypeLazy = () => Section;
+			TableOfContents.MetaModelLazy = () => __tmp4;
+			TableOfContents.NamespaceLazy = () => __tmp3;
+			TableOfContents.Documentation = null;
+			TableOfContents.Name = "TableOfContents";
+			// TableOfContents.IsAbstract = null;
+			TableOfContents.SuperClasses.AddLazy(() => Content);
+			__tmp31.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp31.InnerTypeLazy = () => Content;
+			__tmp33.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp33.InnerTypeLazy = () => ListItem;
+			__tmp36.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp36.InnerTypeLazy = () => Cell;
 	
 			foreach (global::MetaDslx.Core.MutableSymbol symbol in this.Model.Symbols)
 			{
@@ -3574,6 +3976,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// <summary>
 		/// Implements the constructor: Document()
 		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>ContentContainer</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>ContentContainer</li>
+		///     <li>Content</li>
+		/// </ul>
 		public virtual void Document(DocumentBuilder _this)
 		{
 			this.CallDocumentSuperConstructors(_this);
@@ -3584,22 +3995,8 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallDocumentSuperConstructors(DocumentBuilder _this)
 		{
-		}
-	
-	
-		/// <summary>
-		/// Implements the constructor: Section()
-		/// </summary>
-		public virtual void Section(SectionBuilder _this)
-		{
-			this.CallSectionSuperConstructors(_this);
-		}
-	
-		/// <summary>
-		/// Calls the super constructors of Section
-		/// </summary>
-		protected virtual void CallSectionSuperConstructors(SectionBuilder _this)
-		{
+			this.ContentContainer(_this);
+			this.Content(_this);
 		}
 	
 	
@@ -3620,7 +4017,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 	
 	
 		/// <summary>
-		/// Implements the constructor: ContentList()
+		/// Implements the constructor: ContentContainer()
 		/// </summary>
 		/// Direct superclasses: 
 		/// <ul>
@@ -3630,15 +4027,40 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// <ul>
 		///     <li>Content</li>
 		/// </ul>
-		public virtual void ContentList(ContentListBuilder _this)
+		public virtual void ContentContainer(ContentContainerBuilder _this)
 		{
-			this.CallContentListSuperConstructors(_this);
+			this.CallContentContainerSuperConstructors(_this);
 		}
 	
 		/// <summary>
-		/// Calls the super constructors of ContentList
+		/// Calls the super constructors of ContentContainer
 		/// </summary>
-		protected virtual void CallContentListSuperConstructors(ContentListBuilder _this)
+		protected virtual void CallContentContainerSuperConstructors(ContentContainerBuilder _this)
+		{
+			this.Content(_this);
+		}
+	
+	
+		/// <summary>
+		/// Implements the constructor: SectionTitle()
+		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		public virtual void SectionTitle(SectionTitleBuilder _this)
+		{
+			this.CallSectionTitleSuperConstructors(_this);
+		}
+	
+		/// <summary>
+		/// Calls the super constructors of SectionTitle
+		/// </summary>
+		protected virtual void CallSectionTitleSuperConstructors(SectionTitleBuilder _this)
 		{
 			this.Content(_this);
 		}
@@ -3649,10 +4071,11 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		/// Direct superclasses: 
 		/// <ul>
-		///     <li>Content</li>
+		///     <li>ContentContainer</li>
 		/// </ul>
 		/// All superclasses:
 		/// <ul>
+		///     <li>ContentContainer</li>
 		///     <li>Content</li>
 		/// </ul>
 		public virtual void Paragraph(ParagraphBuilder _this)
@@ -3665,6 +4088,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallParagraphSuperConstructors(ParagraphBuilder _this)
 		{
+			this.ContentContainer(_this);
 			this.Content(_this);
 		}
 	
@@ -3724,10 +4148,11 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		/// Direct superclasses: 
 		/// <ul>
-		///     <li>Content</li>
+		///     <li>ContentContainer</li>
 		/// </ul>
 		/// All superclasses:
 		/// <ul>
+		///     <li>ContentContainer</li>
 		///     <li>Content</li>
 		/// </ul>
 		public virtual void Reference(ReferenceBuilder _this)
@@ -3740,6 +4165,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallReferenceSuperConstructors(ReferenceBuilder _this)
 		{
+			this.ContentContainer(_this);
 			this.Content(_this);
 		}
 	
@@ -3749,10 +4175,11 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		/// Direct superclasses: 
 		/// <ul>
-		///     <li>Content</li>
+		///     <li>ContentContainer</li>
 		/// </ul>
 		/// All superclasses:
 		/// <ul>
+		///     <li>ContentContainer</li>
 		///     <li>Content</li>
 		/// </ul>
 		public virtual void Markup(MarkupBuilder _this)
@@ -3765,6 +4192,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallMarkupSuperConstructors(MarkupBuilder _this)
 		{
+			this.ContentContainer(_this);
 			this.Content(_this);
 		}
 	
@@ -3797,6 +4225,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// <summary>
 		/// Implements the constructor: ListItem()
 		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>ContentContainer</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>ContentContainer</li>
+		///     <li>Content</li>
+		/// </ul>
 		public virtual void ListItem(ListItemBuilder _this)
 		{
 			this.CallListItemSuperConstructors(_this);
@@ -3807,6 +4244,8 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallListItemSuperConstructors(ListItemBuilder _this)
 		{
+			this.ContentContainer(_this);
+			this.Content(_this);
 		}
 	
 	
@@ -3842,6 +4281,15 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// <summary>
 		/// Implements the constructor: Cell()
 		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>ContentContainer</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>ContentContainer</li>
+		///     <li>Content</li>
+		/// </ul>
 		public virtual void Cell(CellBuilder _this)
 		{
 			this.CallCellSuperConstructors(_this);
@@ -3852,6 +4300,8 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// </summary>
 		protected virtual void CallCellSuperConstructors(CellBuilder _this)
 		{
+			this.ContentContainer(_this);
+			this.Content(_this);
 		}
 	
 	
@@ -3903,6 +4353,33 @@ namespace DevToolsX.Documents.Symbols.Internal
 		{
 			this.Content(_this);
 		}
+	
+	
+		/// <summary>
+		/// Implements the constructor: TableOfContents()
+		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		public virtual void TableOfContents(TableOfContentsBuilder _this)
+		{
+			this.CallTableOfContentsSuperConstructors(_this);
+		}
+	
+		/// <summary>
+		/// Calls the super constructors of TableOfContents
+		/// </summary>
+		protected virtual void CallTableOfContentsSuperConstructors(TableOfContentsBuilder _this)
+		{
+			this.Content(_this);
+		}
+	
+	
 	
 	
 	

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevToolsX.Documents.Symbols;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,46 +7,6 @@ using System.Text;
 
 namespace DevToolsX.Documents
 {
-    public enum DocumentMarkupKind
-    {
-        None,
-        Bold,
-        Italic,
-        Underline,
-        Code,
-        CodeInline,
-        SubScript,
-        SuperScript,
-        Strikethrough
-    }
-
-    public enum HorizontalAlignment
-    {
-        Default,
-        Justify,
-        Left,
-        Center,
-        Right
-    }
-
-    public enum VerticalAlignment
-    {
-        Default,
-        Top,
-        Center,
-        Bottom
-    }
-
-    public enum ListKind
-    {
-        None,
-        Bullets,
-        Numbers,
-        RomanNumbers,
-        CapitalLetters,
-        SmallLetters
-    }
-
     public class DocumentGenerator : IDisposable
     {
         private IDocumentWriter writer;
@@ -189,37 +150,37 @@ namespace DevToolsX.Documents
             }
         }
 
-        public void Write(bool value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(bool value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(char value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(char value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(int value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(int value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(long value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(long value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(float value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(float value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(double value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(double value, MarkupKind markup = MarkupKind.None)
         {
             this.Append(value.ToString(), markup);
         }
 
-        public void Write(string text, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void Write(string text, MarkupKind markup = MarkupKind.None)
         {
             this.Append(text, markup);
         }
@@ -240,37 +201,37 @@ namespace DevToolsX.Documents
             this.appendSpace = false;
         }
 
-        public void WriteLine(bool value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(bool value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(char value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(char value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(int value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(int value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(long value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(long value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(float value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(float value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(double value, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(double value, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(value.ToString(), markup);
         }
 
-        public void WriteLine(string text, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        public void WriteLine(string text, MarkupKind markup = MarkupKind.None)
         {
             this.AppendLine(text, markup);
         }
@@ -280,7 +241,7 @@ namespace DevToolsX.Documents
             this.AppendLine(string.Format(text, args));
         }
 
-        private void Append(string text, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        private void Append(string text, MarkupKind markup = MarkupKind.None)
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -290,12 +251,12 @@ namespace DevToolsX.Documents
                 }
                 this.FlushBegin();
                 this.BeginParagraphIfNecessary();
-                if (markup != DocumentMarkupKind.None)
+                if (markup != MarkupKind.None)
                 {
                     this.writer.BeginMarkup(markup);
                 }
                 this.writer.Write(text);
-                if (markup != DocumentMarkupKind.None)
+                if (markup != MarkupKind.None)
                 {
                     this.writer.EndMarkup(markup);
                 }
@@ -304,7 +265,7 @@ namespace DevToolsX.Documents
             }
         }
 
-        private void AppendLine(string text, DocumentMarkupKind markup = DocumentMarkupKind.None)
+        private void AppendLine(string text, MarkupKind markup = MarkupKind.None)
         {
             this.Append(text);
             if (!string.IsNullOrEmpty(text))
@@ -410,9 +371,9 @@ namespace DevToolsX.Documents
             this.EnableParagraph();
         }
 
-        public void BeginMarkup(DocumentMarkupKind markupKind)
+        public void BeginMarkup(MarkupKind markupKind)
         {
-            if (markupKind == DocumentMarkupKind.Code)
+            if (markupKind == MarkupKind.Code)
             {
                 this.EndParagraphIfNecessary();
                 this.isInCode = true;
@@ -428,7 +389,7 @@ namespace DevToolsX.Documents
             {
                 this.writer.EndMarkup(begin.MarkupKind);
             }
-            if (begin.MarkupKind == DocumentMarkupKind.Code)
+            if (begin.MarkupKind == MarkupKind.Code)
             {
                 this.isInCode = false;
                 this.isInParagraph = false;
@@ -615,7 +576,7 @@ namespace DevToolsX.Documents
 
         private class MarkupBegin : Begin
         {
-            public DocumentMarkupKind MarkupKind { get; set; }
+            public MarkupKind MarkupKind { get; set; }
 
             protected override void DoApply(DocumentGenerator generator)
             {
