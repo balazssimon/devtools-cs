@@ -94,6 +94,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             heading.Title = this.GetText(node.HeadingText).Trim();
             this.AddContent(heading);
             this.ClearContainer();
+            this.addParagraphSpace = false;
         }
 
         public override void VisitParagraph(ParagraphSyntax node)
@@ -102,7 +103,6 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             var paragraph = this.factory.Paragraph();
             this.AddContent(paragraph);
             this.PushContainer(paragraph);
-            this.addParagraphSpace = false;
             base.VisitParagraph(node);
             if (!(this.PeekContainer() is ParagraphBuilder))
             {
@@ -111,33 +111,32 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             this.PopContainer();
         }
 
-        private void AddParagraphSpaceBefore(string text)
+        private void AddParagraphSpace()
         {
             if (this.addParagraphSpace)
             {
-                if (!text.StartsWith(" ") && !text.StartsWith("\t"))
-                {
-                    var contentList = this.PeekContainer().Text;
-                    var lastText = contentList.LastOrDefault() as TextBuilder;
-                    if (lastText != null)
-                    {
-                        lastText.Text += " ";
-                    }
-                    else
-                    {
-                        var spaceText = this.factory.Text();
-                        spaceText.Text = " ";
-                        this.AddContent(spaceText);
-                    }
-                }
                 this.addParagraphSpace = false;
+                var contentList = this.PeekContainer().Text;
+                var lastText = contentList.LastOrDefault() as TextBuilder;
+                if (lastText != null)
+                {
+                    lastText.Text += " ";
+                }
+                else
+                {
+                    var spaceText = this.factory.Text();
+                    spaceText.Text = " ";
+                    this.AddContent(spaceText);
+                }
             }
         }
 
         private void AddParagraphText(string text, ContentBuilder content = null)
         {
             if (string.IsNullOrEmpty(text)) return;
-            this.AddParagraphSpaceBefore(text);
+            text = text.Trim();
+            if (string.IsNullOrEmpty(text)) return;
+            this.AddParagraphSpace();
             if (content == null)
             {
                 var contentList = this.PeekContainer().Text;
@@ -157,6 +156,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             {
                 this.AddContent(content);
             }
+            this.addParagraphSpace = true;
         }
 
         public override void VisitInlineTextElement(InlineTextElementSyntax node)
@@ -248,6 +248,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 codeMarkup.Text.Add(paragraph);
             }
             this.PopContainer();
+            this.addParagraphSpace = false;
         }
 
         public override void VisitWikiList(WikiListSyntax node)
@@ -256,6 +257,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             this.CreateListInfo(null, string.Empty);
             base.VisitWikiList(node);
             while (this.listStack.Count > listStackCount) this.listStack.Pop();
+            this.addParagraphSpace = false;
         }
 
         public override void VisitWikiInternalLink(WikiInternalLinkSyntax node)
@@ -270,8 +272,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 title = text.Substring(0, firstBarIndex);
                 text = text.Substring(lastBarIndex + 1);
             }
+            if (string.IsNullOrWhiteSpace(text)) return;
             var reference = this.factory.Reference();
+            this.AddParagraphSpace();
             this.AddContent(reference);
+            this.addParagraphSpace = true;
             var referenceText = this.factory.Text();
             referenceText.Text = text;
             reference.Text.Add(referenceText);
@@ -289,8 +294,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 url = text.Substring(0, firstSpaceIndex);
                 text = text.Substring(firstSpaceIndex + 1);
             }
+            if (string.IsNullOrWhiteSpace(text)) return;
             var reference = this.factory.Reference();
+            this.AddParagraphSpace();
             this.AddContent(reference);
+            this.addParagraphSpace = true;
             var referenceText = this.factory.Text();
             referenceText.Text = text;
             reference.Text.Add(referenceText);
@@ -314,6 +322,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             {
                 var item = this.factory.ListItem();
                 this.PushContainer(item);
+                this.addParagraphSpace = false;
                 listInfo.List.Items.Add(item);
                 if (node.DefinitionItem != null)
                 {
@@ -333,6 +342,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             }
             else
             {
+                this.addParagraphSpace = false;
                 if (node.DefinitionItem != null)
                 {
                     MarkupBuilder markup = this.factory.Markup();
@@ -609,6 +619,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             this.AddContent(tableInfo.Table);
             base.Visit(node.TableRows);
             this.tableStack.Pop();
+            this.addParagraphSpace = false;
         }
 
         public override void VisitTableRow(TableRowSyntax node)
@@ -635,14 +646,22 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         {
             var tableInfo = this.tableStack.Peek();
             tableInfo.IsHeaderCell = true;
-            base.VisitTableSingleHeaderCell(node);
+            if (node.TableCell != null)
+            {
+                this.VisitTableCell(node.TableCell);
+                this.AddToLastCell(node.SpecialBlockOrParagraph);
+            }
         }
 
         public override void VisitTableHeaderCells(TableHeaderCellsSyntax node)
         {
             var tableInfo = this.tableStack.Peek();
             tableInfo.IsHeaderCell = true;
-            base.VisitTableHeaderCells(node);
+            foreach (var cell in node.TableCell)
+            {
+                this.VisitTableCell(cell);
+            }
+            this.AddToLastCell(node.SpecialBlockOrParagraph);
         }
 
         public override void VisitTableSingleCell(TableSingleCellSyntax node)
@@ -650,7 +669,11 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             var tableInfo = this.tableStack.Peek();
             tableInfo.IsHeaderCell = false;
             tableInfo.RowStart = false;
-            base.VisitTableSingleCell(node);
+            if (node.TableCell != null)
+            {
+                this.VisitTableCell(node.TableCell);
+                this.AddToLastCell(node.SpecialBlockOrParagraph);
+            }
         }
 
         public override void VisitTableCells(TableCellsSyntax node)
@@ -658,7 +681,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             var tableInfo = this.tableStack.Peek();
             tableInfo.IsHeaderCell = false;
             tableInfo.RowStart = false;
-            base.VisitTableCells(node);
+            foreach (var cell in node.TableCell)
+            {
+                this.VisitTableCell(cell);
+            }
+            this.AddToLastCell(node.SpecialBlockOrParagraph);
+        }
+
+        private void AddToLastCell(SyntaxNodeList<SpecialBlockOrParagraphSyntax> nodes)
+        {
+            if (nodes == null) return;
+            var tableInfo = this.tableStack.Peek();
+            var cell = tableInfo.Table.Cells.LastOrDefault();
+            if (cell != null)
+            {
+                this.PushContainer(cell);
+                foreach (var node in nodes)
+                {
+                    this.VisitSpecialBlockOrParagraph(node);
+                }
+                this.PopContainer();
+            }
         }
 
         public override void VisitTableCell(TableCellSyntax node)

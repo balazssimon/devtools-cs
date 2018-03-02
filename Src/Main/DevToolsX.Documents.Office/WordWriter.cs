@@ -23,7 +23,7 @@ namespace DevToolsX.Documents.Office
         private List<Microsoft.Office.Interop.Word.Table> tableStack;
         private Microsoft.Office.Interop.Word.Table table;
 
-        private MarkupKind lastMarkup = MarkupKind.None;
+        private List<MarkupKind> lastMarkups = new List<MarkupKind>();
 
         public WordWriter(string document, bool debug = false)
         {
@@ -262,7 +262,7 @@ namespace DevToolsX.Documents.Office
                 default:
                     throw new ArgumentOutOfRangeException("Invalid MarkupKind: " + markupKind);
             }
-            this.lastMarkup = markupKind;
+            this.lastMarkups.Add(markupKind);
         }
 
         private void ResetMarkup(MarkupKind markupKind, dynamic range)
@@ -357,14 +357,17 @@ namespace DevToolsX.Documents.Office
 
         public void Write(string text)
         {
-            if (this.lastMarkup != MarkupKind.None)
+            if (this.lastMarkups.Count > 0)
             {
                 int start = this.word.Selection.End;
                 this.word.Selection.TypeText(text);
                 int end = this.word.Selection.End;
                 dynamic range = this.document.Range(start, end);
-                this.ResetMarkup(this.lastMarkup, range);
-                this.lastMarkup = MarkupKind.None;
+                foreach (var markupKind in this.lastMarkups)
+                {
+                    this.ResetMarkup(markupKind, range);
+                }
+                this.lastMarkups.Clear();
             }
             else
             {

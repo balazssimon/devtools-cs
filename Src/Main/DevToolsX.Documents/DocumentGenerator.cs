@@ -451,6 +451,7 @@ namespace DevToolsX.Documents
         {
             this.DisableParagraph();
             this.beginStack.Add(new ListItemBegin() { Level = iterator.Level, Index = iterator.Index, Title = iterator.Title });
+            this.appendSpace = false;
         }
 
         private void CloseListItem(ListIterator iterator)
@@ -461,6 +462,7 @@ namespace DevToolsX.Documents
                 if (begin.IsFlushed)
                 {
                     this.writer.EndListItem(begin.Level, begin.Index, begin.Title);
+                    this.EnableParagraph();
                 }
                 begin.IsClosed = true;
             }
@@ -474,13 +476,13 @@ namespace DevToolsX.Documents
                 if (!begin.IsClosed)
                 {
                     this.writer.EndListItem(begin.Level, begin.Index, begin.Title);
+                    this.EnableParagraph();
                 }
             }
             else
             {
                 iterator.Previous();
             }
-            this.EnableParagraph();
         }
 
         public void EndList()
@@ -510,7 +512,7 @@ namespace DevToolsX.Documents
         public void BeginTable(int columnCount, int headColumnCount = 0, int headRowCount = 0)
         {
             this.EndParagraphIfNecessary();
-            this.DisableParagraph();
+            //this.DisableParagraph();
             this.beginStack.Add(new TableBegin() { ColumnCount = columnCount, HeadColumnCount = headColumnCount, HeadRowCount = headRowCount });
             this.tableIteratorStack.Add(new TableIterator(this, columnCount, headColumnCount, headRowCount));
         }
@@ -525,7 +527,6 @@ namespace DevToolsX.Documents
         private void BeginTableCell(TableIterator iterator)
         {
             this.FlushBegin();
-            this.DisableParagraph();
             if (iterator.Column == 0)
             {
                 if (iterator.Row > 0)
@@ -535,10 +536,13 @@ namespace DevToolsX.Documents
                 this.writer.BeginTableRow(iterator.Row);
             }
             this.writer.BeginTableCell(iterator.Row, iterator.Column, iterator.IsHead);
+            this.newParagraph = true;
+            this.isInParagraph = false;
         }
 
         private void EndTableCell(TableIterator iterator)
         {
+            //this.EndParagraphIfNecessary();
             this.writer.EndTableCell(iterator.Row, iterator.Column, iterator.IsHead);
         }
 
