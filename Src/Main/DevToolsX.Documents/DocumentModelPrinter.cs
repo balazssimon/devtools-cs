@@ -39,13 +39,17 @@ namespace DevToolsX.Documents
                 var paragraph = item as Paragraph;
                 var text = item as Text;
                 var markup = item as Markup;
+                var reference = item as Reference;
                 var list = item as List;
+                var table = item as Table;
                 var childContainer = item as ContentContainer;
                 if (sectionTitle != null) this.Print(sectionTitle);
                 else if (paragraph != null) this.Print(paragraph);
                 else if (text != null) this.Print(text);
                 else if (markup != null) this.Print(markup);
+                else if (reference != null) this.Print(reference);
                 else if (list != null) this.Print(list);
+                else if (table != null) this.Print(table);
                 else if (childContainer != null) this.Print(childContainer);
             }
         }
@@ -69,10 +73,24 @@ namespace DevToolsX.Documents
 
         private void Print(Markup markup)
         {
-            this.generator.BeginMarkup(markup.Kind);
+            foreach (var kind in markup.Kind)
+            {
+                this.generator.BeginMarkup(kind);
+            }
             ContentContainer container = markup;
             this.Print(container);
-            this.generator.EndMarkup();
+            for (int i = 0; i < markup.Kind.Count; i++)
+            {
+                this.generator.EndMarkup();
+            }
+        }
+
+        private void Print(Reference reference)
+        {
+            this.generator.BeginReference(reference.DocumentName, reference.LabelName);
+            ContentContainer container = reference;
+            this.Print(container);
+            this.generator.EndReference();
         }
 
         private void Print(List list)
@@ -86,5 +104,15 @@ namespace DevToolsX.Documents
             this.generator.EndList();
         }
 
+        private void Print(Table table)
+        {
+            this.generator.BeginTable(table.ColumnCount, table.HeadColumnCount, table.HeadRowCount);
+            foreach (var cell in table.Cells)
+            {
+                this.generator.AddTableCell();
+                this.Print(cell);
+            }
+            this.generator.EndTable();
+        }
     }
 }

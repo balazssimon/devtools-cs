@@ -202,6 +202,26 @@ public interface IMediaWikiParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTableFirstRow([NotNull] MediaWikiParser.TableFirstRowContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableNonFirstRow"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterTableNonFirstRow([NotNull] MediaWikiParser.TableNonFirstRowContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.tableNonFirstRow"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitTableNonFirstRow([NotNull] MediaWikiParser.TableNonFirstRowContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableRowStart"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterTableRowStart([NotNull] MediaWikiParser.TableRowStartContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.tableRowStart"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitTableRowStart([NotNull] MediaWikiParser.TableRowStartContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableRow"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -272,15 +292,15 @@ public interface IMediaWikiParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTableCell([NotNull] MediaWikiParser.TableCellContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.cellAttributes"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterCellValue([NotNull] MediaWikiParser.CellValueContext context);
+	void EnterCellAttributes([NotNull] MediaWikiParser.CellAttributesContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.cellAttributes"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitCellValue([NotNull] MediaWikiParser.CellValueContext context);
+	void ExitCellAttributes([NotNull] MediaWikiParser.CellAttributesContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="MediaWikiParser.paragraph"/>.
 	/// </summary>

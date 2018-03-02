@@ -240,6 +240,30 @@ public partial class MediaWikiParserBaseListener : IMediaWikiParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTableFirstRow([NotNull] MediaWikiParser.TableFirstRowContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableNonFirstRow"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterTableNonFirstRow([NotNull] MediaWikiParser.TableNonFirstRowContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.tableNonFirstRow"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitTableNonFirstRow([NotNull] MediaWikiParser.TableNonFirstRowContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableRowStart"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterTableRowStart([NotNull] MediaWikiParser.TableRowStartContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.tableRowStart"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitTableRowStart([NotNull] MediaWikiParser.TableRowStartContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MediaWikiParser.tableRow"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -324,17 +348,17 @@ public partial class MediaWikiParserBaseListener : IMediaWikiParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTableCell([NotNull] MediaWikiParser.TableCellContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
+	/// Enter a parse tree produced by <see cref="MediaWikiParser.cellAttributes"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCellValue([NotNull] MediaWikiParser.CellValueContext context) { }
+	public virtual void EnterCellAttributes([NotNull] MediaWikiParser.CellAttributesContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
+	/// Exit a parse tree produced by <see cref="MediaWikiParser.cellAttributes"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCellValue([NotNull] MediaWikiParser.CellValueContext context) { }
+	public virtual void ExitCellAttributes([NotNull] MediaWikiParser.CellAttributesContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="MediaWikiParser.paragraph"/>.
 	/// <para>The default implementation does nothing.</para>

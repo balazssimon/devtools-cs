@@ -371,30 +371,53 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				{
 					tableFirstRow = (TableFirstRowGreen)this.Visit(tableFirstRowContext);
 				}
-			    MediaWikiParser.TableRowContext[] tableRowContext = context.tableRow();
-			    ArrayBuilder<TableRowGreen> tableRowBuilder = ArrayBuilder<TableRowGreen>.GetInstance(tableRowContext.Length);
-			    for (int i = 0; i < tableRowContext.Length; i++)
+			    MediaWikiParser.TableNonFirstRowContext[] tableNonFirstRowContext = context.tableNonFirstRow();
+			    ArrayBuilder<TableNonFirstRowGreen> tableNonFirstRowBuilder = ArrayBuilder<TableNonFirstRowGreen>.GetInstance(tableNonFirstRowContext.Length);
+			    for (int i = 0; i < tableNonFirstRowContext.Length; i++)
 			    {
-			        tableRowBuilder.Add((TableRowGreen)this.Visit(tableRowContext[i]));
+			        tableNonFirstRowBuilder.Add((TableNonFirstRowGreen)this.Visit(tableNonFirstRowContext[i]));
 			    }
-				InternalSyntaxNodeList tableRow = InternalSyntaxNodeList.Create(tableRowBuilder.ToArrayAndFree());
-				return this.factory.TableRows(tableFirstRow, tableRow, true);
+				InternalSyntaxNodeList tableNonFirstRow = InternalSyntaxNodeList.Create(tableNonFirstRowBuilder.ToArrayAndFree());
+				return this.factory.TableRows(tableFirstRow, tableNonFirstRow, true);
 			}
 			
 			public override GreenNode VisitTableFirstRow(MediaWikiParser.TableFirstRowContext context)
 			{
 				if (context == null) return null;
-			    MediaWikiParser.TableColumnContext[] tableColumnContext = context.tableColumn();
-			    ArrayBuilder<TableColumnGreen> tableColumnBuilder = ArrayBuilder<TableColumnGreen>.GetInstance(tableColumnContext.Length);
-			    for (int i = 0; i < tableColumnContext.Length; i++)
-			    {
-			        tableColumnBuilder.Add((TableColumnGreen)this.Visit(tableColumnContext[i]));
-			    }
-				InternalSyntaxNodeList tableColumn = InternalSyntaxNodeList.Create(tableColumnBuilder.ToArrayAndFree());
-				return this.factory.TableFirstRow(tableColumn, true);
+				MediaWikiParser.TableRowStartContext tableRowStartContext = context.tableRowStart();
+				TableRowStartGreen tableRowStart = null;
+				if (tableRowStartContext != null)
+				{
+					tableRowStart = (TableRowStartGreen)this.Visit(tableRowStartContext);
+				}
+				MediaWikiParser.TableRowContext tableRowContext = context.tableRow();
+				TableRowGreen tableRow = null;
+				if (tableRowContext != null)
+				{
+					tableRow = (TableRowGreen)this.Visit(tableRowContext);
+				}
+				return this.factory.TableFirstRow(tableRowStart, tableRow, true);
 			}
 			
-			public override GreenNode VisitTableRow(MediaWikiParser.TableRowContext context)
+			public override GreenNode VisitTableNonFirstRow(MediaWikiParser.TableNonFirstRowContext context)
+			{
+				if (context == null) return null;
+				MediaWikiParser.TableRowStartContext tableRowStartContext = context.tableRowStart();
+				TableRowStartGreen tableRowStart = null;
+				if (tableRowStartContext != null)
+				{
+					tableRowStart = (TableRowStartGreen)this.Visit(tableRowStartContext);
+				}
+				MediaWikiParser.TableRowContext tableRowContext = context.tableRow();
+				TableRowGreen tableRow = null;
+				if (tableRowContext != null)
+				{
+					tableRow = (TableRowGreen)this.Visit(tableRowContext);
+				}
+				return this.factory.TableNonFirstRow(tableRowStart, tableRow, true);
+			}
+			
+			public override GreenNode VisitTableRowStart(MediaWikiParser.TableRowStartContext context)
 			{
 				if (context == null) return null;
 				InternalSyntaxToken tTableRowStart = (InternalSyntaxToken)this.VisitTerminal(context.TTableRowStart());
@@ -405,6 +428,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 					inlineText = (InlineTextGreen)this.Visit(inlineTextContext);
 				}
 				InternalSyntaxToken crlf = (InternalSyntaxToken)this.VisitTerminal(context.CRLF());
+				return this.factory.TableRowStart(tTableRowStart, inlineText, crlf, true);
+			}
+			
+			public override GreenNode VisitTableRow(MediaWikiParser.TableRowContext context)
+			{
+				if (context == null) return null;
 			    MediaWikiParser.TableColumnContext[] tableColumnContext = context.tableColumn();
 			    ArrayBuilder<TableColumnGreen> tableColumnBuilder = ArrayBuilder<TableColumnGreen>.GetInstance(tableColumnContext.Length);
 			    for (int i = 0; i < tableColumnContext.Length; i++)
@@ -412,7 +441,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			        tableColumnBuilder.Add((TableColumnGreen)this.Visit(tableColumnContext[i]));
 			    }
 				InternalSyntaxNodeList tableColumn = InternalSyntaxNodeList.Create(tableColumnBuilder.ToArrayAndFree());
-				return this.factory.TableRow(tTableRowStart, inlineText, crlf, tableColumn, true);
+				return this.factory.TableRow(tableColumn, true);
 			}
 			
 			public override GreenNode VisitTableColumn(MediaWikiParser.TableColumnContext context)
@@ -540,32 +569,32 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			public override GreenNode VisitTableCell(MediaWikiParser.TableCellContext context)
 			{
 				if (context == null) return null;
+				MediaWikiParser.CellAttributesContext cellAttributesContext = context.cellAttributes();
+				CellAttributesGreen cellAttributes = null;
+				if (cellAttributesContext != null)
+				{
+					cellAttributes = (CellAttributesGreen)this.Visit(cellAttributesContext);
+				}
 				MediaWikiParser.CellTextContext cellTextContext = context.cellText();
 				CellTextGreen cellText = null;
 				if (cellTextContext != null)
 				{
 					cellText = (CellTextGreen)this.Visit(cellTextContext);
 				}
-				MediaWikiParser.CellValueContext cellValueContext = context.cellValue();
-				CellValueGreen cellValue = null;
-				if (cellValueContext != null)
-				{
-					cellValue = (CellValueGreen)this.Visit(cellValueContext);
-				}
-				return this.factory.TableCell(cellText, cellValue, true);
+				return this.factory.TableCell(cellAttributes, cellText, true);
 			}
 			
-			public override GreenNode VisitCellValue(MediaWikiParser.CellValueContext context)
+			public override GreenNode VisitCellAttributes(MediaWikiParser.CellAttributesContext context)
 			{
 				if (context == null) return null;
-				InternalSyntaxToken tBar = (InternalSyntaxToken)this.VisitTerminal(context.TBar());
 				MediaWikiParser.CellTextContext cellTextContext = context.cellText();
 				CellTextGreen cellText = null;
 				if (cellTextContext != null)
 				{
 					cellText = (CellTextGreen)this.Visit(cellTextContext);
 				}
-				return this.factory.CellValue(tBar, cellText, true);
+				InternalSyntaxToken tBar = (InternalSyntaxToken)this.VisitTerminal(context.TBar());
+				return this.factory.CellAttributes(cellText, tBar, true);
 			}
 			
 			public override GreenNode VisitParagraph(MediaWikiParser.ParagraphContext context)

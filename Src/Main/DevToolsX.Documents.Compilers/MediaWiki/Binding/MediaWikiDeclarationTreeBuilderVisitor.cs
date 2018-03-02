@@ -96,6 +96,14 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 		{
 		}
 		
+		public virtual void VisitTableNonFirstRow(TableNonFirstRowSyntax node)
+		{
+		}
+		
+		public virtual void VisitTableRowStart(TableRowStartSyntax node)
+		{
+		}
+		
 		public virtual void VisitTableRow(TableRowSyntax node)
 		{
 		}
@@ -124,7 +132,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 		{
 		}
 		
-		public virtual void VisitCellValue(CellValueSyntax node)
+		public virtual void VisitCellAttributes(CellAttributesSyntax node)
 		{
 		}
 		

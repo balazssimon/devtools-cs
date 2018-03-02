@@ -2193,9 +2193,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	internal class TableRowsGreen : MediaWikiGreenNode
 	{
 	    private TableFirstRowGreen tableFirstRow;
-	    private InternalSyntaxNodeList tableRow;
+	    private InternalSyntaxNodeList tableNonFirstRow;
 	
-	    public TableRowsGreen(MediaWikiSyntaxKind kind, TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableRow)
+	    public TableRowsGreen(MediaWikiSyntaxKind kind, TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableNonFirstRow)
 	        : base(kind, null, null)
 	    {
 			if (tableFirstRow != null)
@@ -2203,14 +2203,14 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tableFirstRow);
 				this.tableFirstRow = tableFirstRow;
 			}
-			if (tableRow != null)
+			if (tableNonFirstRow != null)
 			{
-				this.AdjustFlagsAndWidth(tableRow);
-				this.tableRow = tableRow;
+				this.AdjustFlagsAndWidth(tableNonFirstRow);
+				this.tableNonFirstRow = tableNonFirstRow;
 			}
 	    }
 	
-	    public TableRowsGreen(MediaWikiSyntaxKind kind, TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableRow, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public TableRowsGreen(MediaWikiSyntaxKind kind, TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableNonFirstRow, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (tableFirstRow != null)
@@ -2218,17 +2218,17 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tableFirstRow);
 				this.tableFirstRow = tableFirstRow;
 			}
-			if (tableRow != null)
+			if (tableNonFirstRow != null)
 			{
-				this.AdjustFlagsAndWidth(tableRow);
-				this.tableRow = tableRow;
+				this.AdjustFlagsAndWidth(tableNonFirstRow);
+				this.tableNonFirstRow = tableNonFirstRow;
 			}
 	    }
 	
 		public override int SlotCount { get { return 2; } }
 	
 	    public TableFirstRowGreen TableFirstRow { get { return this.tableFirstRow; } }
-	    public InternalSyntaxNodeList TableRow { get { return this.tableRow; } }
+	    public InternalSyntaxNodeList TableNonFirstRow { get { return this.tableNonFirstRow; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
@@ -2240,27 +2240,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	        switch (index)
 	        {
 	            case 0: return this.tableFirstRow;
-	            case 1: return this.tableRow;
+	            case 1: return this.tableNonFirstRow;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TableRowsGreen(this.Kind, this.tableFirstRow, this.tableRow, diagnostics, this.GetAnnotations());
+	        return new TableRowsGreen(this.Kind, this.tableFirstRow, this.tableNonFirstRow, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TableRowsGreen(this.Kind, this.tableFirstRow, this.tableRow, this.GetDiagnostics(), annotations);
+	        return new TableRowsGreen(this.Kind, this.tableFirstRow, this.tableNonFirstRow, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TableRowsGreen Update(TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableRow)
+	    public TableRowsGreen Update(TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableNonFirstRow)
 	    {
 	        if (this.tableFirstRow != tableFirstRow ||
-				this.tableRow != tableRow)
+				this.tableNonFirstRow != tableNonFirstRow)
 	        {
-	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableRows(tableFirstRow, tableRow);
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableRows(tableFirstRow, tableNonFirstRow);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -2275,9 +2275,272 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	
 	internal class TableFirstRowGreen : MediaWikiGreenNode
 	{
+	    private TableRowStartGreen tableRowStart;
+	    private TableRowGreen tableRow;
+	
+	    public TableFirstRowGreen(MediaWikiSyntaxKind kind, TableRowStartGreen tableRowStart, TableRowGreen tableRow)
+	        : base(kind, null, null)
+	    {
+			if (tableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tableRowStart);
+				this.tableRowStart = tableRowStart;
+			}
+			if (tableRow != null)
+			{
+				this.AdjustFlagsAndWidth(tableRow);
+				this.tableRow = tableRow;
+			}
+	    }
+	
+	    public TableFirstRowGreen(MediaWikiSyntaxKind kind, TableRowStartGreen tableRowStart, TableRowGreen tableRow, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (tableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tableRowStart);
+				this.tableRowStart = tableRowStart;
+			}
+			if (tableRow != null)
+			{
+				this.AdjustFlagsAndWidth(tableRow);
+				this.tableRow = tableRow;
+			}
+	    }
+	
+		public override int SlotCount { get { return 2; } }
+	
+	    public TableRowStartGreen TableRowStart { get { return this.tableRowStart; } }
+	    public TableRowGreen TableRow { get { return this.tableRow; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableFirstRowSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.tableRowStart;
+	            case 1: return this.tableRow;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new TableFirstRowGreen(this.Kind, this.tableRowStart, this.tableRow, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new TableFirstRowGreen(this.Kind, this.tableRowStart, this.tableRow, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public TableFirstRowGreen Update(TableRowStartGreen tableRowStart, TableRowGreen tableRow)
+	    {
+	        if (this.tableRowStart != tableRowStart ||
+				this.tableRow != tableRow)
+	        {
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableFirstRow(tableRowStart, tableRow);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (TableFirstRowGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class TableNonFirstRowGreen : MediaWikiGreenNode
+	{
+	    private TableRowStartGreen tableRowStart;
+	    private TableRowGreen tableRow;
+	
+	    public TableNonFirstRowGreen(MediaWikiSyntaxKind kind, TableRowStartGreen tableRowStart, TableRowGreen tableRow)
+	        : base(kind, null, null)
+	    {
+			if (tableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tableRowStart);
+				this.tableRowStart = tableRowStart;
+			}
+			if (tableRow != null)
+			{
+				this.AdjustFlagsAndWidth(tableRow);
+				this.tableRow = tableRow;
+			}
+	    }
+	
+	    public TableNonFirstRowGreen(MediaWikiSyntaxKind kind, TableRowStartGreen tableRowStart, TableRowGreen tableRow, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (tableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tableRowStart);
+				this.tableRowStart = tableRowStart;
+			}
+			if (tableRow != null)
+			{
+				this.AdjustFlagsAndWidth(tableRow);
+				this.tableRow = tableRow;
+			}
+	    }
+	
+		public override int SlotCount { get { return 2; } }
+	
+	    public TableRowStartGreen TableRowStart { get { return this.tableRowStart; } }
+	    public TableRowGreen TableRow { get { return this.tableRow; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableNonFirstRowSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.tableRowStart;
+	            case 1: return this.tableRow;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new TableNonFirstRowGreen(this.Kind, this.tableRowStart, this.tableRow, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new TableNonFirstRowGreen(this.Kind, this.tableRowStart, this.tableRow, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public TableNonFirstRowGreen Update(TableRowStartGreen tableRowStart, TableRowGreen tableRow)
+	    {
+	        if (this.tableRowStart != tableRowStart ||
+				this.tableRow != tableRow)
+	        {
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableNonFirstRow(tableRowStart, tableRow);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (TableNonFirstRowGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class TableRowStartGreen : MediaWikiGreenNode
+	{
+	    private InternalSyntaxToken tTableRowStart;
+	    private InlineTextGreen inlineText;
+	    private InternalSyntaxToken crlf;
+	
+	    public TableRowStartGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf)
+	        : base(kind, null, null)
+	    {
+			if (tTableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tTableRowStart);
+				this.tTableRowStart = tTableRowStart;
+			}
+			if (inlineText != null)
+			{
+				this.AdjustFlagsAndWidth(inlineText);
+				this.inlineText = inlineText;
+			}
+			if (crlf != null)
+			{
+				this.AdjustFlagsAndWidth(crlf);
+				this.crlf = crlf;
+			}
+	    }
+	
+	    public TableRowStartGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (tTableRowStart != null)
+			{
+				this.AdjustFlagsAndWidth(tTableRowStart);
+				this.tTableRowStart = tTableRowStart;
+			}
+			if (inlineText != null)
+			{
+				this.AdjustFlagsAndWidth(inlineText);
+				this.inlineText = inlineText;
+			}
+			if (crlf != null)
+			{
+				this.AdjustFlagsAndWidth(crlf);
+				this.crlf = crlf;
+			}
+	    }
+	
+		public override int SlotCount { get { return 3; } }
+	
+	    public InternalSyntaxToken TTableRowStart { get { return this.tTableRowStart; } }
+	    public InlineTextGreen InlineText { get { return this.inlineText; } }
+	    public InternalSyntaxToken CRLF { get { return this.crlf; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableRowStartSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.tTableRowStart;
+	            case 1: return this.inlineText;
+	            case 2: return this.crlf;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new TableRowStartGreen(this.Kind, this.tTableRowStart, this.inlineText, this.crlf, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new TableRowStartGreen(this.Kind, this.tTableRowStart, this.inlineText, this.crlf, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public TableRowStartGreen Update(InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf)
+	    {
+	        if (this.tTableRowStart != tTableRowStart ||
+				this.inlineText != inlineText ||
+				this.crlf != crlf)
+	        {
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableRowStart(tTableRowStart, inlineText, crlf);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (TableRowStartGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class TableRowGreen : MediaWikiGreenNode
+	{
 	    private InternalSyntaxNodeList tableColumn;
 	
-	    public TableFirstRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxNodeList tableColumn)
+	    public TableRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxNodeList tableColumn)
 	        : base(kind, null, null)
 	    {
 			if (tableColumn != null)
@@ -2287,7 +2550,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public TableFirstRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxNodeList tableColumn, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public TableRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxNodeList tableColumn, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (tableColumn != null)
@@ -2303,7 +2566,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
-	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableFirstRowSyntax(this, parent, position);
+	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableRowSyntax(this, parent, position);
 	    }
 	
 	    public override GreenNode GetSlot(int index)
@@ -2317,130 +2580,19 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TableFirstRowGreen(this.Kind, this.tableColumn, diagnostics, this.GetAnnotations());
+	        return new TableRowGreen(this.Kind, this.tableColumn, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TableFirstRowGreen(this.Kind, this.tableColumn, this.GetDiagnostics(), annotations);
+	        return new TableRowGreen(this.Kind, this.tableColumn, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TableFirstRowGreen Update(InternalSyntaxNodeList tableColumn)
+	    public TableRowGreen Update(InternalSyntaxNodeList tableColumn)
 	    {
 	        if (this.tableColumn != tableColumn)
 	        {
-	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableFirstRow(tableColumn);
-	            var diags = this.GetDiagnostics();
-	            if (diags != null && diags.Length > 0)
-	               newNode = newNode.WithDiagnostics(diags);
-	            var annotations = this.GetAnnotations();
-	            if (annotations != null && annotations.Length > 0)
-	               newNode = newNode.WithAnnotations(annotations);
-				return (TableFirstRowGreen)newNode;
-	        }
-	        return this;
-	    }
-	}
-	
-	internal class TableRowGreen : MediaWikiGreenNode
-	{
-	    private InternalSyntaxToken tTableRowStart;
-	    private InlineTextGreen inlineText;
-	    private InternalSyntaxToken crlf;
-	    private InternalSyntaxNodeList tableColumn;
-	
-	    public TableRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, InternalSyntaxNodeList tableColumn)
-	        : base(kind, null, null)
-	    {
-			if (tTableRowStart != null)
-			{
-				this.AdjustFlagsAndWidth(tTableRowStart);
-				this.tTableRowStart = tTableRowStart;
-			}
-			if (inlineText != null)
-			{
-				this.AdjustFlagsAndWidth(inlineText);
-				this.inlineText = inlineText;
-			}
-			if (crlf != null)
-			{
-				this.AdjustFlagsAndWidth(crlf);
-				this.crlf = crlf;
-			}
-			if (tableColumn != null)
-			{
-				this.AdjustFlagsAndWidth(tableColumn);
-				this.tableColumn = tableColumn;
-			}
-	    }
-	
-	    public TableRowGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, InternalSyntaxNodeList tableColumn, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
-	        : base(kind, diagnostics, annotations)
-	    {
-			if (tTableRowStart != null)
-			{
-				this.AdjustFlagsAndWidth(tTableRowStart);
-				this.tTableRowStart = tTableRowStart;
-			}
-			if (inlineText != null)
-			{
-				this.AdjustFlagsAndWidth(inlineText);
-				this.inlineText = inlineText;
-			}
-			if (crlf != null)
-			{
-				this.AdjustFlagsAndWidth(crlf);
-				this.crlf = crlf;
-			}
-			if (tableColumn != null)
-			{
-				this.AdjustFlagsAndWidth(tableColumn);
-				this.tableColumn = tableColumn;
-			}
-	    }
-	
-		public override int SlotCount { get { return 4; } }
-	
-	    public InternalSyntaxToken TTableRowStart { get { return this.tTableRowStart; } }
-	    public InlineTextGreen InlineText { get { return this.inlineText; } }
-	    public InternalSyntaxToken CRLF { get { return this.crlf; } }
-	    public InternalSyntaxNodeList TableColumn { get { return this.tableColumn; } }
-	
-	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
-	    {
-	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.TableRowSyntax(this, parent, position);
-	    }
-	
-	    public override GreenNode GetSlot(int index)
-	    {
-	        switch (index)
-	        {
-	            case 0: return this.tTableRowStart;
-	            case 1: return this.inlineText;
-	            case 2: return this.crlf;
-	            case 3: return this.tableColumn;
-	            default: return null;
-	        }
-	    }
-	
-	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
-	    {
-	        return new TableRowGreen(this.Kind, this.tTableRowStart, this.inlineText, this.crlf, this.tableColumn, diagnostics, this.GetAnnotations());
-	    }
-	
-	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
-	    {
-	        return new TableRowGreen(this.Kind, this.tTableRowStart, this.inlineText, this.crlf, this.tableColumn, this.GetDiagnostics(), annotations);
-	    }
-	
-	    public TableRowGreen Update(InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, InternalSyntaxNodeList tableColumn)
-	    {
-	        if (this.tTableRowStart != tTableRowStart ||
-				this.inlineText != inlineText ||
-				this.crlf != crlf ||
-				this.tableColumn != tableColumn)
-	        {
-	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableRow(tTableRowStart, inlineText, crlf, tableColumn);
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableRow(tableColumn);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -3055,43 +3207,43 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	
 	internal class TableCellGreen : MediaWikiGreenNode
 	{
+	    private CellAttributesGreen cellAttributes;
 	    private CellTextGreen cellText;
-	    private CellValueGreen cellValue;
 	
-	    public TableCellGreen(MediaWikiSyntaxKind kind, CellTextGreen cellText, CellValueGreen cellValue)
+	    public TableCellGreen(MediaWikiSyntaxKind kind, CellAttributesGreen cellAttributes, CellTextGreen cellText)
 	        : base(kind, null, null)
 	    {
+			if (cellAttributes != null)
+			{
+				this.AdjustFlagsAndWidth(cellAttributes);
+				this.cellAttributes = cellAttributes;
+			}
 			if (cellText != null)
 			{
 				this.AdjustFlagsAndWidth(cellText);
 				this.cellText = cellText;
-			}
-			if (cellValue != null)
-			{
-				this.AdjustFlagsAndWidth(cellValue);
-				this.cellValue = cellValue;
 			}
 	    }
 	
-	    public TableCellGreen(MediaWikiSyntaxKind kind, CellTextGreen cellText, CellValueGreen cellValue, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public TableCellGreen(MediaWikiSyntaxKind kind, CellAttributesGreen cellAttributes, CellTextGreen cellText, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
+			if (cellAttributes != null)
+			{
+				this.AdjustFlagsAndWidth(cellAttributes);
+				this.cellAttributes = cellAttributes;
+			}
 			if (cellText != null)
 			{
 				this.AdjustFlagsAndWidth(cellText);
 				this.cellText = cellText;
-			}
-			if (cellValue != null)
-			{
-				this.AdjustFlagsAndWidth(cellValue);
-				this.cellValue = cellValue;
 			}
 	    }
 	
 		public override int SlotCount { get { return 2; } }
 	
+	    public CellAttributesGreen CellAttributes { get { return this.cellAttributes; } }
 	    public CellTextGreen CellText { get { return this.cellText; } }
-	    public CellValueGreen CellValue { get { return this.cellValue; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
@@ -3102,28 +3254,28 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	    {
 	        switch (index)
 	        {
-	            case 0: return this.cellText;
-	            case 1: return this.cellValue;
+	            case 0: return this.cellAttributes;
+	            case 1: return this.cellText;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TableCellGreen(this.Kind, this.cellText, this.cellValue, diagnostics, this.GetAnnotations());
+	        return new TableCellGreen(this.Kind, this.cellAttributes, this.cellText, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TableCellGreen(this.Kind, this.cellText, this.cellValue, this.GetDiagnostics(), annotations);
+	        return new TableCellGreen(this.Kind, this.cellAttributes, this.cellText, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TableCellGreen Update(CellTextGreen cellText, CellValueGreen cellValue)
+	    public TableCellGreen Update(CellAttributesGreen cellAttributes, CellTextGreen cellText)
 	    {
-	        if (this.cellText != cellText ||
-				this.cellValue != cellValue)
+	        if (this.cellAttributes != cellAttributes ||
+				this.cellText != cellText)
 	        {
-	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableCell(cellText, cellValue);
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.TableCell(cellAttributes, cellText);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -3136,84 +3288,84 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	    }
 	}
 	
-	internal class CellValueGreen : MediaWikiGreenNode
+	internal class CellAttributesGreen : MediaWikiGreenNode
 	{
-	    private InternalSyntaxToken tBar;
 	    private CellTextGreen cellText;
+	    private InternalSyntaxToken tBar;
 	
-	    public CellValueGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tBar, CellTextGreen cellText)
+	    public CellAttributesGreen(MediaWikiSyntaxKind kind, CellTextGreen cellText, InternalSyntaxToken tBar)
 	        : base(kind, null, null)
 	    {
-			if (tBar != null)
-			{
-				this.AdjustFlagsAndWidth(tBar);
-				this.tBar = tBar;
-			}
 			if (cellText != null)
 			{
 				this.AdjustFlagsAndWidth(cellText);
 				this.cellText = cellText;
+			}
+			if (tBar != null)
+			{
+				this.AdjustFlagsAndWidth(tBar);
+				this.tBar = tBar;
 			}
 	    }
 	
-	    public CellValueGreen(MediaWikiSyntaxKind kind, InternalSyntaxToken tBar, CellTextGreen cellText, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public CellAttributesGreen(MediaWikiSyntaxKind kind, CellTextGreen cellText, InternalSyntaxToken tBar, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
-			if (tBar != null)
-			{
-				this.AdjustFlagsAndWidth(tBar);
-				this.tBar = tBar;
-			}
 			if (cellText != null)
 			{
 				this.AdjustFlagsAndWidth(cellText);
 				this.cellText = cellText;
+			}
+			if (tBar != null)
+			{
+				this.AdjustFlagsAndWidth(tBar);
+				this.tBar = tBar;
 			}
 	    }
 	
 		public override int SlotCount { get { return 2; } }
 	
-	    public InternalSyntaxToken TBar { get { return this.tBar; } }
 	    public CellTextGreen CellText { get { return this.cellText; } }
+	    public InternalSyntaxToken TBar { get { return this.tBar; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
-	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.CellValueSyntax(this, parent, position);
+	        return new global::DevToolsX.Documents.Compilers.MediaWiki.Syntax.CellAttributesSyntax(this, parent, position);
 	    }
 	
 	    public override GreenNode GetSlot(int index)
 	    {
 	        switch (index)
 	        {
-	            case 0: return this.tBar;
-	            case 1: return this.cellText;
+	            case 0: return this.cellText;
+	            case 1: return this.tBar;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new CellValueGreen(this.Kind, this.tBar, this.cellText, diagnostics, this.GetAnnotations());
+	        return new CellAttributesGreen(this.Kind, this.cellText, this.tBar, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new CellValueGreen(this.Kind, this.tBar, this.cellText, this.GetDiagnostics(), annotations);
+	        return new CellAttributesGreen(this.Kind, this.cellText, this.tBar, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public CellValueGreen Update(InternalSyntaxToken tBar, CellTextGreen cellText)
+	    public CellAttributesGreen Update(CellTextGreen cellText, InternalSyntaxToken tBar)
 	    {
-	        if (this.tBar != tBar ||
-				this.cellText != cellText)
+	        if (this.cellText != cellText ||
+				this.tBar != tBar)
 	        {
-	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.CellValue(tBar, cellText);
+	            GreenNode newNode = MediaWikiLanguage.Instance.InternalSyntaxFactory.CellAttributes(cellText, tBar);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
-				return (CellValueGreen)newNode;
+				return (CellAttributesGreen)newNode;
 	        }
 	        return this;
 	    }
@@ -8507,7 +8659,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	        return new TableCaptionGreen(MediaWikiSyntaxKind.TableCaption, tTableCaptionStart, inlineText, crlf, specialBlockOrParagraph);
 	    }
 	
-		public TableRowsGreen TableRows(TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableRow, bool errorNode = false)
+		public TableRowsGreen TableRows(TableFirstRowGreen tableFirstRow, InternalSyntaxNodeList tableNonFirstRow, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
@@ -8516,9 +8668,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableRows, tableFirstRow, tableRow, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableRows, tableFirstRow, tableNonFirstRow, out hash);
 			if (cached != null) return (TableRowsGreen)cached;
-			var result = new TableRowsGreen(MediaWikiSyntaxKind.TableRows, tableFirstRow, tableRow);
+			var result = new TableRowsGreen(MediaWikiSyntaxKind.TableRows, tableFirstRow, tableNonFirstRow);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -8526,17 +8678,18 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public TableFirstRowGreen TableFirstRow(InternalSyntaxNodeList tableColumn, bool errorNode = false)
+		public TableFirstRowGreen TableFirstRow(TableRowStartGreen tableRowStart, TableRowGreen tableRow, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
+				if (tableRow == null) throw new ArgumentNullException(nameof(tableRow));
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableFirstRow, tableColumn, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableFirstRow, tableRowStart, tableRow, out hash);
 			if (cached != null) return (TableFirstRowGreen)cached;
-			var result = new TableFirstRowGreen(MediaWikiSyntaxKind.TableFirstRow, tableColumn);
+			var result = new TableFirstRowGreen(MediaWikiSyntaxKind.TableFirstRow, tableRowStart, tableRow);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -8544,7 +8697,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public TableRowGreen TableRow(InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, InternalSyntaxNodeList tableColumn, bool errorNode = false)
+		public TableNonFirstRowGreen TableNonFirstRow(TableRowStartGreen tableRowStart, TableRowGreen tableRow, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (tableRowStart == null) throw new ArgumentNullException(nameof(tableRowStart));
+				if (tableRow == null) throw new ArgumentNullException(nameof(tableRow));
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableNonFirstRow, tableRowStart, tableRow, out hash);
+			if (cached != null) return (TableNonFirstRowGreen)cached;
+			var result = new TableNonFirstRowGreen(MediaWikiSyntaxKind.TableNonFirstRow, tableRowStart, tableRow);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public TableRowStartGreen TableRowStart(InternalSyntaxToken tTableRowStart, InlineTextGreen inlineText, InternalSyntaxToken crlf, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
@@ -8555,7 +8728,33 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				if (crlf.RawKind != (int)MediaWikiSyntaxKind.CRLF) throw new ArgumentException(nameof(crlf));
 			}
 	#endif
-	        return new TableRowGreen(MediaWikiSyntaxKind.TableRow, tTableRowStart, inlineText, crlf, tableColumn);
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableRowStart, tTableRowStart, inlineText, crlf, out hash);
+			if (cached != null) return (TableRowStartGreen)cached;
+			var result = new TableRowStartGreen(MediaWikiSyntaxKind.TableRowStart, tTableRowStart, inlineText, crlf);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public TableRowGreen TableRow(InternalSyntaxNodeList tableColumn, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableRow, tableColumn, out hash);
+			if (cached != null) return (TableRowGreen)cached;
+			var result = new TableRowGreen(MediaWikiSyntaxKind.TableRow, tableColumn);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
 	    }
 	
 		public TableColumnGreen TableColumn(TableSingleHeaderCellGreen tableSingleHeaderCell, bool errorNode = false)
@@ -8658,7 +8857,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 	        return new TableCellsGreen(MediaWikiSyntaxKind.TableCells, tBar, tableCell, crlf, specialBlockOrParagraph);
 	    }
 	
-		public TableCellGreen TableCell(CellTextGreen cellText, CellValueGreen cellValue, bool errorNode = false)
+		public TableCellGreen TableCell(CellAttributesGreen cellAttributes, CellTextGreen cellText, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
@@ -8666,9 +8865,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableCell, cellText, cellValue, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.TableCell, cellAttributes, cellText, out hash);
 			if (cached != null) return (TableCellGreen)cached;
-			var result = new TableCellGreen(MediaWikiSyntaxKind.TableCell, cellText, cellValue);
+			var result = new TableCellGreen(MediaWikiSyntaxKind.TableCell, cellAttributes, cellText);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -8676,19 +8875,20 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public CellValueGreen CellValue(InternalSyntaxToken tBar, CellTextGreen cellText, bool errorNode = false)
+		public CellAttributesGreen CellAttributes(CellTextGreen cellText, InternalSyntaxToken tBar, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
+				if (cellText == null) throw new ArgumentNullException(nameof(cellText));
 				if (tBar == null) throw new ArgumentNullException(nameof(tBar));
 				if (tBar.RawKind != (int)MediaWikiSyntaxKind.TBar) throw new ArgumentException(nameof(tBar));
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.CellValue, tBar, cellText, out hash);
-			if (cached != null) return (CellValueGreen)cached;
-			var result = new CellValueGreen(MediaWikiSyntaxKind.CellValue, tBar, cellText);
+			var cached = SyntaxNodeCache.TryGetNode((int)MediaWikiSyntaxKind.CellAttributes, cellText, tBar, out hash);
+			if (cached != null) return (CellAttributesGreen)cached;
+			var result = new CellAttributesGreen(MediaWikiSyntaxKind.CellAttributes, cellText, tBar);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -9864,6 +10064,8 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				typeof(TableCaptionGreen),
 				typeof(TableRowsGreen),
 				typeof(TableFirstRowGreen),
+				typeof(TableNonFirstRowGreen),
+				typeof(TableRowStartGreen),
 				typeof(TableRowGreen),
 				typeof(TableColumnGreen),
 				typeof(TableSingleHeaderCellGreen),
@@ -9871,7 +10073,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 				typeof(TableSingleCellGreen),
 				typeof(TableCellsGreen),
 				typeof(TableCellGreen),
-				typeof(CellValueGreen),
+				typeof(CellAttributesGreen),
 				typeof(ParagraphGreen),
 				typeof(TextLineInlineElementsWithCommentGreen),
 				typeof(TextLineCommentGreen),

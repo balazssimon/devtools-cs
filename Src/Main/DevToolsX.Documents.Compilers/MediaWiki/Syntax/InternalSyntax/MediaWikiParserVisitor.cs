@@ -135,6 +135,18 @@ public interface IMediaWikiParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTableFirstRow([NotNull] MediaWikiParser.TableFirstRowContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.tableNonFirstRow"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTableNonFirstRow([NotNull] MediaWikiParser.TableNonFirstRowContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.tableRowStart"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTableRowStart([NotNull] MediaWikiParser.TableRowStartContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.tableRow"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -177,11 +189,11 @@ public interface IMediaWikiParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTableCell([NotNull] MediaWikiParser.TableCellContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="MediaWikiParser.cellValue"/>.
+	/// Visit a parse tree produced by <see cref="MediaWikiParser.cellAttributes"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCellValue([NotNull] MediaWikiParser.CellValueContext context);
+	Result VisitCellAttributes([NotNull] MediaWikiParser.CellAttributesContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="MediaWikiParser.paragraph"/>.
 	/// </summary>

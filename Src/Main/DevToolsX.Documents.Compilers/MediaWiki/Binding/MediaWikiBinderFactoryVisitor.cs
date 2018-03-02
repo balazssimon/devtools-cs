@@ -317,6 +317,40 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 			return resultBinder;
 		}
 		
+		public Binder VisitTableNonFirstRow(TableNonFirstRowSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitTableRowStart(TableRowStartSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
 		public Binder VisitTableRow(TableRowSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
@@ -436,7 +470,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Binding
 			return resultBinder;
 		}
 		
-		public Binder VisitCellValue(CellValueSyntax node)
+		public Binder VisitCellAttributes(CellAttributesSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
 		    if (!node.FullSpan.Contains(this.Position))

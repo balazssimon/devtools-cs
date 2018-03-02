@@ -126,7 +126,7 @@ namespace DevToolsX.Documents
 
         public override void Write(string text)
         {
-            Writer.Write(text);
+            Writer.Write(this.EscapeText(text));
         }
 
         public override void WriteLine()
@@ -213,7 +213,14 @@ namespace DevToolsX.Documents
 
         public override void BeginReference(string document, string id)
         {
-            Writer.Write(@"<a href=""" + this.EscapeText(document) + "#" + this.EscapeText(id) + @""">");
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                Writer.Write(@"<a href=""" + this.EscapeText(document) + "#" + this.EscapeText(id) + @""">");
+            }
+            else
+            {
+                Writer.Write(@"<a href=""" + this.EscapeText(document) + @""">");
+            }
         }
 
         public override void EndReference(string document, string id)

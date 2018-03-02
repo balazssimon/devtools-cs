@@ -86,12 +86,14 @@
 
 	class Reference : ContentContainer
 	{
+		string DocumentName;
+		string LabelName;
 		Label Target;
 	}
 
 	class Markup : ContentContainer
 	{
-		MarkupKind Kind;
+		list<MarkupKind> Kind;
 	}
 
 	class List : Content
@@ -112,10 +114,10 @@
 		int HeadRowCount;
 		int ColumnCount;
 		derived int RowCount;
-		list<Cell> Cells;
+		list<TableCell> Cells;
 	}
 
-	class Cell : ContentContainer
+	class TableCell : ContentContainer
 	{
 	}
 

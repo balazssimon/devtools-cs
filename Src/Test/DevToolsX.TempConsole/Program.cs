@@ -3,8 +3,6 @@ using DevToolsX.Documents.Compilers.MediaWiki;
 using DevToolsX.Documents.Compilers.MediaWiki.Syntax;
 using DevToolsX.Documents.Office;
 using DevToolsX.Documents.Symbols;
-using MetaDslx.Compiler.Syntax;
-using MetaDslx.Compiler.Text;
 using MetaDslx.Core;
 using System;
 using System.Collections.Generic;
@@ -20,12 +18,12 @@ namespace DevToolsX.TempConsole
             {
                 string text =
     @"= Hello =
-World ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65;
-*World2
-*World3
+World ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
+*World2 
+*World3 ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
 *#AAA
 *#BBB
-***CCC
+***CCC ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
 *#DDD
 *#EEE
 *FFF
@@ -35,13 +33,25 @@ World ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65;
 *:ddd
 *:eee
 ;xxx
-:yyy
+:yyy ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
 ;zzz
 :www
 :ttt
 World4
  code
  block
+{|
+|+Food complements
+|-
+!Orange
+!Apple
+|-
+!Bread
+|Pie
+|-
+!Butter ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
+|Ice cream  ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
+|}
 == Bello ==
 Rorld";
                 ImmutableModel model = MediaWikiToDocumentModel.Compile(text);

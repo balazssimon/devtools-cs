@@ -72,9 +72,11 @@ definitionItem : TDefinitionStart definitionText? (TColon inlineText)?;
 wikiTable : TTableStart leadingInlineText=inlineText? CRLF tableCaption? tableRows TTableEnd trailingInlineText=inlineText?;
 
 tableCaption : TTableCaptionStart inlineText? CRLF specialBlockOrParagraph*;
-tableRows : tableFirstRow tableRow*;
-tableFirstRow : tableColumn*;
-tableRow : TTableRowStart inlineText? CRLF tableColumn*;
+tableRows : tableFirstRow tableNonFirstRow*;
+tableFirstRow : tableRowStart? tableRow;
+tableNonFirstRow : tableRowStart tableRow;
+tableRowStart : TTableRowStart inlineText? CRLF;
+tableRow : tableColumn*;
 tableColumn
     : tableSingleHeaderCell
     | tableHeaderCells
@@ -85,9 +87,9 @@ tableSingleHeaderCell : TExclamation tableCell? CRLF specialBlockOrParagraph*;
 tableHeaderCells : TExclamation tableCell (TExclExcl tableCell)* CRLF specialBlockOrParagraph*;
 tableSingleCell : TBar tableCell? CRLF specialBlockOrParagraph*;
 tableCells : TBar tableCell (TBarBar tableCell)* CRLF specialBlockOrParagraph*;
-tableCell : cellText? cellValue?;
+tableCell : cellAttributes? cellText?;
 
-cellValue : TBar cellText?;
+cellAttributes : cellText TBar;
 
 paragraph : textLine+;
 textLine
@@ -149,7 +151,8 @@ wikiFormat
     ;
 wikiLink
     : wikiInternalLink
-    | wikiExternalLink ;
+    | wikiExternalLink 
+	;
 wikiInternalLink
     : TLinkStart linkText linkTextPart* TLinkEnd
     ;

@@ -1,23 +1,75 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32F2A9E8-2C10-4305-B516-CAFD42BCA933}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>DevToolsX.TempConsole</RootNamespace>
+    <AssemblyName>DevToolsX.TempConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Compilers\DevToolsX.Documents.Compilers.csproj" />
-    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Office\DevToolsX.Documents.Office.csproj" />
-    <ProjectReference Include="..\..\Main\DevToolsX.Documents\DevToolsX.Documents.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MetaDslx.Compiler.Antlr4">
-      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Compiler.Antlr4.dll</HintPath>
-    </Reference>
     <Reference Include="MetaDslx.Core">
       <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Compilers\DevToolsX.Documents.Compilers.csproj">
+      <Project>{7a9a25e6-f07a-47bb-9f9c-c6fd5c4e5ed0}</Project>
+      <Name>DevToolsX.Documents.Compilers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents.Office\DevToolsX.Documents.Office.csproj">
+      <Project>{82b236b4-2896-45bf-bf48-42fdab0f6879}</Project>
+      <Name>DevToolsX.Documents.Office</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\DevToolsX.Documents\DevToolsX.Documents.csproj">
+      <Project>{8f393b75-f5a7-43f9-8bd2-ee4fb63b7d74}</Project>
+      <Name>DevToolsX.Documents</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable">
+      <Version>1.4.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

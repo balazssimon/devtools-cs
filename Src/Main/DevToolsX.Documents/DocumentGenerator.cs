@@ -721,6 +721,7 @@ namespace DevToolsX.Documents
             {
                 get
                 {
+                    if (this.ColumnCount == 0) return 0;
                     return this.index % this.ColumnCount;
                 }
             }
@@ -728,6 +729,7 @@ namespace DevToolsX.Documents
             {
                 get
                 {
+                    if (this.ColumnCount == 0) return 0;
                     return this.index / this.ColumnCount;
                 }
             }
