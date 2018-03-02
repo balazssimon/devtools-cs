@@ -63,10 +63,10 @@ Rorld";
                 {
                     printer.Print();
                 }
-                /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx"))))
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
                 {
                     printer.Print();
-                }*/
+                }
             }
             catch (Exception ex)
             {

@@ -428,6 +428,11 @@ namespace DevToolsX.Documents
         
         public void BeginList(ListKind listKind = ListKind.None)
         {
+            ListIterator iterator = this.CurrentListIterator;
+            if (iterator != null)
+            {
+                this.CloseListItem(iterator);
+            }
             this.EndParagraphIfNecessary();
             this.DisableParagraph();
             int level = this.listLevel++;
@@ -448,12 +453,28 @@ namespace DevToolsX.Documents
             this.beginStack.Add(new ListItemBegin() { Level = iterator.Level, Index = iterator.Index, Title = iterator.Title });
         }
 
+        private void CloseListItem(ListIterator iterator)
+        {
+            ListItemBegin begin = this.CurrentBegin as ListItemBegin;
+            if (begin != null && !begin.IsClosed)
+            {
+                if (begin.IsFlushed)
+                {
+                    this.writer.EndListItem(begin.Level, begin.Index, begin.Title);
+                }
+                begin.IsClosed = true;
+            }
+        }
+
         private void EndListItem(ListIterator iterator)
         {
             ListItemBegin begin = this.PopBegin<ListItemBegin>("EndListItem");
             if (begin.IsFlushed)
             {
-                this.writer.EndListItem(begin.Level, begin.Index, begin.Title);
+                if (!begin.IsClosed)
+                {
+                    this.writer.EndListItem(begin.Level, begin.Index, begin.Title);
+                }
             }
             else
             {
@@ -626,6 +647,7 @@ namespace DevToolsX.Documents
             public int Level { get; set; }
             public int Index { get; set; }
             public string Title { get; set; }
+            public bool IsClosed { get; set; }
 
             protected override void DoApply(DocumentGenerator generator)
             {
