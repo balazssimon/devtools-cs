@@ -2,6 +2,7 @@
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -383,6 +384,15 @@ namespace DevToolsX.Documents.Office
         public void PageBreak()
         {
             this.word.Selection.InsertBreak(WdBreakType.wdPageBreak);
+        }
+
+        public void AddImage(string path)
+        {
+            if (!Path.IsPathRooted(path))
+            {
+                path = Path.GetFullPath(path);
+            }
+            this.word.Selection.InlineShapes.AddPicture(path);
         }
     }
 }

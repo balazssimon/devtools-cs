@@ -66,5 +66,6 @@ namespace DevToolsX.Documents
         public abstract void EndTableCell(int rowIndex, int colIndex, bool head);
         public abstract void EndTable(int colCount);
         public abstract void PageBreak();
+        public abstract void AddImage(string path);
     }
 }

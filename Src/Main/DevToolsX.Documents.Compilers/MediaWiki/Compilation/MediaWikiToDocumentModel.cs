@@ -29,7 +29,6 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         private DocumentBuilder document;
         private Stack<ContentContainerBuilder> containerStack = new Stack<ContentContainerBuilder>();
         private Stack<string> formatStack = new Stack<string>();
-        private List<ReferenceInfo> references = new List<ReferenceInfo>();
         private Stack<ListInfo> listStack = new Stack<ListInfo>();
         private Stack<TableInfo> tableStack = new Stack<TableInfo>();
         private bool addParagraphSpace = false;
@@ -273,14 +272,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 text = text.Substring(lastBarIndex + 1);
             }
             if (string.IsNullOrWhiteSpace(text)) return;
-            var reference = this.factory.Reference();
-            this.AddParagraphSpace();
-            this.AddContent(reference);
-            this.addParagraphSpace = true;
-            var referenceText = this.factory.Text();
-            referenceText.Text = text;
-            reference.Text.Add(referenceText);
-            reference.DocumentName = title;
+            if (title.StartsWith("File:") || title.StartsWith("Image:") || title.StartsWith("Media:"))
+            {
+                int colonIndex = title.IndexOf(':');
+                title = title.Substring(colonIndex + 1);
+                var image = this.factory.Image();
+                image.FilePath = title;
+                this.addParagraphSpace = false;
+                this.AddContent(image);
+                this.addParagraphSpace = false;
+            }
+            else
+            {
+                var reference = this.factory.Reference();
+                this.AddParagraphSpace();
+                this.AddContent(reference);
+                this.addParagraphSpace = true;
+                var referenceText = this.factory.Text();
+                referenceText.Text = text;
+                reference.Text.Add(referenceText);
+                reference.DocumentName = title;
+            }
         }
 
         public override void VisitWikiExternalLink(WikiExternalLinkSyntax node)
@@ -743,12 +755,6 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             }
         }
 
-
-        private class ReferenceInfo
-        {
-            public string Title;
-            public ReferenceBuilder Reference;
-        }
 
         private class ListInfo
         {

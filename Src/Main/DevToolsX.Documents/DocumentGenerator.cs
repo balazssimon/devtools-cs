@@ -132,6 +132,11 @@ namespace DevToolsX.Documents
             return null;
         }
 
+        public void AddImage(string filePath)
+        {
+            this.writer.AddImage(filePath);
+        }
+
         private ListIterator CurrentListIterator
         {
             get

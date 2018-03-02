@@ -57,7 +57,10 @@ World4
 |Ice cream  ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
 |}
 == Bello ==
-Rorld";
+Rorld
+[[File:..\..\WP_20180227_001.jpg]]
+Eeee
+";
                 ImmutableModel model = MediaWikiToDocumentModel.Compile(text);
                 using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                 {

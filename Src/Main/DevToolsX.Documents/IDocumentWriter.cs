@@ -44,5 +44,7 @@ namespace DevToolsX.Documents
         void BeginTableCell(int rowIndex, int colIndex, bool head);
         void EndTableCell(int rowIndex, int colIndex, bool head);
         void EndTable(int colCount);
+
+        void AddImage(string path);
     }
 }

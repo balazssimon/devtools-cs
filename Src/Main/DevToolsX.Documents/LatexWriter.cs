@@ -323,6 +323,13 @@ namespace DevToolsX.Documents
             Writer.WriteLine(@"\newpage");
             Writer.WriteLine();
         }
+
+        public override void AddImage(string path)
+        {
+            Writer.WriteLine();
+            Writer.WriteLine(@"\includegraphics{"+path+"}");
+            Writer.WriteLine();
+        }
     }
 }
 
