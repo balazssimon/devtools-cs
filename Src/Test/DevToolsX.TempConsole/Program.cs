@@ -21,17 +21,17 @@ namespace DevToolsX.TempConsole
                 using (Browser browser = new Browser())
                 {
                     TestDocWiki test = new TestDocWiki();
-                    test.Properties.Browser = browser;
-                    string wikiText = test.OpenPage("http://www.google.com");
+                    test.Browser = browser;
+                    string wikiText = test.OpenPage("http://www.google.com", "GoogleXYZ");
                     ImmutableModel model = MediaWikiToDocumentModel.Compile(wikiText);
                     using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                     {
                         printer.Print();
                     }
-                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
+                    /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
                     {
                         printer.Print();
-                    }
+                    }*/
                     //Console.ReadLine();
                 }
                 /*string text = string.Empty;

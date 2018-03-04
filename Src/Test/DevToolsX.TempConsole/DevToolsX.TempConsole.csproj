@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TestDocWiki.mgen</DependentUpon>
     </Compile>
+    <Compile Include="TestWikiGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

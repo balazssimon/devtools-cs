@@ -1,40 +1,15 @@
 ﻿namespace DevToolsX.TempConsole;
-generator TestDocWiki for IEnumerable<object>;
+generator TestDocWiki : TestWikiGenerator;
 
 using DevToolsX.Testing.Selenium;
 
-properties Properties
-	Browser Browser = null;
-end properties
-
-template OpenPage(string url)
-Open page '[url]' in the browser: [GoToUrl(url)]
+template OpenPage(string url, string title)
+Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
-[Image(TakeScreenshot())]
+[Browser.TakeScreenshot()]
 ^
 <br/>
 ^
-The page title should be [AssertEquals("GoogleX", Properties.Browser.Title)].
-end template
-
-function string GoToUrl(string url)
-	Properties.Browser.GoToUrl(url);
-	return "";
-end function
-
-function string TakeScreenshot()
-	return Properties.Browser.TakeScreenshot();
-end function
-
-function string Image(string filePath)
-	return "[[Media:"+filePath+"]]";
-end function
-
-template AssertEquals(string expected, string actual)
-[if (expected == actual)]
-[expected]
-[else]
-[expected]<span style="background:#FF8080; text-decoration:line-through">[actual]</span>
-[end if]
+The page title should be [Browser.TitleShouldBe(title)].
 end template
 

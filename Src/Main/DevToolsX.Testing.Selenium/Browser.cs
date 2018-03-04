@@ -99,7 +99,7 @@ namespace DevToolsX.Testing.Selenium
             this.driver.Manage().Window.Maximize();
         }
 
-        public string TakeScreenshot(string filePath = null)
+        public ImageResult TakeScreenshot(string filePath = null)
         {
             if (this.screenshotTaker == null) return null;
             string fileName = filePath;
@@ -116,7 +116,7 @@ namespace DevToolsX.Testing.Selenium
             }
             var screenshot = this.screenshotTaker.GetScreenshot();
             screenshot.SaveAsFile(filePath);
-            return fileName;
+            return new ImageResult(fileName);
         }
 
         public void WaitUntil(Func<bool> condition, TimeSpan timeout)
@@ -128,6 +128,11 @@ namespace DevToolsX.Testing.Selenium
         public void Close()
         {
             this.driver.Close();
+        }
+
+        public AssertionResult TitleShouldBe(string title)
+        {
+            return new AssertionResult(title, this.Title);
         }
     }
 }
