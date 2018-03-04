@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Diagnostics;
+using System.Drawing;
+using DevToolsX.Documents.Utils;
 
 namespace DevToolsX.Documents.Compilers.MediaWiki
 {
@@ -27,7 +29,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         private DocumentModelFactory factory;
         private MutableModel model;
         private DocumentBuilder document;
-        private Stack<ContentContainerBuilder> containerStack = new Stack<ContentContainerBuilder>();
+        private List<ContentContainerBuilder> containerStack = new List<ContentContainerBuilder>();
         private Stack<string> formatStack = new Stack<string>();
         private Stack<ListInfo> listStack = new Stack<ListInfo>();
         private Stack<TableInfo> tableStack = new Stack<TableInfo>();
@@ -52,18 +54,21 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         private void PushContainer(ContentContainerBuilder container)
         {
-            this.containerStack.Push(container);
+            this.containerStack.Add(container);
         }
 
         private ContentContainerBuilder PeekContainer()
         {
-            if (this.containerStack.Count > 0) return this.containerStack.Peek();
+            if (this.containerStack.Count > 0) return this.containerStack[this.containerStack.Count - 1];
             else return this.document;
         }
 
         private ContentContainerBuilder PopContainer()
         {
-            return this.containerStack.Pop();
+            int index = this.containerStack.Count - 1;
+            ContentContainerBuilder result = this.containerStack[index];
+            this.containerStack.RemoveAt(index);
+            return result;
         }
 
         private void ClearContainer()
@@ -115,17 +120,62 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             if (this.addParagraphSpace)
             {
                 this.addParagraphSpace = false;
-                var contentList = this.PeekContainer().Text;
-                var lastText = contentList.LastOrDefault() as TextBuilder;
-                if (lastText != null)
+                
+                ContentContainerBuilder container = null;
+                int index = this.containerStack.Count - 1;
+                while (index >= 0)
                 {
-                    lastText.Text += " ";
+                    container = this.containerStack[index];
+                    if (container is ParagraphBuilder)
+                    {
+                        break;
+                    }
+                    else if (container.Text.Count > 0)
+                    {
+                        break;
+                    }
+                    --index;
                 }
-                else
+                bool insertBefore = index < this.containerStack.Count - 1;
+                if (container == null)
                 {
-                    var spaceText = this.factory.Text();
-                    spaceText.Text = " ";
-                    this.AddContent(spaceText);
+                    insertBefore = false;
+                }
+
+                TextBuilder lastText = null;
+                if (insertBefore)
+                {
+                    var contentList = container.Text;
+                    if (contentList.Count >= 2)
+                    {
+                        lastText = contentList[contentList.Count - 2] as TextBuilder;
+                        if (lastText != null)
+                        {
+                            lastText.Text += " ";
+                        }
+                    }
+                    if (lastText == null && contentList.Count >= 1)
+                    {
+                        lastText = this.factory.Text();
+                        lastText.Text = " ";
+                        contentList.Insert(contentList.Count - 1, lastText);
+                    }
+                }
+                if (lastText == null)
+                {
+                    container = this.PeekContainer();
+                    var contentList = container.Text;
+                    lastText = contentList.LastOrDefault() as TextBuilder;
+                    if (lastText != null)
+                    {
+                        lastText.Text += " ";
+                    }
+                    else
+                    {
+                        lastText = this.factory.Text();
+                        lastText.Text = " ";
+                        container.Text.Add(lastText);
+                    }
                 }
             }
         }
@@ -133,9 +183,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         private void AddParagraphText(string text, ContentBuilder content = null)
         {
             if (string.IsNullOrEmpty(text)) return;
-            text = text.Trim();
-            if (string.IsNullOrEmpty(text)) return;
-            this.AddParagraphSpace();
+            //text = text.Trim();
+            //if (string.IsNullOrEmpty(text)) return;
+            //this.AddParagraphSpace();
             if (content == null)
             {
                 var contentList = this.PeekContainer().Text;
@@ -156,6 +206,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 this.AddContent(content);
             }
             this.addParagraphSpace = true;
+        }
+
+        public override void VisitTextLineInlineElementsWithComment(TextLineInlineElementsWithCommentSyntax node)
+        {
+            this.AddParagraphSpace();
+            base.VisitTextLineInlineElementsWithComment(node);
         }
 
         public override void VisitInlineTextElement(InlineTextElementSyntax node)
@@ -223,6 +279,89 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             this.AddParagraphText(text);
         }
 
+        public override void VisitHtmlTagOpen(HtmlTagOpenSyntax node)
+        {
+            string name = node.HtmlTagName.GetText().ToString().ToLower();
+            bool bold = name == "b" || name == "strong";
+            bool italic = name == "i" || name == "em";
+            bool underline = false;
+            bool strikeThrough = false;
+            bool inlineCode = name == "code";
+            bool code = name == "pre";
+            bool subscript = name == "sub";
+            bool superscript = name == "sup";
+            Color foregroundColor = Color.Empty;
+            Color backgroundColor = Color.Empty;
+            if (name == "span" || name == "div" || name == "p")
+            {
+                var styleAttribute = node.HtmlAttribute?.OfType<HtmlAttributeWithValueSyntax>().FirstOrDefault(a => a.HtmlAttributeName.GetText().ToString() == "style");
+                if (styleAttribute != null)
+                {
+                    string style = styleAttribute.HtmlAttributeValue.TAttributeValue.ValueText;
+                    if (style.StartsWith("\"") || style.StartsWith("'")) style = style.Substring(1);
+                    if (style.EndsWith("\"") || style.EndsWith("'")) style = style.Substring(0, style.Length - 1);
+                    string[] cssAttributes = style.Split(';');
+                    foreach (var cssAttribute in cssAttributes)
+                    {
+                        int colonIndex = cssAttribute.IndexOf(':');
+                        if (colonIndex >= 0)
+                        {
+                            string cssAttributeName = cssAttribute.Substring(0, colonIndex).Trim();
+                            string cssAttributeValue = cssAttribute.Substring(colonIndex + 1).Trim();
+                            switch (cssAttributeName)
+                            {
+                                case "color":
+                                    foregroundColor = ColorTranslator.FromHtml(cssAttributeValue);
+                                    break;
+                                case "background":
+                                    backgroundColor = ColorTranslator.FromHtml(cssAttributeValue);
+                                    break;
+                                case "font-weight":
+                                    if (cssAttributeValue == "bold") bold = true;
+                                    break;
+                                case "font-style":
+                                    if (cssAttributeValue == "italic") italic = true;
+                                    break;
+                                case "text-decoration":
+                                    if (cssAttributeValue == "underline") underline = true;
+                                    if (cssAttributeValue == "line-through") strikeThrough = true;
+                                    break;
+                                case "vertical-align":
+                                    if (cssAttributeValue == "sub") subscript = true;
+                                    if (cssAttributeValue == "super") superscript = true;
+                                    break;
+                            }
+
+                        }
+                    }
+                }
+            }
+            var markup = this.factory.Markup();
+            if (bold) markup.Kind.Add(MarkupKind.Bold);
+            if (italic) markup.Kind.Add(MarkupKind.Italic);
+            if (underline) markup.Kind.Add(MarkupKind.Underline);
+            if (strikeThrough) markup.Kind.Add(MarkupKind.Strikethrough);
+            if (code) markup.Kind.Add(MarkupKind.Code);
+            else if (inlineCode) markup.Kind.Add(MarkupKind.CodeInline);
+            if (subscript) markup.Kind.Add(MarkupKind.SubScript);
+            if (superscript) markup.Kind.Add(MarkupKind.SuperScript);
+            markup.ForegroundColor = foregroundColor;
+            markup.BackgroundColor = backgroundColor;
+            this.AddContent(markup);
+            this.PushContainer(markup);
+        }
+
+        public override void VisitHtmlTagClose(HtmlTagCloseSyntax node)
+        {
+            string name = node.HtmlTagName.GetText().ToString().ToLower();
+            if (name == "b" || name == "strong" || name == "i" || name == "em" ||
+                name == "code" || name == "pre" || name == "sub" || name == "sup" ||
+                name == "span" || name == "div" || name == "p")
+            {
+                this.PopContainer();
+            }
+        }
+
         public override void VisitHorizontalRule(HorizontalRuleSyntax node)
         {
             if (this.PeekContainer() != this.document) return;
@@ -278,20 +417,18 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 title = title.Substring(colonIndex + 1);
                 var image = this.factory.Image();
                 image.FilePath = title;
-                this.addParagraphSpace = false;
                 this.AddContent(image);
-                this.addParagraphSpace = false;
+                this.addParagraphSpace = true;
             }
             else
             {
                 var reference = this.factory.Reference();
-                this.AddParagraphSpace();
                 this.AddContent(reference);
-                this.addParagraphSpace = true;
                 var referenceText = this.factory.Text();
                 referenceText.Text = text;
                 reference.Text.Add(referenceText);
                 reference.DocumentName = title;
+                this.addParagraphSpace = true;
             }
         }
 
@@ -308,13 +445,12 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             }
             if (string.IsNullOrWhiteSpace(text)) return;
             var reference = this.factory.Reference();
-            this.AddParagraphSpace();
             this.AddContent(reference);
-            this.addParagraphSpace = true;
             var referenceText = this.factory.Text();
             referenceText.Text = text;
             reference.Text.Add(referenceText);
             reference.DocumentName = url;
+            this.addParagraphSpace = true;
         }
 
         public override void VisitListItem(ListItemSyntax node)

@@ -60,6 +60,15 @@ World4
 Rorld
 [[File:..\..\WP_20180227_001.jpg]]
 Eeee
+AAA <span style=""font-weight:bold"">bold</span> BBB
+AAA <span style=""font-style:italic"">italic</span> BBB
+AAA <span style=""text-decoration:underline"">underline</span> BBB
+AAA <span style=""text-decoration:line-through"">strikethrough</span> BBB
+AAA<span style=""vertical-align:sub"">subscript</span> BBB
+AAA<span style=""vertical-align:super"">superscript</span> BBB
+AAA <span style=""font-weight:bold; font-style:italic; text-decoration:underline"">bold and italic and underline</span> BBB
+AAA <span style=""color:#800000"">red</span> BBB
+AAA <span style=""background:#CCCCCC"">gray backround</span> BBB
 ";
                 ImmutableModel model = MediaWikiToDocumentModel.Compile(text);
                 using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
@@ -85,3 +94,5 @@ Eeee
 
 }
 
+/*
+*/

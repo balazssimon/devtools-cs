@@ -2,6 +2,8 @@
 {
 	metamodel DocumentModel(Uri="http://devtoolsx.documents.documentmodel/1.0"); 
 
+	extern struct System.Drawing.Color Color;
+
 	class Document : ContentContainer
 	{
 		[Name]
@@ -94,6 +96,8 @@
 	class Markup : ContentContainer
 	{
 		list<MarkupKind> Kind;
+		Color ForegroundColor;
+		Color BackgroundColor;
 	}
 
 	class List : Content

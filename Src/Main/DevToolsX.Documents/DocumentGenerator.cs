@@ -1,6 +1,7 @@
 ﻿using DevToolsX.Documents.Symbols;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -258,12 +259,12 @@ namespace DevToolsX.Documents
                 this.BeginParagraphIfNecessary();
                 if (markup != MarkupKind.None)
                 {
-                    this.writer.BeginMarkup(markup);
+                    this.writer.BeginMarkup(new MarkupKind[] { markup }, Color.Empty, Color.Empty);
                 }
                 this.writer.Write(text);
                 if (markup != MarkupKind.None)
                 {
-                    this.writer.EndMarkup(markup);
+                    this.writer.EndMarkup(new MarkupKind[] { markup }, Color.Empty, Color.Empty);
                 }
                 this.newParagraph = false;
                 this.appendSpace = true;
@@ -376,15 +377,15 @@ namespace DevToolsX.Documents
             this.EnableParagraph();
         }
 
-        public void BeginMarkup(MarkupKind markupKind)
+        public void BeginMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
-            if (markupKind == MarkupKind.Code)
+            if (markupKinds.Contains(MarkupKind.Code))
             {
                 this.EndParagraphIfNecessary();
                 this.isInCode = true;
                 this.appendSpace = false;
             }
-            this.beginStack.Add(new MarkupBegin() { MarkupKind = markupKind });
+            this.beginStack.Add(new MarkupBegin() { MarkupKinds = markupKinds, ForegroundColor = foregroundColor, BackgroundColor = backgroundColor });
         }
 
         public void EndMarkup()
@@ -392,9 +393,9 @@ namespace DevToolsX.Documents
             MarkupBegin begin = this.PopBegin<MarkupBegin>("EndMarkup");
             if (begin.IsFlushed)
             {
-                this.writer.EndMarkup(begin.MarkupKind);
+                this.writer.EndMarkup(begin.MarkupKinds, begin.ForegroundColor, begin.BackgroundColor);
             }
-            if (begin.MarkupKind == MarkupKind.Code)
+            if (begin.MarkupKinds.Contains(MarkupKind.Code))
             {
                 this.isInCode = false;
                 this.isInParagraph = false;
@@ -606,11 +607,13 @@ namespace DevToolsX.Documents
 
         private class MarkupBegin : Begin
         {
-            public MarkupKind MarkupKind { get; set; }
+            public IEnumerable<MarkupKind> MarkupKinds { get; set; }
+            public Color ForegroundColor { get; set; }
+            public Color BackgroundColor { get; set; }
 
             protected override void DoApply(DocumentGenerator generator)
             {
-                generator.writer.BeginMarkup(this.MarkupKind);
+                generator.writer.BeginMarkup(this.MarkupKinds, this.ForegroundColor, this.BackgroundColor);
             }
 
             public override string ToString()

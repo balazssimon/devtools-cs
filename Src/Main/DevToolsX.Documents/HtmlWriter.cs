@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using DevToolsX.Documents.Symbols;
+using System.Drawing;
+using DevToolsX.Documents.Utils;
 
 namespace DevToolsX.Documents
 {
@@ -154,56 +156,104 @@ namespace DevToolsX.Documents
             }
         }
 
-        public override void BeginMarkup(MarkupKind markupKind)
+        public override void BeginMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
-            switch (markupKind)
+            string style = string.Empty;
+            bool code = false;
+            bool inlineCode = false;
+            if (foregroundColor != Color.Empty || backgroundColor != Color.Empty)
             {
-                case MarkupKind.Bold:
-                    Writer.Write(@"<b>");
-                    break;
-                case MarkupKind.Italic:
-                    Writer.Write(@"<i>");
-                    break;
-                case MarkupKind.Code:
-                    Writer.WriteLine();
-                    Writer.WriteLine(@"<pre><code>");
-                    break;
-                case MarkupKind.CodeInline:
-                    Writer.Write(@"<code>");
-                    break;
-                default:
-                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                if (foregroundColor != Color.Empty)
+                {
+                    if (style.Length > 0) style += "; ";
+                    style += "color:" + ColorTranslator.ToHtml(foregroundColor);
+                }
+                if (backgroundColor != Color.Empty)
+                {
+                    if (style.Length > 0) style += ";";
+                    style += "background:" + ColorTranslator.ToHtml(backgroundColor);
+                }
             }
-            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+            foreach (var markupKind in markupKinds)
             {
+                switch (markupKind)
+                {
+                    case MarkupKind.Bold:
+                        if (style.Length > 0) style += "; ";
+                        style += "font-weight:bold";
+                        break;
+                    case MarkupKind.Italic:
+                        if (style.Length > 0) style += "; ";
+                        style += "font-style:italic";
+                        break;
+                    case MarkupKind.Underline:
+                        if (style.Length > 0) style += "; ";
+                        style += "text-decoration:underline";
+                        break;
+                    case MarkupKind.Strikethrough:
+                        if (style.Length > 0) style += "; ";
+                        style += "text-decoration:line-through";
+                        break;
+                    case MarkupKind.SubScript:
+                        if (style.Length > 0) style += "; ";
+                        style += "vertical-align:sub";
+                        break;
+                    case MarkupKind.SuperScript:
+                        if (style.Length > 0) style += "; ";
+                        style += "vertical-align:super";
+                        break;
+                    case MarkupKind.Code:
+                        code = true;
+                        break;
+                    case MarkupKind.CodeInline:
+                        inlineCode = true;
+                        break;
+                    default:
+                        throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                }
+            }
+            Writer.Write(@"<span style=""" + style + @""">");
+            if (code)
+            {
+                Writer.WriteLine();
+                Writer.WriteLine(@"<pre><code>");
+                this.isInCode = true;
+            }
+            else if (inlineCode)
+            { 
+                Writer.Write(@"<code>");
                 this.isInCode = true;
             }
         }
 
-        public override void EndMarkup(MarkupKind markupKind)
+        public override void EndMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
-            switch (markupKind)
+            bool code = false;
+            bool inlineCode = false;
+            foreach (var markupKind in markupKinds)
             {
-                case MarkupKind.Bold:
-                    Writer.Write(@"</b>");
-                    break;
-                case MarkupKind.Italic:
-                    Writer.Write(@"</i>");
-                    break;
-                case MarkupKind.Code:
-                    Writer.WriteLine(@"</code></pre>");
-                    Writer.WriteLine();
-                    break;
-                case MarkupKind.CodeInline:
-                    Writer.Write(@"</code>");
-                    break;
-                default:
-                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                switch (markupKind)
+                {
+                    case MarkupKind.Code:
+                        code = true;
+                        break;
+                    case MarkupKind.CodeInline:
+                        inlineCode = true;
+                        break;
+                }
             }
-            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+            if (code)
             {
+                Writer.WriteLine();
+                Writer.WriteLine(@"</code></pre>");
                 this.isInCode = false;
             }
+            else if (inlineCode)
+            {
+                Writer.Write(@"</code>");
+                this.isInCode = false;
+            }
+            Writer.Write(@"</span>");
         }
 
         public override void AddLabel(string id)

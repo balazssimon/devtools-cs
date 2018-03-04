@@ -1,6 +1,7 @@
 ﻿using DevToolsX.Documents.Symbols;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +26,8 @@ namespace DevToolsX.Documents
         void WriteLine();
         void EndParagraph();
 
-        void BeginMarkup(MarkupKind markupKind);
-        void EndMarkup(MarkupKind markupKind);
+        void BeginMarkup(IEnumerable<MarkupKind> markupKind, Color foregroundColor, Color backgroundColor);
+        void EndMarkup(IEnumerable<MarkupKind> markupKind, Color foregroundColor, Color backgroundColor);
 
         void AddLabel(string id);
 

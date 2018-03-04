@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using DevToolsX.Documents.Symbols;
+using System.Drawing;
+using DevToolsX.Documents.Utils;
 
 namespace DevToolsX.Documents
 {
@@ -49,6 +51,8 @@ namespace DevToolsX.Documents
             Writer.WriteLine(@"\usepackage[utf8]{inputenc}");
             Writer.WriteLine(@"\usepackage{t1enc}");
             Writer.WriteLine(@"\usepackage{longtable}");
+            Writer.WriteLine(@"\usepackage{color}");
+            Writer.WriteLine(@"\usepackage[normalem]{ulem}");
             Writer.WriteLine();
             Writer.WriteLine(@"\begin{document}");
         }
@@ -133,61 +137,91 @@ namespace DevToolsX.Documents
             }
         }
 
-        public override void BeginMarkup(MarkupKind markupKind)
+        public override void BeginMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
-            switch (markupKind)
+            if (foregroundColor != Color.Empty)
             {
-                case MarkupKind.Bold:
-                    Writer.Write(@"\textbf{");
-                    break;
-                case MarkupKind.Italic:
-                    Writer.Write(@"\emph{");
-                    break;
-                case MarkupKind.SubScript:
-                    Writer.Write(@"_{");
-                    break;
-                case MarkupKind.SuperScript:
-                    Writer.Write(@"^{");
-                    break;
-                case MarkupKind.Code:
-                    Writer.WriteLine();
-                    Writer.WriteLine(@"\begin{verbatim}");
-                    break;
-                case MarkupKind.CodeInline:
-                    Writer.Write(@"\verb|");
-                    break;
-                default:
-                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                Writer.Write(@"\textcolor[rgb]{" + ColorTranslator.ToLaTeX(foregroundColor) + "}{");
             }
-            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+            if (backgroundColor != Color.Empty)
             {
-                this.isInCode = true;
+                Writer.Write(@"\colorbox[rgb]{" + ColorTranslator.ToLaTeX(backgroundColor) + "}{");
+            }
+            foreach (var markupKind in markupKinds)
+            {
+                switch (markupKind)
+                {
+                    case MarkupKind.Bold:
+                        Writer.Write(@"\textbf{");
+                        break;
+                    case MarkupKind.Italic:
+                        Writer.Write(@"\emph{");
+                        break;
+                    case MarkupKind.Underline:
+                        Writer.Write(@"\uline{");
+                        break;
+                    case MarkupKind.Strikethrough:
+                        Writer.Write(@"\sout{");
+                        break;
+                    case MarkupKind.SubScript:
+                        Writer.Write(@"\textsubscript{");
+                        break;
+                    case MarkupKind.SuperScript:
+                        Writer.Write(@"\textsuperscript{");
+                        break;
+                    case MarkupKind.Code:
+                        Writer.WriteLine();
+                        Writer.WriteLine(@"\begin{verbatim}");
+                        break;
+                    case MarkupKind.CodeInline:
+                        Writer.Write(@"\verb|");
+                        break;
+                    default:
+                        throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                }
+                if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+                {
+                    this.isInCode = true;
+                }
             }
         }
 
-        public override void EndMarkup(MarkupKind markupKind)
+        public override void EndMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
-            switch (markupKind)
+            foreach (var markupKind in markupKinds)
             {
-                case MarkupKind.Bold:
-                case MarkupKind.Italic:
-                case MarkupKind.SubScript:
-                case MarkupKind.SuperScript:
-                    Writer.Write(@"}");
-                    break;
-                case MarkupKind.Code:
-                    Writer.WriteLine(@"\end{verbatim}");
-                    Writer.WriteLine();
-                    break;
-                case MarkupKind.CodeInline:
-                    Writer.Write(@"|");
-                    break;
-                default:
-                    throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                switch (markupKind)
+                {
+                    case MarkupKind.Bold:
+                    case MarkupKind.Italic:
+                    case MarkupKind.Underline:
+                    case MarkupKind.Strikethrough:
+                    case MarkupKind.SubScript:
+                    case MarkupKind.SuperScript:
+                        Writer.Write(@"}");
+                        break;
+                    case MarkupKind.Code:
+                        Writer.WriteLine(@"\end{verbatim}");
+                        Writer.WriteLine();
+                        break;
+                    case MarkupKind.CodeInline:
+                        Writer.Write(@"|");
+                        break;
+                    default:
+                        throw new DocumentException("Invalid MarkupKind: " + markupKind);
+                }
+                if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+                {
+                    this.isInCode = false;
+                }
             }
-            if (markupKind == MarkupKind.Code || markupKind == MarkupKind.CodeInline)
+            if (backgroundColor != Color.Empty)
             {
-                this.isInCode = false;
+                Writer.Write(@"}");
+            }
+            if (foregroundColor != Color.Empty)
+            {
+                Writer.Write(@"}");
             }
         }
 

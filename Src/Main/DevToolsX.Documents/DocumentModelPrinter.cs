@@ -75,16 +75,10 @@ namespace DevToolsX.Documents
 
         private void Print(Markup markup)
         {
-            foreach (var kind in markup.Kind)
-            {
-                this.generator.BeginMarkup(kind);
-            }
+            this.generator.BeginMarkup(markup.Kind, markup.ForegroundColor, markup.BackgroundColor);
             ContentContainer container = markup;
             this.Print(container);
-            for (int i = 0; i < markup.Kind.Count; i++)
-            {
-                this.generator.EndMarkup();
-            }
+            this.generator.EndMarkup();
         }
 
         private void Print(Reference reference)

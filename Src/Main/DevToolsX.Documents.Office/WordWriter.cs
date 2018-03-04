@@ -2,6 +2,7 @@
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,7 +25,7 @@ namespace DevToolsX.Documents.Office
         private List<Microsoft.Office.Interop.Word.Table> tableStack;
         private Microsoft.Office.Interop.Word.Table table;
 
-        private List<MarkupKind> lastMarkups = new List<MarkupKind>();
+        private List<Markup> lastMarkups = new List<Markup>();
 
         public WordWriter(string document, bool debug = false)
         {
@@ -150,13 +151,13 @@ namespace DevToolsX.Documents.Office
             this.PushPosition();
             if (!string.IsNullOrEmpty(title))
             {
-                this.BeginMarkup(MarkupKind.Bold);
+                this.BeginMarkup(new MarkupKind[] { MarkupKind.Bold }, Color.Empty, Color.Empty);
                 this.Write(title);
-                this.EndMarkup(MarkupKind.Bold);
+                this.EndMarkup(new MarkupKind[] { MarkupKind.Bold }, Color.Empty, Color.Empty);
             }
         }
 
-        public void BeginMarkup(MarkupKind markupKind)
+        public void BeginMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
             this.PushPosition();
         }
@@ -228,74 +229,108 @@ namespace DevToolsX.Documents.Office
             this.word.Selection.TypeParagraph();
         }
 
-        public void EndMarkup(MarkupKind markupKind)
+        public void EndMarkup(IEnumerable<MarkupKind> markupKinds, Color foregroundColor, Color backgroundColor)
         {
             dynamic range = this.PopPosition();
-            switch (markupKind)
+            foreach (var markupKind in markupKinds)
             {
-                case MarkupKind.None:
-                    break;
-                case MarkupKind.Bold:
-                    range.Font.Bold = true;
-                    break;
-                case MarkupKind.Italic:
-                    range.Font.Italic = true;
-                    break;
-                case MarkupKind.SubScript:
-                    range.Font.Subscript = true;
-                    break;
-                case MarkupKind.SuperScript:
-                    range.Font.Superscript = true;
-                    break;
-                case MarkupKind.Code:
-                    range.Font.Name = "Courier New";
-                    range.Font.Size = this.normalStyle.Font.Size - 2;
-                    foreach (Microsoft.Office.Interop.Word.Paragraph par in range.Paragraphs)
-                    {
-                        par.SpaceBefore = 0;
-                        par.SpaceAfter = 0;
-                    }
-                    break;
-                case MarkupKind.CodeInline:
-                    range.Font.Name = "Courier New";
-                    range.Font.Size = this.normalStyle.Font.Size - 2;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("Invalid MarkupKind: " + markupKind);
+                switch (markupKind)
+                {
+                    case MarkupKind.None:
+                        break;
+                    case MarkupKind.Bold:
+                        range.Font.Bold = true;
+                        break;
+                    case MarkupKind.Italic:
+                        range.Font.Italic = true;
+                        break;
+                    case MarkupKind.Underline:
+                        range.Font.Underline = WdUnderline.wdUnderlineSingle;
+                        break;
+                    case MarkupKind.Strikethrough:
+                        range.Font.StrikeThrough = true;
+                        break;
+                    case MarkupKind.SubScript:
+                        range.Font.Subscript = true;
+                        break;
+                    case MarkupKind.SuperScript:
+                        range.Font.Superscript = true;
+                        break;
+                    case MarkupKind.Code:
+                        range.Font.Name = "Courier New";
+                        range.Font.Size = this.normalStyle.Font.Size - 2;
+                        foreach (Microsoft.Office.Interop.Word.Paragraph par in range.Paragraphs)
+                        {
+                            par.SpaceBefore = 0;
+                            par.SpaceAfter = 0;
+                        }
+                        break;
+                    case MarkupKind.CodeInline:
+                        range.Font.Name = "Courier New";
+                        range.Font.Size = this.normalStyle.Font.Size - 2;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("Invalid MarkupKind: " + markupKind);
+                }
             }
-            this.lastMarkups.Add(markupKind);
+            if (foregroundColor != Color.Empty)
+            {
+                range.Font.Color = (WdColor)ColorTranslator.ToOle(foregroundColor);
+            }
+            if (backgroundColor != Color.Empty)
+            {
+                range.Font.Shading.BackgroundPatternColor = (WdColor)ColorTranslator.ToOle(backgroundColor);
+            }
+            this.lastMarkups.Add(new Markup(markupKinds, foregroundColor, backgroundColor));
         }
 
-        private void ResetMarkup(MarkupKind markupKind, dynamic range)
+        private void ResetMarkup(Markup markup, dynamic range)
         {
-            switch (markupKind)
+            foreach (var markupKind in markup.Kinds)
             {
-                case MarkupKind.None:
-                    break;
-                case MarkupKind.Bold:
-                    range.Font.Bold = false;
-                    break;
-                case MarkupKind.Italic:
-                    range.Font.Italic = false;
-                    break;
-                case MarkupKind.SubScript:
-                    range.Font.Subscript = false;
-                    break;
-                case MarkupKind.SuperScript:
-                    range.Font.Superscript = false;
-                    break;
-                case MarkupKind.Code:
-                    range.Font.Name = this.normalStyle.Font.Name;
-                    range.Font.Size = this.normalStyle.Font.Size;
-                    range.ParagraphFormat.SpaceBefore = this.normalStyle.ParagraphFormat.SpaceBefore;
-                    range.ParagraphFormat.SpaceAfter = this.normalStyle.ParagraphFormat.SpaceAfter;
-                    break;
-                case MarkupKind.CodeInline:
-                    range.Font.Name = this.normalStyle.Font.Name;
-                    range.Font.Size = this.normalStyle.Font.Size;
-                    break;
-                default:
-                    break;
+                switch (markupKind)
+                {
+                    case MarkupKind.None:
+                        break;
+                    case MarkupKind.Bold:
+                        range.Font.Bold = false;
+                        break;
+                    case MarkupKind.Italic:
+                        range.Font.Italic = false;
+                        break;
+                    case MarkupKind.Underline:
+                        range.Font.Underline = WdUnderline.wdUnderlineNone;
+                        break;
+                    case MarkupKind.Strikethrough:
+                        range.Font.StrikeThrough = false;
+                        break;
+                    case MarkupKind.SubScript:
+                        range.Font.Subscript = false;
+                        break;
+                    case MarkupKind.SuperScript:
+                        range.Font.Superscript = false;
+                        break;
+                    case MarkupKind.Code:
+                        range.Font.Name = this.normalStyle.Font.Name;
+                        range.Font.Size = this.normalStyle.Font.Size;
+                        range.ParagraphFormat.SpaceBefore = this.normalStyle.ParagraphFormat.SpaceBefore;
+                        range.ParagraphFormat.SpaceAfter = this.normalStyle.ParagraphFormat.SpaceAfter;
+                        break;
+                    case MarkupKind.CodeInline:
+                        range.Font.Name = this.normalStyle.Font.Name;
+                        range.Font.Size = this.normalStyle.Font.Size;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (markup.ForegroundColor != Color.Empty)
+            {
+                range.Font.Color = WdColor.wdColorAutomatic;
+            }
+            if (markup.BackgroundColor != Color.Empty)
+            {
+                range.Font.Shading.BackgroundPatternColor = WdColor.wdColorAutomatic;
             }
         }
 
@@ -364,9 +399,9 @@ namespace DevToolsX.Documents.Office
                 this.word.Selection.TypeText(text);
                 int end = this.word.Selection.End;
                 dynamic range = this.document.Range(start, end);
-                foreach (var markupKind in this.lastMarkups)
+                foreach (var markup in this.lastMarkups)
                 {
-                    this.ResetMarkup(markupKind, range);
+                    this.ResetMarkup(markup, range);
                 }
                 this.lastMarkups.Clear();
             }
@@ -393,6 +428,21 @@ namespace DevToolsX.Documents.Office
                 path = Path.GetFullPath(path);
             }
             this.word.Selection.InlineShapes.AddPicture(path);
+        }
+
+
+        private struct Markup
+        {
+            public IEnumerable<MarkupKind> Kinds;
+            public Color ForegroundColor;
+            public Color BackgroundColor;
+
+            public Markup(IEnumerable<MarkupKind> kinds, Color foregroundColor, Color backgroundColor)
+            {
+                this.Kinds = kinds;
+                this.ForegroundColor = foregroundColor;
+                this.BackgroundColor = backgroundColor;
+            }
         }
     }
 }
