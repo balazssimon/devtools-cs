@@ -3,9 +3,11 @@ using DevToolsX.Documents.Compilers.MediaWiki;
 using DevToolsX.Documents.Compilers.MediaWiki.Syntax;
 using DevToolsX.Documents.Office;
 using DevToolsX.Documents.Symbols;
+using DevToolsX.Testing.Selenium;
 using MetaDslx.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace DevToolsX.TempConsole
@@ -16,73 +18,40 @@ namespace DevToolsX.TempConsole
         {
             try
             {
-                string text =
-    @"= Hello =
-World ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-*World2 
-*World3 ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-*#AAA
-*#BBB
-***CCC ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-*#DDD
-*#EEE
-*FFF
-*;aaa
-*:bbb
-*;ccc
-*:ddd
-*:eee
-;xxx
-:yyy ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-;zzz
-:www
-:ttt
-World4
- code
- block
-{|
-|+Food complements
-|-
-!Orange
-!Apple
-|-
-!Bread
-|Pie
-* AAA
-* BBB
-** CCC ''italic''
-** DDD '''bold'''
-|-
-!Butter ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-|Ice cream  ''italic'' aaa '''bold''' bbb '''''italic &amp; bold''''' &#65; [external.html] [external2.html external link] [[internal.html]] [[internal2.html|internal link]]
-|}
-== Bello ==
-Rorld
-[[File:..\..\WP_20180227_001.jpg]]
-Eeee
-AAA <span style=""font-weight:bold"">bold</span> BBB
-AAA <span style=""font-style:italic"">italic</span> BBB
-AAA <span style=""text-decoration:underline"">underline</span> BBB
-AAA <span style=""text-decoration:line-through"">strikethrough</span> BBB
-AAA<span style=""vertical-align:sub"">subscript</span> BBB
-AAA<span style=""vertical-align:super"">superscript</span> BBB
-AAA <span style=""font-weight:bold; font-style:italic; text-decoration:underline"">bold and italic and underline</span> BBB
-AAA <span style=""color:#800000"">red</span> BBB
-AAA <span style=""background:#CCCCCC"">gray backround</span> BBB
-";
+                using (Browser browser = new Browser())
+                {
+                    TestDocWiki test = new TestDocWiki();
+                    test.Properties.Browser = browser;
+                    string wikiText = test.OpenPage("http://www.google.com");
+                    ImmutableModel model = MediaWikiToDocumentModel.Compile(wikiText);
+                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
+                    {
+                        printer.Print();
+                    }
+                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
+                    {
+                        printer.Print();
+                    }
+                    //Console.ReadLine();
+                }
+                /*string text = string.Empty;
+                using (StreamReader reader = new StreamReader(@"..\..\test.wiki"))
+                {
+                    text = reader.ReadToEnd();
+                }
                 ImmutableModel model = MediaWikiToDocumentModel.Compile(text);
                 using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                 {
                     printer.Print();
-                }
-                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateLatexDocument("test.tex")))
+                }*/
+                /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateLatexDocument("test.tex")))
                 {
                     printer.Print();
                 }
                 using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
                 {
                     printer.Print();
-                }
+                }*/
             }
             catch (Exception ex)
             {

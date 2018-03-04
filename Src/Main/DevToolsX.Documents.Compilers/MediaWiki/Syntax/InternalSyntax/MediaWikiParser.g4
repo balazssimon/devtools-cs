@@ -83,9 +83,9 @@ tableColumn
     | tableSingleCell
     | tableCells
     ;
-tableSingleHeaderCell : TExclamation tableCell? CRLF specialBlockOrParagraph*;
+tableSingleHeaderCell : TExclamation tableCell CRLF specialBlockOrParagraph*;
 tableHeaderCells : TExclamation tableCell (TExclExcl tableCell)* CRLF specialBlockOrParagraph*;
-tableSingleCell : TBar tableCell? CRLF specialBlockOrParagraph*;
+tableSingleCell : TBar tableCell CRLF specialBlockOrParagraph*;
 tableCells : TBar tableCell (TBarBar tableCell)* CRLF specialBlockOrParagraph*;
 tableCell : cellAttributes? cellText?;
 

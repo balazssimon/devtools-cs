@@ -48,9 +48,18 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDocWiki.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestDocWiki.mgen</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="TestDocWiki.mgen">
+      <Generator>MetaGeneratorGenerator</Generator>
+      <LastGenOutput>TestDocWiki.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Main\DevToolsX.Documents.Compilers\DevToolsX.Documents.Compilers.csproj">
@@ -64,6 +73,14 @@
     <ProjectReference Include="..\..\Main\DevToolsX.Documents\DevToolsX.Documents.csproj">
       <Project>{8f393b75-f5a7-43f9-8bd2-ee4fb63b7d74}</Project>
       <Name>DevToolsX.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\DevToolsX.Testing.Selenium\DevToolsX.Testing.Selenium.csproj">
+      <Project>{d3a4c717-95a3-4867-8ae9-ab36ec1b8f7a}</Project>
+      <Name>DevToolsX.Testing.Selenium</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Main\DevToolsX.Testing\DevToolsX.Testing.csproj">
+      <Project>{271a9e3e-5098-4c41-8198-ead56f25728b}</Project>
+      <Name>DevToolsX.Testing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

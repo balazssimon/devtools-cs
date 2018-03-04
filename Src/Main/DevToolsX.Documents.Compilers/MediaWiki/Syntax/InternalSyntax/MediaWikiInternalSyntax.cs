@@ -8808,6 +8808,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			{
 				if (tExclamation == null) throw new ArgumentNullException(nameof(tExclamation));
 				if (tExclamation.RawKind != (int)MediaWikiSyntaxKind.TExclamation) throw new ArgumentException(nameof(tExclamation));
+				if (tableCell == null) throw new ArgumentNullException(nameof(tableCell));
 				if (crlf == null) throw new ArgumentNullException(nameof(crlf));
 				if (crlf.RawKind != (int)MediaWikiSyntaxKind.CRLF) throw new ArgumentException(nameof(crlf));
 			}
@@ -8836,6 +8837,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax
 			{
 				if (tBar == null) throw new ArgumentNullException(nameof(tBar));
 				if (tBar.RawKind != (int)MediaWikiSyntaxKind.TBar) throw new ArgumentException(nameof(tBar));
+				if (tableCell == null) throw new ArgumentNullException(nameof(tableCell));
 				if (crlf == null) throw new ArgumentNullException(nameof(crlf));
 				if (crlf.RawKind != (int)MediaWikiSyntaxKind.CRLF) throw new ArgumentException(nameof(crlf));
 			}

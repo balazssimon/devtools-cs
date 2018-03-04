@@ -10492,14 +10492,15 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		{
 		    if (tExclamation == null) throw new ArgumentNullException(nameof(tExclamation));
 		    if (tExclamation.RawKind != (int)MediaWikiSyntaxKind.TExclamation) throw new ArgumentException(nameof(tExclamation));
+		    if (tableCell == null) throw new ArgumentNullException(nameof(tableCell));
 		    if (crlf == null) throw new ArgumentNullException(nameof(crlf));
 		    if (crlf.RawKind != (int)MediaWikiSyntaxKind.CRLF) throw new ArgumentException(nameof(crlf));
-		    return (TableSingleHeaderCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableSingleHeaderCell((InternalSyntaxToken)tExclamation.Green, tableCell == null ? null : (Syntax.InternalSyntax.TableCellGreen)tableCell.Green, (InternalSyntaxToken)crlf.Green, specialBlockOrParagraph == null ? null : specialBlockOrParagraph.Green).CreateRed();
+		    return (TableSingleHeaderCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableSingleHeaderCell((InternalSyntaxToken)tExclamation.Green, (Syntax.InternalSyntax.TableCellGreen)tableCell.Green, (InternalSyntaxToken)crlf.Green, specialBlockOrParagraph == null ? null : specialBlockOrParagraph.Green).CreateRed();
 		}
 		
-		public TableSingleHeaderCellSyntax TableSingleHeaderCell(SyntaxToken crlf)
+		public TableSingleHeaderCellSyntax TableSingleHeaderCell(TableCellSyntax tableCell, SyntaxToken crlf)
 		{
-			return this.TableSingleHeaderCell(this.Token(MediaWikiSyntaxKind.TExclamation), null, crlf, null);
+			return this.TableSingleHeaderCell(this.Token(MediaWikiSyntaxKind.TExclamation), tableCell, crlf, null);
 		}
 		
 		public TableHeaderCellsSyntax TableHeaderCells(SyntaxToken tExclamation, SeparatedSyntaxNodeList<TableCellSyntax> tableCell, SyntaxToken crlf, SyntaxNodeList<SpecialBlockOrParagraphSyntax> specialBlockOrParagraph)
@@ -10521,14 +10522,15 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 		{
 		    if (tBar == null) throw new ArgumentNullException(nameof(tBar));
 		    if (tBar.RawKind != (int)MediaWikiSyntaxKind.TBar) throw new ArgumentException(nameof(tBar));
+		    if (tableCell == null) throw new ArgumentNullException(nameof(tableCell));
 		    if (crlf == null) throw new ArgumentNullException(nameof(crlf));
 		    if (crlf.RawKind != (int)MediaWikiSyntaxKind.CRLF) throw new ArgumentException(nameof(crlf));
-		    return (TableSingleCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableSingleCell((InternalSyntaxToken)tBar.Green, tableCell == null ? null : (Syntax.InternalSyntax.TableCellGreen)tableCell.Green, (InternalSyntaxToken)crlf.Green, specialBlockOrParagraph == null ? null : specialBlockOrParagraph.Green).CreateRed();
+		    return (TableSingleCellSyntax)MediaWikiLanguage.Instance.InternalSyntaxFactory.TableSingleCell((InternalSyntaxToken)tBar.Green, (Syntax.InternalSyntax.TableCellGreen)tableCell.Green, (InternalSyntaxToken)crlf.Green, specialBlockOrParagraph == null ? null : specialBlockOrParagraph.Green).CreateRed();
 		}
 		
-		public TableSingleCellSyntax TableSingleCell(SyntaxToken tBar, SyntaxToken crlf)
+		public TableSingleCellSyntax TableSingleCell(SyntaxToken tBar, TableCellSyntax tableCell, SyntaxToken crlf)
 		{
-			return this.TableSingleCell(tBar, null, crlf, null);
+			return this.TableSingleCell(tBar, tableCell, crlf, null);
 		}
 		
 		public TableCellsSyntax TableCells(SyntaxToken tBar, SeparatedSyntaxNodeList<TableCellSyntax> tableCell, SyntaxToken crlf, SyntaxNodeList<SpecialBlockOrParagraphSyntax> specialBlockOrParagraph)

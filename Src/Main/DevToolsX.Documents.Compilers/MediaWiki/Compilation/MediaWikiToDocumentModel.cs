@@ -214,6 +214,20 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             base.VisitTextLineInlineElementsWithComment(node);
         }
 
+        public override void VisitTextLineComment(TextLineCommentSyntax node)
+        {
+            base.VisitTextLineComment(node);
+            var container = this.PeekContainer() as ParagraphBuilder;
+            if (container != null && container.Text.Count > 0)
+            {
+                this.PopContainer();
+                container = this.factory.Paragraph();
+                this.AddContent(container);
+                this.PushContainer(container);
+                this.addParagraphSpace = false;
+            }
+        }
+
         public override void VisitInlineTextElement(InlineTextElementSyntax node)
         {
             base.VisitInlineTextElement(node);
@@ -282,6 +296,19 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         public override void VisitHtmlTagOpen(HtmlTagOpenSyntax node)
         {
             string name = node.HtmlTagName.GetText().ToString().ToLower();
+            if (name == "br")
+            {
+                var container = this.PeekContainer() as ParagraphBuilder;
+                if (container != null)
+                {
+                    this.PopContainer();
+                    container = this.factory.Paragraph();
+                    this.AddContent(container);
+                    this.PushContainer(container);
+                    this.addParagraphSpace = false;
+                }
+                return;
+            }
             bool bold = name == "b" || name == "strong";
             bool italic = name == "i" || name == "em";
             bool underline = false;
@@ -360,6 +387,25 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             {
                 this.PopContainer();
             }
+        }
+
+        public override void VisitHtmlTagEmpty(HtmlTagEmptySyntax node)
+        {
+            string name = node.HtmlTagName.GetText().ToString().ToLower();
+            if (name == "br")
+            {
+                var container = this.PeekContainer() as ParagraphBuilder;
+                if (container != null)
+                {
+                    this.PopContainer();
+                    container = this.factory.Paragraph();
+                    this.AddContent(container);
+                    this.PushContainer(container);
+                    this.addParagraphSpace = false;
+                }
+                return;
+            }
+            base.VisitHtmlTagEmpty(node);
         }
 
         public override void VisitHorizontalRule(HorizontalRuleSyntax node)
