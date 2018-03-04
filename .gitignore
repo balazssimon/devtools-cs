@@ -194,3 +194,4 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+/Src/Test/DevToolsX.TempConsole/WP_20180227_001.jpg
