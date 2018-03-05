@@ -5,6 +5,8 @@ using DevToolsX.Documents.Office;
 using DevToolsX.Documents.Symbols;
 using DevToolsX.Testing.Selenium;
 using MetaDslx.Core;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,11 +16,24 @@ namespace DevToolsX.TempConsole
 {
     class Program
     {
+        private static readonly ILoggerFactory LoggerFactory;
+
+        static Program()
+        {
+            Log.Logger = new LoggerConfiguration()
+              .Enrich.FromLogContext()
+              .WriteTo.Console()
+              .CreateLogger();
+            Program.LoggerFactory = new LoggerFactory();
+            SerilogLoggerFactoryExtensions.AddSerilog(Program.LoggerFactory);
+        }
+
         static void Main(string[] args)
         {
             try
             {
-                using (Browser browser = new Browser())
+                Options options = new Options(LoggerFactory);
+                using (Browser browser = new Browser(BrowserKind.Firefox, options))
                 {
                     TestDocWiki test = new TestDocWiki();
                     test.Browser = browser;

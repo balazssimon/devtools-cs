@@ -11,6 +11,16 @@ namespace DevToolsX.TempConsole
     {
         public Browser Browser { get; set; }
 
+        private Screenshot screenshot;
+        public Screenshot Screenshot
+        {
+            get
+            {
+                if (screenshot == null) screenshot = new Screenshot(this.Browser);
+                return screenshot;
+            }
+        }
+
         protected virtual string ProcessTemplateOutput(object output)
         {
             if (output == null) return string.Empty;

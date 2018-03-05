@@ -6,7 +6,7 @@ using DevToolsX.Testing.Selenium;
 template OpenPage(string url, string title)
 Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
-[Browser.TakeScreenshot()]
+[Screenshot.TakeScreenshot()]
 ^
 <br/>
 ^

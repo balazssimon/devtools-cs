@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.Logging;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
@@ -11,14 +12,11 @@ namespace DevToolsX.Testing.Selenium
 {
     public class Browser : IDisposable
     {
-        private static int screenshotIndex = 0;
-        private static object screenshotLock = new object();
-
         private IWebDriver driver;
-        private ITakesScreenshot screenshotTaker;
 
-        public Browser(BrowserKind kind = BrowserKind.Firefox)
+        public Browser(BrowserKind kind, Options options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
             switch (kind)
             {
                 case BrowserKind.Firefox:
@@ -30,22 +28,40 @@ namespace DevToolsX.Testing.Selenium
                 default:
                     throw new ArgumentException("Invalid browser kind.", nameof(kind));
             }
-            this.ScreenshotDirectory = Directory.GetCurrentDirectory();
-            this.screenshotTaker = this.driver as ITakesScreenshot;
+            this.Options = options;
+            this.Options.RegisterDriver(driver);
+            this.Logger = this.Options.LoggerFactory.CreateLogger(this.GetType());
         }
 
-        public Browser(IWebDriver driver)
+        public Browser(IWebDriver driver, Options options)
         {
             if (driver == null) throw new ArgumentNullException(nameof(driver));
+            if (options == null) throw new ArgumentNullException(nameof(options));
             this.driver = driver;
-            this.screenshotTaker = this.driver as ITakesScreenshot;
+            this.Options = options;
+            this.Options.RegisterDriver(driver);
         }
 
         public void Dispose()
         {
+            this.Options.UnregisterDriver(driver);
             this.driver.Dispose();
         }
 
+        public Options Options
+        {
+            get;
+        }
+
+        public IWebDriver Driver
+        {
+            get { return this.driver; }
+        }
+
+        public ILogger Logger
+        {
+            get;
+        }
         /// <summary>
         /// Returns the title of current page.
         /// </summary>
@@ -61,8 +77,14 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult TitleShouldBe(string title, string message = null)
         {
-            message = message ?? "Title should have been '{0}' but was '{1}'.";
-            return new AssertionResult(title, this.Title, message);
+            message = message ?? "Title should have been '{0}' but it was '{1}'.";
+            return AssertionResult.Create(this.Logger, title, this.LogTitle(), message);
+        }
+
+        public string LogTitle()
+        {
+            this.Logger.LogInformation("Title is '{0}'.", this.Title);
+            return this.Title;
         }
 
         /// <summary>
@@ -80,8 +102,8 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult UrlShouldBe(string url, string message = null)
         {
-            message = message ?? "URL should have been '{0}' but was '{1}'.";
-            return new AssertionResult(url, this.Url, message);
+            message = message ?? "URL should have been '{0}' but it was '{1}'.";
+            return AssertionResult.Create(this.Logger, url, this.Url, message);
         }
 
         /// <summary>
@@ -92,7 +114,13 @@ namespace DevToolsX.Testing.Selenium
         public AssertionResult UrlShouldContain(string urlPart, string message = null)
         {
             message = message ?? "URL should have contained '{0}' but it was '{1}'.";
-            return new AssertionResult(this.Url.Contains(urlPart), urlPart, this.Url, message);
+            return AssertionResult.Create(this.Logger, this.Url.Contains(urlPart), urlPart, this.LogUrl(), message);
+        }
+
+        public string LogUrl()
+        {
+            this.Logger.LogInformation("URL is '{0}'.", this.Url);
+            return this.Url;
         }
 
         /// <summary>
@@ -103,28 +131,10 @@ namespace DevToolsX.Testing.Selenium
             get { return this.driver.PageSource; }
         }
 
-        public string ScreenshotDirectory
+        public string LogPageSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            get;
-            set;
-        }
-
-        public TimeSpan PageLoadTimeout
-        {
-            get { return this.driver.Manage().Timeouts().PageLoad; }
-            set { this.driver.Manage().Timeouts().PageLoad = value; }
-        }
-
-        public TimeSpan ImplicitWaitTimeout
-        {
-            get { return this.driver.Manage().Timeouts().ImplicitWait; }
-            set { this.driver.Manage().Timeouts().ImplicitWait = value; }
-        }
-
-        public TimeSpan AsynchronousJavaScriptTimeout
-        {
-            get { return this.driver.Manage().Timeouts().AsynchronousJavaScript; }
-            set { this.driver.Manage().Timeouts().AsynchronousJavaScript = value; }
+            this.Logger.Log(level, new EventId(), this.PageSource, null, null);
+            return this.PageSource;
         }
 
         public void GoBack()
@@ -152,36 +162,9 @@ namespace DevToolsX.Testing.Selenium
             this.driver.Manage().Window.Maximize();
         }
 
-        public ImageResult TakeScreenshot(string filePath = null)
-        {
-            if (this.screenshotTaker == null) return null;
-            string fileName = filePath;
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                int index = 0;
-                lock (screenshotLock)
-                {
-                    index = ++screenshotIndex;
-                }
-                Directory.CreateDirectory(this.ScreenshotDirectory);
-                fileName = $"screenshot-{index}.png";
-                filePath = Path.Combine(this.ScreenshotDirectory, fileName);
-            }
-            var screenshot = this.screenshotTaker.GetScreenshot();
-            screenshot.SaveAsFile(filePath);
-            return new ImageResult(fileName);
-        }
-
-        public void WaitUntil(Func<bool> condition, TimeSpan timeout)
-        {
-            var wait = new WebDriverWait(driver, timeout);
-            wait.Until(d => condition);
-        }
-
         public void Close()
         {
             this.driver.Close();
         }
-
     }
 }

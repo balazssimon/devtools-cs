@@ -8,8 +8,8 @@ using DevToolsX.Testing.Selenium; //4:1
 
 namespace DevToolsX.TempConsole //1:1
 {
-    using __Hidden_TestDocWiki_1306933732;
-    namespace __Hidden_TestDocWiki_1306933732
+    using __Hidden_TestDocWiki_930674750;
+    namespace __Hidden_TestDocWiki_930674750
     {
         internal static class __Extensions
         {
@@ -93,7 +93,7 @@ namespace DevToolsX.TempConsole //1:1
             __out.AppendLine(true); //8:1
             bool __tmp8_outputWritten = false;
             StringBuilder __tmp9 = new StringBuilder();
-            __tmp9.Append(this.ProcessTemplateOutput(Browser.TakeScreenshot()));
+            __tmp9.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
             using(StreamReader __tmp9Reader = new StreamReader(this.__ToStream(__tmp9.ToString())))
             {
                 bool __tmp9_last = __tmp9Reader.EndOfStream;
@@ -111,7 +111,7 @@ namespace DevToolsX.TempConsole //1:1
             }
             if (__tmp8_outputWritten)
             {
-                __out.AppendLine(false); //9:27
+                __out.AppendLine(false); //9:30
             }
             __out.AppendLine(true); //10:1
             __out.Append(this.ProcessTemplateOutput("<br/>")); //11:1
