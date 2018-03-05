@@ -46,14 +46,61 @@ namespace DevToolsX.Testing.Selenium
             this.driver.Dispose();
         }
 
+        /// <summary>
+        /// Returns the title of current page.
+        /// </summary>
         public string Title
         {
             get { return this.driver.Title; }
         }
 
+        /// <summary>
+        /// Verifies that current page title equals title.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        public AssertionResult TitleShouldBe(string title, string message = null)
+        {
+            message = message ?? "Title should have been '{0}' but was '{1}'.";
+            return new AssertionResult(title, this.Title, message);
+        }
+
+        /// <summary>
+        /// Returns the current browser URL.
+        /// </summary>
         public string Url
         {
             get { return this.driver.Url; }
+        }
+
+        /// <summary>
+        /// Verifies that current URL is exactly the url.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public AssertionResult UrlShouldBe(string url, string message = null)
+        {
+            message = message ?? "URL should have been '{0}' but was '{1}'.";
+            return new AssertionResult(url, this.Url, message);
+        }
+
+        /// <summary>
+        /// Verifies that current URL is exactly the url.
+        /// </summary>
+        /// <param name="urlPart"></param>
+        /// <returns></returns>
+        public AssertionResult UrlShouldContain(string urlPart, string message = null)
+        {
+            message = message ?? "URL should have contained '{0}' but it was '{1}'.";
+            return new AssertionResult(this.Url.Contains(urlPart), urlPart, this.Url, message);
+        }
+
+        /// <summary>
+        /// Returns the entire HTML source of the current page or frame.
+        /// </summary>
+        public string PageSource
+        {
+            get { return this.driver.PageSource; }
         }
 
         public string ScreenshotDirectory
@@ -72,6 +119,12 @@ namespace DevToolsX.Testing.Selenium
         {
             get { return this.driver.Manage().Timeouts().ImplicitWait; }
             set { this.driver.Manage().Timeouts().ImplicitWait = value; }
+        }
+
+        public TimeSpan AsynchronousJavaScriptTimeout
+        {
+            get { return this.driver.Manage().Timeouts().AsynchronousJavaScript; }
+            set { this.driver.Manage().Timeouts().AsynchronousJavaScript = value; }
         }
 
         public void GoBack()
@@ -130,9 +183,5 @@ namespace DevToolsX.Testing.Selenium
             this.driver.Close();
         }
 
-        public AssertionResult TitleShouldBe(string title)
-        {
-            return new AssertionResult(title, this.Title);
-        }
     }
 }
