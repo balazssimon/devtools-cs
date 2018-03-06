@@ -111,7 +111,7 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult UrlShouldContain(string urlPart, string message = null)
         {
-            return this.AssertSuccess(this.Url.Contains(urlPart), message ?? "URL should have contained '{0}' but it was '{1}'.", "URL is '{1}'.", urlPart, this.Url);
+            return this.AssertExpected(this.Url.Contains(urlPart), urlPart, this.Url, message ?? "URL should have contained '{0}' but it was '{1}'.", "URL is '{1}'.");
         }
 
         public string LogUrl()
@@ -119,7 +119,7 @@ namespace DevToolsX.Testing.Selenium
             return this.LogValue("URL", this.Url);
         }
 
-        public Element Page
+        public Page Page
         {
             get;
         }

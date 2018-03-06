@@ -188,11 +188,18 @@ namespace DevToolsX.Testing.Selenium
             return result;
         }
 
-        internal protected AssertEqualsResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
+        internal protected AssertExpectedResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
         {
             successMessage = successMessage ?? name + " is '{1}'";
             failureMessage = failureMessage ?? name + " should have been '{0}' but it was '{1}'.";
-            var result = new AssertEqualsResult(expected, actual, successMessage, failureMessage);
+            var result = new AssertExpectedResult(expected == actual, expected, actual, successMessage, failureMessage);
+            this.LogAssertionResult(result);
+            return result;
+        }
+
+        internal protected AssertExpectedResult AssertExpected(bool success, string expected, string actual, string successMessage, string failureMessage)
+        {
+            var result = new AssertExpectedResult(success, expected, actual, successMessage, failureMessage);
             this.LogAssertionResult(result);
             return result;
         }

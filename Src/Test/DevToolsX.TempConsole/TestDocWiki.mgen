@@ -3,13 +3,26 @@ generator TestDocWiki : TestWikiGenerator;
 
 using DevToolsX.Testing.Selenium;
 
-template OpenPage(string url, string title)
+template OpenPage(string url, string search)
 Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
 [Screenshot.TakeScreenshot()]
 ^
 <br/>
 ^
-The page title should be [Browser.TitleShouldBe(title)].
+The page title should be [Browser.TitleShouldBe("Google")].
+^
+The page should have input [Page.ShouldContainElement("name:q")]
+^
+The page should have button [Page.ShouldContainElement("name:btnK")]
+^
+Type '[search]' into the search box: [void Page.TypeTextIntoElement("name:q", search)]
+^
+[Screenshot.TakeScreenshot()]
+^
+Press ENTER: [void Page.TypeTextIntoElement("name:q", "\n")][void Waiting.Wait(TimeSpan.FromSeconds(3))]
+^
+[Screenshot.TakeScreenshot()]
+^
 end template
 

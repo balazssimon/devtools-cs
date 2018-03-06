@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace DevToolsX.Testing.Selenium
 {
@@ -10,6 +11,11 @@ namespace DevToolsX.Testing.Selenium
         public Waiting(Browser browser) 
             : base(browser)
         {
+        }
+
+        public void Wait(TimeSpan timeout)
+        {
+            Thread.Sleep(timeout);
         }
 
         public void WaitUntil(Func<bool> condition, TimeSpan timeout)

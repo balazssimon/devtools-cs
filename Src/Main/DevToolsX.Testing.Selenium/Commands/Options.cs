@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DevToolsX.Testing.Selenium.Locators;
+using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,20 @@ namespace DevToolsX.Testing.Selenium
             this.ScreenshotImageFormat = ImageFormat.Png;
 
             this.JavaScriptDirectory = Directory.GetCurrentDirectory();
+
+            this.RegisterLocator<ClassLocator>("class");
+            this.RegisterLocator<CssLocator>("css");
+            this.RegisterLocator<DomLocator>("dom");
+            this.RegisterLocator<IdentifierLocator>("identifier");
+            this.RegisterLocator<IdLocator>("id");
+            this.RegisterLocator<JQueryLocator>("jquery");
+            this.RegisterLocator<JQueryLocator>("sizzle");
+            this.RegisterLocator<LinkLocator>("link");
+            this.RegisterLocator<NameLocator>("name");
+            this.RegisterLocator<PartialLinkLocator>("partial link");
+            this.RegisterLocator<ScLocator>("scLocator");
+            this.RegisterLocator<TagLocator>("tag");
+            this.RegisterLocator<XPathLocator>("xpath");
         }
 
         internal void RegisterDriver(IWebDriver driver)
@@ -93,7 +108,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        private TimeSpan implicitWaitTimeout = TimeSpan.MaxValue;
+        private TimeSpan implicitWaitTimeout = TimeSpan.Zero;
         public TimeSpan ImplicitWaitTimeout
         {
             get { return this.implicitWaitTimeout; }
@@ -110,7 +125,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        private TimeSpan asynchronousJavaScriptTimeout = TimeSpan.MaxValue;
+        private TimeSpan asynchronousJavaScriptTimeout = TimeSpan.Zero;
         public TimeSpan AsynchronousJavaScriptTimeout
         {
             get { return this.asynchronousJavaScriptTimeout; }

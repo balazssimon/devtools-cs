@@ -11,6 +11,21 @@ namespace DevToolsX.TempConsole
     {
         public Browser Browser { get; set; }
 
+        public Page Page
+        {
+            get { return this.Browser.Page; }
+        }
+
+        private Waiting waiting;
+        public Waiting Waiting
+        {
+            get
+            {
+                if (waiting == null) waiting = new Waiting(this.Browser);
+                return waiting;
+            }
+        }
+
         private Screenshot screenshot;
         public Screenshot Screenshot
         {
@@ -24,17 +39,17 @@ namespace DevToolsX.TempConsole
         protected virtual string ProcessTemplateOutput(object output)
         {
             if (output == null) return string.Empty;
-            AssertEqualsResult assertEqualsResult = output as AssertEqualsResult;
+            AssertExpectedResult assertExpectedResult = output as AssertExpectedResult;
             ImageResult imageResult = output as ImageResult;
-            if (assertEqualsResult != null)
+            if (assertExpectedResult != null)
             {
-                if (assertEqualsResult.Success)
+                if (assertExpectedResult.Success)
                 {
-                    return assertEqualsResult.Expected;
+                    return assertExpectedResult.Expected;
                 }
                 else
                 {
-                    return assertEqualsResult.Expected + @"<span style=""background:#FF8080; text-decoration:line-through"">" + assertEqualsResult.Actual + "</span>";
+                    return assertExpectedResult.Expected + @"<span style=""background:#FF8080; text-decoration:line-through"">" + assertExpectedResult.Actual + "</span>";
                 }
             }
             else if (imageResult != null)

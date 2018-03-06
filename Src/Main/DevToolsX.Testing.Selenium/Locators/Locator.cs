@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 
-namespace DevToolsX.Testing.Selenium
+namespace DevToolsX.Testing.Selenium.Locators
 {
     public abstract class Locator
     {
@@ -18,6 +18,11 @@ namespace DevToolsX.Testing.Selenium
 
         public Browser Browser { get; private set; }
         public Element Parent { get; private set; }
+
+        public IWebDriver Driver
+        {
+            get { return this.Browser.Driver; }
+        }
 
         public Options Options
         {
@@ -33,6 +38,12 @@ namespace DevToolsX.Testing.Selenium
         {
             get { return this.Parent?.WebElement; }
         }
+
+        protected ISearchContext SearchContext
+        {
+            get { return (ISearchContext)this.ParentWebElement ?? this.Browser.Driver; }
+        }
+
 
         protected void LogTrace(string message, params object[] args)
         {
@@ -109,7 +120,12 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertSuccess(success, successMessage, failureMessage, args);
         }
 
-        protected AssertionResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
+        protected AssertExpectedResult AssertExpected(bool success, string expected, string actual, string successMessage, string failureMessage)
+        {
+            return this.Browser.AssertExpected(success, expected, actual, successMessage, failureMessage);
+        }
+
+        protected AssertExpectedResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
         {
             return this.Browser.AssertEquals(name, expected, actual, successMessage, failureMessage);
         }
@@ -127,5 +143,18 @@ namespace DevToolsX.Testing.Selenium
         }
 
         protected abstract ImmutableArray<Element> FindElements(string value, string tag);
+
+        protected ImmutableArray<Element> FilterElements(IEnumerable<IWebElement> webElements, string tag)
+        {
+            List<Element> result = new List<Element>();
+            foreach (var webElement in webElements)
+            {
+                if (tag == null || webElement.TagName.ToLower() == tag.ToLower())
+                {
+                    result.Add(new Element(this.Browser, this.Parent, webElement));
+                }
+            }
+            return result.ToImmutableArray();
+        }
     }
 }

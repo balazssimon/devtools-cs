@@ -21,10 +21,10 @@ namespace DevToolsX.Testing.Selenium
         public object[] Args { get; private set; }
     }
 
-    public class AssertEqualsResult : AssertionResult
+    public class AssertExpectedResult : AssertionResult
     {
-        public AssertEqualsResult(string expected, string actual, string successMessage, string failureMessage)
-            : base(expected == actual, successMessage, failureMessage, expected, actual)
+        public AssertExpectedResult(bool success, string expected, string actual, string successMessage, string failureMessage)
+            : base(success, successMessage, failureMessage, expected, actual)
         {
             this.Expected = expected;
             this.Actual = actual;

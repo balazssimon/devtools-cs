@@ -38,12 +38,13 @@ namespace DevToolsX.TempConsole
                 {
                     TestDocWiki test = new TestDocWiki();
                     test.Browser = browser;
-                    string wikiText = test.OpenPage("http://www.google.com", "GoogleXYZ");
+                    string wikiText = test.OpenPage("http://www.google.com", "apple");
                     ImmutableModel model = MediaWikiToDocumentModel.Compile(wikiText);
                     using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                     {
                         printer.Print();
                     }
+                    
                     /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
                     {
                         printer.Print();
