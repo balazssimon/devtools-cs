@@ -24,17 +24,17 @@ namespace DevToolsX.TempConsole
         protected virtual string ProcessTemplateOutput(object output)
         {
             if (output == null) return string.Empty;
-            AssertionResult assertionResult = output as AssertionResult;
+            AssertEqualsResult assertEqualsResult = output as AssertEqualsResult;
             ImageResult imageResult = output as ImageResult;
-            if (assertionResult != null)
+            if (assertEqualsResult != null)
             {
-                if (assertionResult.Success)
+                if (assertEqualsResult.Success)
                 {
-                    return assertionResult.Expected;
+                    return assertEqualsResult.Expected;
                 }
                 else
                 {
-                    return assertionResult.Expected + @"<span style=""background:#FF8080; text-decoration:line-through"">" + assertionResult.Actual + "</span>";
+                    return assertEqualsResult.Expected + @"<span style=""background:#FF8080; text-decoration:line-through"">" + assertEqualsResult.Actual + "</span>";
                 }
             }
             else if (imageResult != null)

@@ -25,7 +25,7 @@ namespace DevToolsX.TempConsole
               .WriteTo.Console()
               .CreateLogger();
             Program.LoggerFactory = new LoggerFactory();
-            SerilogLoggerFactoryExtensions.AddSerilog(Program.LoggerFactory);
+            Program.LoggerFactory.AddSerilog();
         }
 
         static void Main(string[] args)
@@ -33,6 +33,7 @@ namespace DevToolsX.TempConsole
             try
             {
                 Options options = new Options(LoggerFactory);
+                options.ScreenshotImageFormat = ImageFormat.Jpeg;
                 using (Browser browser = new Browser(BrowserKind.Firefox, options))
                 {
                     TestDocWiki test = new TestDocWiki();

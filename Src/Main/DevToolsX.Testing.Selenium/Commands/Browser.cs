@@ -10,11 +10,12 @@ using System.Text;
 
 namespace DevToolsX.Testing.Selenium
 {
-    public class Browser : IDisposable
+    public class Browser : CommandsBase, IDisposable
     {
         private IWebDriver driver;
 
         public Browser(BrowserKind kind, Options options)
+            : base(null)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
             switch (kind)
@@ -30,16 +31,20 @@ namespace DevToolsX.Testing.Selenium
             }
             this.Options = options;
             this.Options.RegisterDriver(driver);
-            this.Logger = this.Options.LoggerFactory.CreateLogger(this.GetType());
+            base.SetBrowser(this);
+            this.Page = new Page(this);
         }
 
         public Browser(IWebDriver driver, Options options)
+            : base(null)
         {
             if (driver == null) throw new ArgumentNullException(nameof(driver));
             if (options == null) throw new ArgumentNullException(nameof(options));
             this.driver = driver;
             this.Options = options;
             this.Options.RegisterDriver(driver);
+            base.SetBrowser(this);
+            this.Page = new Page(this);
         }
 
         public void Dispose()
@@ -48,20 +53,16 @@ namespace DevToolsX.Testing.Selenium
             this.driver.Dispose();
         }
 
-        public Options Options
+        public override Options Options
         {
             get;
         }
 
-        public IWebDriver Driver
+        public override IWebDriver Driver
         {
             get { return this.driver; }
         }
 
-        public ILogger Logger
-        {
-            get;
-        }
         /// <summary>
         /// Returns the title of current page.
         /// </summary>
@@ -77,14 +78,12 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult TitleShouldBe(string title, string message = null)
         {
-            message = message ?? "Title should have been '{0}' but it was '{1}'.";
-            return AssertionResult.Create(this.Logger, title, this.LogTitle(), message);
+            return this.AssertEquals("Title", title, this.Title, message);
         }
 
         public string LogTitle()
         {
-            this.Logger.LogInformation("Title is '{0}'.", this.Title);
-            return this.Title;
+            return this.LogValue("Title", this.Title);
         }
 
         /// <summary>
@@ -102,8 +101,7 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult UrlShouldBe(string url, string message = null)
         {
-            message = message ?? "URL should have been '{0}' but it was '{1}'.";
-            return AssertionResult.Create(this.Logger, url, this.Url, message);
+            return this.AssertEquals("URL", url, this.Url);
         }
 
         /// <summary>
@@ -113,14 +111,17 @@ namespace DevToolsX.Testing.Selenium
         /// <returns></returns>
         public AssertionResult UrlShouldContain(string urlPart, string message = null)
         {
-            message = message ?? "URL should have contained '{0}' but it was '{1}'.";
-            return AssertionResult.Create(this.Logger, this.Url.Contains(urlPart), urlPart, this.LogUrl(), message);
+            return this.AssertSuccess(this.Url.Contains(urlPart), message ?? "URL should have contained '{0}' but it was '{1}'.", "URL is '{1}'.", urlPart, this.Url);
         }
 
         public string LogUrl()
         {
-            this.Logger.LogInformation("URL is '{0}'.", this.Url);
-            return this.Url;
+            return this.LogValue("URL", this.Url);
+        }
+
+        public Element Page
+        {
+            get;
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace DevToolsX.Testing.Selenium
 
         public string LogPageSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            this.Logger.Log(level, new EventId(), this.PageSource, null, null);
+            this.Log(level, this.PageSource);
             return this.PageSource;
         }
 
