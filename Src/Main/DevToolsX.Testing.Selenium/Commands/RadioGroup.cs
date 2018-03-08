@@ -35,6 +35,11 @@ namespace DevToolsX.Testing.Selenium
             set { this.SetValue(value); }
         }
 
+        public bool IsSelected
+        {
+            get { return this.TryGetRadioGroupValue(out string value); }
+        }
+
         public AssertionResult ShouldHaveValue(string value, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             string radioValue = null;
