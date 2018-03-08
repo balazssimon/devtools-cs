@@ -74,6 +74,11 @@ namespace DevToolsX.Testing.Selenium
             rows.AddRange(this.bodyCache);
             this.footerCache = this.FindElements("xpath:./tfoot/tr");
             rows.AddRange(this.footerCache);
+            if (rows.Count == 0)
+            {
+                this.bodyCache = this.FindElements("xpath:./tr");
+                rows.AddRange(this.bodyCache);
+            }
             this.rowCache = rows.ToImmutableArray();
             this.cellCache = new ImmutableArray<Element>?[rows.Count];
         }

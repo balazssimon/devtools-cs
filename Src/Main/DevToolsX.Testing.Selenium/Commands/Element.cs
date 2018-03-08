@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DevToolsX.Testing.Selenium
 {
-    public class Element
+    public class Element : IEquatable<Element>
     {
         public Element(Browser browser, Element parent, string locator, string tagKind, IWebElement webElement)
         {
@@ -632,5 +632,20 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
         }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Element);
+        }
+
+        public bool Equals(Element element)
+        {
+            if (element == null) return false;
+            return this.WebElement?.Equals(element.WebElement) ?? false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -31,8 +31,12 @@ namespace DevToolsX.Testing.Selenium
 
         public string Value
         {
-            get { return this.GetValue(); }
-            set { this.SetValue(value); }
+            get
+            {
+                string radioValue = null;
+                this.TryGetRadioGroupValue(out radioValue);
+                return radioValue;
+            }
         }
 
         public bool IsSelected
@@ -65,14 +69,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertSuccess(selected, successMessage, failureMessage, this.GroupName, radioValue);
         }
 
-        private string GetValue()
-        {
-            string radioValue = null;
-            this.TryGetRadioGroupValue(out radioValue);
-            return radioValue;
-        }
-
-        private void SetValue(string value)
+        public void Select(string value)
         {
             Element radioButton = this.GetRadioButtonWithValue(value);
             if (radioButton != null) radioButton.Select();
