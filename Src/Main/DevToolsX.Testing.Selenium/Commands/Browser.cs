@@ -13,6 +13,7 @@ namespace DevToolsX.Testing.Selenium
     public class Browser : CommandsBase, IDisposable
     {
         private IWebDriver driver;
+        private JavaScript javaScript;
 
         public Browser(BrowserKind kind, Options options)
             : base(null)
@@ -32,7 +33,10 @@ namespace DevToolsX.Testing.Selenium
             this.Options = options;
             this.Options.RegisterDriver(driver);
             base.SetBrowser(this);
+            this.javaScript = new JavaScript(this);
+            this.Wait = new Wait(this);
             this.Page = new Page(this);
+            this.Alert = new Alert(this);
         }
 
         public Browser(IWebDriver driver, Options options)
@@ -44,7 +48,10 @@ namespace DevToolsX.Testing.Selenium
             this.Options = options;
             this.Options.RegisterDriver(driver);
             base.SetBrowser(this);
+            this.javaScript = new JavaScript(this);
+            this.Wait = new Wait(this);
             this.Page = new Page(this);
+            this.Alert = new Alert(this);
         }
 
         public void Dispose()
@@ -61,6 +68,16 @@ namespace DevToolsX.Testing.Selenium
         public override IWebDriver Driver
         {
             get { return this.driver; }
+        }
+
+        public override JavaScript JavaScript
+        {
+            get { return this.javaScript; }
+        }
+
+        public Wait Wait
+        {
+            get;
         }
 
         /// <summary>
@@ -120,6 +137,16 @@ namespace DevToolsX.Testing.Selenium
         }
 
         public Page Page
+        {
+            get;
+        }
+
+        public Wait Waiting
+        {
+            get;
+        }
+
+        public Alert Alert
         {
             get;
         }

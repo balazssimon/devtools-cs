@@ -33,6 +33,7 @@ namespace DevToolsX.TempConsole
             try
             {
                 Options options = new Options(LoggerFactory);
+                options.ImplicitWaitTimeout = TimeSpan.FromSeconds(3);
                 //options.ScreenshotImageFormat = ImageFormat.Jpeg;
                 using (Browser browser = new Browser(BrowserKind.Firefox, options))
                 {

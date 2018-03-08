@@ -5,12 +5,81 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace DevToolsX.Testing.Selenium
 {
+    internal class MarkState
+    {
+        private static ConditionalWeakTable<Element, MarkState> markStates = new ConditionalWeakTable<Element, MarkState>();
+
+        private MarkState(Element element, string styleBeforeMark)
+        {
+            this.MarkedElement = element;
+            this.StyleBeforeMark = styleBeforeMark;
+        }
+
+        public Element MarkedElement { get; }
+        public string StyleBeforeMark { get; }
+
+        public static void Mark(Element element)
+        {
+            if (element == null || element.Browser.JavaScript == null) return;
+            MarkState markState;
+            if (MarkState.markStates.TryGetValue(element, out markState)) return;
+            string saveMarkStateCode =
+                @"var style = window.getComputedStyle(arguments[0], null);
+                    return [style.getPropertyValue('border'), style.getPropertyValue('border-color'), style.getPropertyValue('border-style')];";
+            element.Browser.LogDebug("Executing JavaScript: {0}", saveMarkStateCode);
+            string[] styleString = element.Browser.JavaScript.Execute(saveMarkStateCode, element.WebElement) as string[];
+            string styleBeforeMark =
+                @"arguments[0].style.border = 0; arguments[0].style.borderColor = ''; arguments[0].style.borderStyle = '';";
+            if (styleString != null && styleString.Length == 3)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("arguments[0].style.border = '");
+                if (!string.IsNullOrWhiteSpace(styleString[0]))
+                {
+                    sb.Append(styleString[0]);
+                }
+                sb.Append("'; ");
+                sb.Append("arguments[0].style.borderColor = '");
+                if (!string.IsNullOrWhiteSpace(styleString[1]))
+                {
+                    sb.Append(styleString[1]);
+                }
+                sb.Append("'; ");
+                sb.Append("arguments[0].style.borderStyle = '");
+                if (!string.IsNullOrWhiteSpace(styleString[2]))
+                {
+                    sb.Append(styleString[2]);
+                }
+                sb.Append("'; ");
+                styleBeforeMark = sb.ToString();
+            }
+            MarkState.markStates.Add(element, new MarkState(element, styleBeforeMark));
+            string markCode =
+                @"arguments[0].style.border = '4px'; arguments[0].style.borderColor = 'red'; arguments[0].style.borderStyle = 'solid';";
+            element.Browser.LogDebug("Executing JavaScript: {0}", markCode);
+            element.Browser.JavaScript.Execute(markCode, element.WebElement);
+        }
+
+        public static void Unmark(Element element)
+        {
+            MarkState markState;
+            if (MarkState.markStates.TryGetValue(element, out markState))
+            {
+                element.Browser.LogDebug("Executing JavaScript: {0}", markState.StyleBeforeMark);
+                element.Browser.JavaScript.Execute(markState.StyleBeforeMark, element.WebElement);
+            }
+        }
+    }
+
     public class Element : IEquatable<Element>
     {
+        private ElementWait cachedWait;
+
         public Element(Browser browser, Element parent, string locator, string tagKind, IWebElement webElement)
         {
             if (browser == null) throw new ArgumentNullException(nameof(browser));
@@ -37,6 +106,15 @@ namespace DevToolsX.Testing.Selenium
         public string Locator { get; }
         public string TagKind { get; }
         public IWebElement WebElement { get; }
+
+        public ElementWait Wait
+        {
+            get
+            {
+                if (this.cachedWait == null) this.cachedWait = new ElementWait(this);
+                return this.cachedWait;
+            }
+        }
 
         public string Name
         {
@@ -133,7 +211,7 @@ namespace DevToolsX.Testing.Selenium
             get
             {
                 if (this.WebElement == null) return false;
-                return this.WebElement.Enabled && this.WebElement.GetAttribute("readonly") == null && 
+                return this.WebElement.Enabled && this.WebElement.GetAttribute("readonly") == null &&
                     this.WebElement.GetAttribute("disabled") == null;
             }
         }
@@ -173,7 +251,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public bool IsTextPresent(string text)
+        public bool ContainsText(string text)
         {
             string locator = string.Format("xpath://*[contains(., {0})]", Utils.EscapeXpathValue(text));
             return this.FindElement(locator, required: false) != null;
@@ -197,7 +275,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = (tag ?? "element") + " '" + locator + " ";
+            string childName = (tag ?? "element") + " '" + locator + "'";
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
@@ -210,7 +288,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = (tag ?? "element") + " '" + locator + " ";
+            string childName = (tag ?? "element") + " '" + locator + "' ";
             string successMessage = "{0} does not contain {1}.";
             string failureMessage = message ?? "{0} should not have contained {1}.";
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
@@ -348,11 +426,7 @@ namespace DevToolsX.Testing.Selenium
 
         public void Focus()
         {
-            var javaScriptExecutor = this.Browser.Driver as IJavaScriptExecutor;
-            if (javaScriptExecutor != null)
-            {
-                javaScriptExecutor.ExecuteScript("arguments[0].focus();", this);
-            }
+            this.Browser.JavaScript.Execute("arguments[0].focus();", this);
         }
 
         public void TypeText(string text)
@@ -397,7 +471,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "form '" + locator + " ";
+            string childName = "form '" + locator + "'";
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
             return this.Browser.AssertForm(child, successMessage, failureMessage, this.LogName, childName);
@@ -523,7 +597,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "radio group '" + groupName + " ";
+            string childName = "radio group '" + groupName + "'";
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
             return this.Browser.AssertRadioGroup(child, successMessage, failureMessage, this.LogName, childName);
@@ -536,7 +610,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "radio group '" + groupName + " ";
+            string childName = "radio group '" + groupName + "' ";
             string successMessage = "{0} does not contain {1}.";
             string failureMessage = message ?? "{0} should not have contained {1}.";
             return this.Browser.AssertRadioGroup(child, successMessage, failureMessage, this.LogName, childName);
@@ -576,7 +650,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "list '" + locator + " ";
+            string childName = "list '" + locator + "'";
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
             return this.Browser.AssertList(child, successMessage, failureMessage, this.LogName, childName);
@@ -589,7 +663,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "list '" + locator + " ";
+            string childName = "list '" + locator + "' ";
             string successMessage = "{0} does not contain {1}.";
             string failureMessage = message ?? "{0} should not have contained {1}.";
             return this.Browser.AssertList(child, successMessage, failureMessage, this.LogName, childName);
@@ -613,7 +687,7 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "table '" + locator + " ";
+            string childName = "table '" + locator + "' ";
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
             return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
@@ -626,47 +700,21 @@ namespace DevToolsX.Testing.Selenium
             {
                 this.LogSource(logLevel);
             }
-            string childName = "table '" + locator + " ";
+            string childName = "table '" + locator + "'";
             string successMessage = "{0} does not contain {1}.";
             string failureMessage = message ?? "{0} should not have contained {1}.";
             return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        private void CreateMarkerCssClass(IJavaScriptExecutor executor)
-        {
-            string css = "." + this.Options.ElementMarkerCssClassName + " { " + this.Options.ElementMarkerCss + " }";
-            css = css.Replace("'", "\\'");
-            string createCssClass = string.Format(
-                @"if (document.getElementsByClassName({0}).length === 0){
-                        var style = document.createElement('style');
-                        style.type = 'text/css';
-                        style.innerHTML = '{1}';
-                    }", this.Options.ElementMarkerCssClassName, css);
-            executor.ExecuteScript(createCssClass);
-        }
-
         public void Mark()
         {
-            if (this.WebElement == null) return;
-            IJavaScriptExecutor executor = this.Browser.Driver as IJavaScriptExecutor;
-            if (executor != null)
-            {
-                this.CreateMarkerCssClass(executor);
-                executor.ExecuteScript(string.Format("jQuery(arguments[0]).addClass('{0}');", this.Options.ElementMarkerCssClassName), this.WebElement);
-            }
+            MarkState.Mark(this);
         }
 
         public void Unmark()
         {
-            if (this.WebElement == null) return;
-            IJavaScriptExecutor executor = this.Browser.Driver as IJavaScriptExecutor;
-            if (executor != null)
-            {
-                this.CreateMarkerCssClass(executor);
-                executor.ExecuteScript(string.Format("jQuery(arguments[0]).removeClass('{0}');", this.Options.ElementMarkerCssClassName), this.WebElement);
-            }
+            MarkState.Unmark(this);
         }
-
 
         public override bool Equals(object obj)
         {
@@ -683,5 +731,6 @@ namespace DevToolsX.Testing.Selenium
         {
             return base.GetHashCode();
         }
+
     }
 }

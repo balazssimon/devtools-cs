@@ -43,6 +43,11 @@ namespace DevToolsX.Testing.Selenium
             get { return this.browser.Driver; }
         }
 
+        public virtual JavaScript JavaScript
+        {
+            get { return this.browser.JavaScript; }
+        }
+
         public ILogger Logger
         {
             get;

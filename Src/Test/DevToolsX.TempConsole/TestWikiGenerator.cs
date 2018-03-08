@@ -16,13 +16,13 @@ namespace DevToolsX.TempConsole
             get { return this.Browser.Page; }
         }
 
-        private Waiting waiting;
-        public Waiting Waiting
+        private Wait wait;
+        public Wait Wait
         {
             get
             {
-                if (waiting == null) waiting = new Waiting(this.Browser);
-                return waiting;
+                if (wait == null) wait = new Wait(this.Browser);
+                return wait;
             }
         }
 

@@ -16,38 +16,43 @@ namespace DevToolsX.Testing.Selenium
             this.javaScriptExecutor = this.Driver as IJavaScriptExecutor;
         }
 
-        public void Execute(string javaScriptCode)
+        public bool IsSupported
+        {
+            get { return this.javaScriptExecutor != null; }
+        }
+
+        public object Execute(string javaScriptCode, params object[] args)
         {
             if (this.javaScriptExecutor == null)
             {
                 this.LogError("The driver does not support JavaScript.");
-                return;
+                return null;
             }
-            this.javaScriptExecutor.ExecuteScript(javaScriptCode);
+            return this.javaScriptExecutor.ExecuteScript(javaScriptCode, args);
         }
 
-        public void ExecuteAsync(string javaScriptCode)
+        public object ExecuteAsync(string javaScriptCode, params object[] args)
         {
             if (this.javaScriptExecutor == null)
             {
                 this.LogError("The driver does not support JavaScript.");
-                return;
+                return null;
             }
-            this.javaScriptExecutor.ExecuteAsyncScript(javaScriptCode);
+            return this.javaScriptExecutor.ExecuteAsyncScript(javaScriptCode, args);
         }
 
-        public void ExecuteFile(string javaScriptFileName)
+        public object ExecuteFile(string javaScriptFileName, params object[] args)
         {
             string javaScriptFilePath = Path.Combine(this.Options.JavaScriptDirectory, javaScriptFileName);
             string javaScriptCode = File.ReadAllText(javaScriptFilePath);
-            this.Execute(javaScriptCode);
+            return this.Execute(javaScriptCode, args);
         }
 
-        public void ExecuteFileAsync(string javaScriptFileName)
+        public object ExecuteFileAsync(string javaScriptFileName, params object[] args)
         {
             string javaScriptFilePath = Path.Combine(this.Options.JavaScriptDirectory, javaScriptFileName);
             string javaScriptCode = File.ReadAllText(javaScriptFilePath);
-            this.ExecuteAsync(javaScriptCode);
+            return this.ExecuteAsync(javaScriptCode, args);
         }
     }
 }

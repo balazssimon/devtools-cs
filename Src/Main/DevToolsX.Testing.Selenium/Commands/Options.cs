@@ -24,9 +24,6 @@ namespace DevToolsX.Testing.Selenium
 
             this.JavaScriptDirectory = Directory.GetCurrentDirectory();
 
-            this.ElementMarkerCss = "border : '4em solid red';";
-            this.ElementMarkerCssClassName = "devtoolsxElementMarkerClass";
-
             this.RegisterLocator<ClassLocator>("class");
             this.RegisterLocator<CssLocator>("css");
             this.RegisterLocator<DomLocator>("dom");
@@ -153,8 +150,5 @@ namespace DevToolsX.Testing.Selenium
         public ImageFormat ScreenshotImageFormat { get; set; }
 
         public string JavaScriptDirectory { get; set; }
-
-        public string ElementMarkerCssClassName { get; set; }
-        public string ElementMarkerCss { get; set; }
     }
 }
