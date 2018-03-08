@@ -4,6 +4,8 @@ generator TestDocWiki : TestWikiGenerator;
 using DevToolsX.Testing.Selenium;
 
 template OpenPage(string url, string search)
+[Element input]
+[Element searchButton]
 Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
 [Screenshot.TakeScreenshot()]
@@ -12,15 +14,15 @@ Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
 The page title should be [Browser.TitleShouldBe("Google")].
 ^
-The page should have input [Page.ShouldContainElement("name:q")]
+The page should have input [input = Page.ShouldContainElement("name:q").Element]
 ^
-The page should have button [Page.ShouldContainElement("name:btnK")]
+The page should have button [searchButton = Page.ShouldContainElement("name:btnK").Element]
 ^
-Type '[search]' into the search box: [void Page.TypeTextIntoElement("name:q", search)]
+Type '[search]' into the search box: [void input.TypeText(search)]
 ^
 [Screenshot.TakeScreenshot()]
 ^
-Press ENTER: [void Page.TypeTextIntoElement("name:q", "\n")][void Waiting.Wait(TimeSpan.FromSeconds(3))]
+Press ENTER: [void input.TypeText("\n")][void Waiting.Wait(TimeSpan.FromSeconds(3))]
 ^
 [Screenshot.TakeScreenshot()]
 ^

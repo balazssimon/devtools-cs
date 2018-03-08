@@ -8,10 +8,15 @@ namespace DevToolsX.Testing.Selenium.Locators
 {
     public class ClassLocator : Locator
     {
-        protected override ImmutableArray<Element> FindElements(string value, string tag)
+        public ClassLocator(Browser browser, Element parent, string locatorText, string tag, bool required) 
+            : base(browser, parent, locatorText, tag, required)
         {
-            var elements = this.SearchContext.FindElements(By.ClassName(value));
-            return this.FilterElements(elements, tag);
+        }
+
+        protected override ImmutableArray<Element> DoFindElements()
+        {
+            var elements = this.SearchContext.FindElements(By.ClassName(this.Value));
+            return this.FilterElements(elements);
         }
     }
 }

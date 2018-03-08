@@ -3,30 +3,47 @@ using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DevToolsX.Testing.Selenium
 {
     public class Element
     {
-        public Element(Browser browser, Element parent, IWebElement webElement)
+        public Element(Browser browser, Element parent, string locator, string tagKind, IWebElement webElement)
         {
             if (browser == null) throw new ArgumentNullException(nameof(browser));
             this.Browser = browser;
             this.Parent = parent;
+            this.Locator = locator;
+            this.TagKind = tagKind;
             this.WebElement = webElement;
         }
 
+        public Element(Element element)
+        {
+            if (element == null) throw new ArgumentNullException(nameof(element));
+            this.Browser = element.Browser;
+            this.Parent = element.Parent;
+            this.Locator = element.Locator;
+            this.TagKind = element.TagKind;
+            this.WebElement = element.WebElement;
+        }
+
+
         public Browser Browser { get; }
         public Element Parent { get; }
+        public string Locator { get; }
+        public string TagKind { get; }
         public IWebElement WebElement { get; }
 
         public string Name
         {
             get
             {
-                if (this.Parent == null) return "Page";
-                else return this.WebElement?.TagName ?? "Element";
+                if (this.Locator == null) return "Page";
+                else return this.TagKind ?? this.WebElement?.TagName ?? "Element";
             }
         }
 
@@ -43,6 +60,15 @@ namespace DevToolsX.Testing.Selenium
         private string SmallName()
         {
             return this.Name.ToLower();
+        }
+
+        protected string LogName
+        {
+            get
+            {
+                if (this.Locator == null) return this.CapitalName();
+                else return this.CapitalName() + " '" + this.Locator + "'";
+            }
         }
 
         public Options Options
@@ -65,24 +91,41 @@ namespace DevToolsX.Testing.Selenium
             get { return this.WebElement?.GetAttribute("value"); }
         }
 
-        public Element FindOne(string locator, string tag = null, bool required = true)
+        public bool Exists
         {
-            if (locator == null) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
-            int colonIndex = locator.IndexOf(':');
-            if (colonIndex < 0) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
-            string prefix = locator.Substring(0, colonIndex).Trim();
-            string value = locator.Substring(colonIndex + 1).Trim();
-            return this.Options.CreateLocator(prefix, this.Browser, this).FindOne(value, tag, required);
+            get { return this.Locator == null || this.WebElement != null; }
         }
 
-        public ImmutableArray<Element> Find(string locator, string tag = null, bool required = true)
+        public Element FindElement(string locator, string tag = null, bool required = true)
         {
-            if (locator == null) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
-            int colonIndex = locator.IndexOf(':');
-            if (colonIndex < 0) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
-            string prefix = locator.Substring(0, colonIndex).Trim();
-            string value = locator.Substring(colonIndex + 1).Trim();
-            return this.Options.CreateLocator(prefix, this.Browser, this).Find(value, tag, required);
+            return this.Options.CreateLocator(this.Browser, this, locator, tag, required).FindElement();
+        }
+
+        public ImmutableArray<Element> FindElements(string locator, string tag = null, bool required = true)
+        {
+            return this.Options.CreateLocator(this.Browser, this, locator, tag, required).FindElements();
+        }
+
+        public int GetElementCount(string locator)
+        {
+            return this.FindElements(locator, required: false).Length;
+        }
+
+        public AssertionResult LocatorShouldMatchNTimes(string locator, int n, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            int matchCount = this.GetElementCount(locator);
+            return this.Browser.AssertSuccess(matchCount == n, "Locator '{2}' matches {1} times.", message ?? "Locator '{2}' should have matched {0} times but matched {1} times.", n, matchCount, locator);
+        }
+
+        public int GetMatchingXPathCount(string xpath)
+        {
+            return this.FindElements("xpath:" + xpath, required: false).Length;
+        }
+
+        public AssertionResult XPathShouldMatchNTimes(string xpath, int n, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            int matchCount = this.GetMatchingXPathCount(xpath);
+            return this.Browser.AssertSuccess(matchCount == n, "XPath '{2}' matches {1} times.", message ?? "XPath '{2}' should have matched {0} times but matched {1} times.", n, matchCount, xpath);
         }
 
         public bool IsEnabled
@@ -95,12 +138,6 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public bool IsElementEnabled(string locator, string tag = null)
-        {
-            Element child = this.FindOne(locator, tag, false);
-            return child != null && child.IsEnabled;
-        }
-
         public bool IsVisible
         {
             get
@@ -108,12 +145,6 @@ namespace DevToolsX.Testing.Selenium
                 if (this.WebElement == null) return false;
                 return this.WebElement.Displayed;
             }
-        }
-
-        public bool IsElementVisible(string locator, string tag = null)
-        {
-            Element child = this.FindOne(locator, tag, false);
-            return child != null && child.IsVisible;
         }
 
         public bool IsFocused
@@ -125,12 +156,6 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public bool IsElementFocused(string locator, string tag = null)
-        {
-            Element child = this.FindOne(locator, tag, false);
-            return child != null && child.IsFocused;
-        }
-
         public bool IsSelected
         {
             get
@@ -140,23 +165,25 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public bool IsElementSelected(string locator, string tag = null)
+        public string Source
         {
-            Element child = this.FindOne(locator, tag, false);
-            return child != null && child.IsSelected;
+            get
+            {
+                return this.WebElement?.GetAttribute("innerHTML");
+            }
         }
 
         public bool IsTextPresent(string text)
         {
             string locator = string.Format("xpath://*[contains(., {0})]", Utils.EscapeXpathValue(text));
-            return this.FindOne(locator, null, false) != null;
+            return this.FindElement(locator, required: false) != null;
         }
 
-        public string LogElementSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Information)
+        public string LogSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             if (this.WebElement != null)
             {
-                string source = this.WebElement.GetAttribute("innerHTML");
+                string source = this.Source;
                 this.Browser.Log(level, source);
                 return source;
             }
@@ -165,110 +192,65 @@ namespace DevToolsX.Testing.Selenium
 
         public AssertElementResult ShouldContainElement(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            Element child = this.FindOne(locator, tag, false);
-            if (child == null)
+            Element child = this.FindElement(locator, tag, false);
+            if (!child.Exists)
             {
-                this.LogElementSource(logLevel);
+                this.LogSource(logLevel);
             }
-            string successMessage = this.CapitalName() + " contains {0} '{1}'.";
-            string failureMessage = message ?? this.CapitalName() + " should have contained {0} '{1}' but did not.";
-            return this.Browser.AssertElement(child, successMessage, failureMessage, tag ?? "element", locator);
+            string childName = (tag ?? "element") + " '" + locator + " ";
+            string successMessage = "{0} contains {1}.";
+            string failureMessage = message ?? "{0} should have contained {1} but did not.";
+            return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
         public AssertElementResult ShouldNotContainElement(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            Element child = this.FindOne(locator, tag, false);
-            if (child != null)
+            Element child = this.FindElement(locator, tag, false);
+            if (child.Exists)
             {
-                this.LogElementSource(logLevel);
+                this.LogSource(logLevel);
             }
-            string successMessage = this.CapitalName() + " does not contain {0} '{1}'.";
-            string failureMessage = message ?? this.CapitalName() + " should not have contained {0} '{1}' but did not.";
-            return this.Browser.AssertElement(child, successMessage, failureMessage, tag ?? "element", locator);
+            string childName = (tag ?? "element") + " '" + locator + " ";
+            string successMessage = "{0} does not contain {1}.";
+            string failureMessage = message ?? "{0} should not have contained {1}.";
+            return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
         public AssertionResult ShouldContainText(string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.CheckElementContainsText(true, false, null, text, ignoreCase, message: message, logLevel: logLevel);
+            return this.CheckText(true, false, text, ignoreCase, message: message, logLevel: logLevel);
         }
 
         public AssertionResult ShouldNotContainText(string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.CheckElementContainsText(false, false, null, text, ignoreCase, message: message, logLevel: logLevel);
-        }
-
-        public AssertionResult ElementShouldContainText(string locator, string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
-        {
-            return this.CheckElementContainsText(true, false, locator, text, ignoreCase, tag: null, message: message, logLevel: logLevel);
-        }
-
-        public AssertionResult ElementShouldNotContainText(string locator, string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
-        {
-            return this.CheckElementContainsText(false, false, locator, text, ignoreCase, tag: null, message: message, logLevel: logLevel);
+            return this.CheckText(false, false, text, ignoreCase, message: message, logLevel: logLevel);
         }
 
         public AssertionResult ShouldHaveText(string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.CheckElementContainsText(true, true, null, text, ignoreCase, message: message, logLevel: logLevel);
+            return this.CheckText(true, true, text, ignoreCase, message: message, logLevel: logLevel);
         }
 
         public AssertionResult ShouldNotHaveText(string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.CheckElementContainsText(false, true, null, text, ignoreCase, message: message, logLevel: logLevel);
+            return this.CheckText(false, true, text, ignoreCase, message: message, logLevel: logLevel);
         }
 
-        public AssertionResult ElementShouldHaveText(string locator, string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        private AssertionResult CheckText(bool shouldContain, bool equals, string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.CheckElementContainsText(true, true, locator, text, ignoreCase, tag: null, message: message, logLevel: logLevel);
-        }
-
-        public AssertionResult ElementShouldNotHaveText(string locator, string text, bool ignoreCase = false, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
-        {
-            return this.CheckElementContainsText(false, true, locator, text, ignoreCase, tag: null, message: message, logLevel: logLevel);
-        }
-
-        private AssertionResult CheckElementContainsText(bool shouldContain, bool equals, string locator, string text, bool ignoreCase = false, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
-        {
-            Element element = null;
             string successMessage;
             string failureMessage;
-            if (locator == null)
+            if (shouldContain)
             {
-                if (shouldContain)
-                {
-                    successMessage = this.CapitalName() + " contains text '{0}'.";
-                    failureMessage = message ?? this.CapitalName() + " should have contained text '{0}' but its text was '{1}'.";
-                }
-                else
-                {
-                    successMessage = this.CapitalName() + " does not contain text '{0}'.";
-                    failureMessage = message ?? this.CapitalName() + " should not have contained text '{0}' but its text was '{1}'.";
-                }
-                element = this;
+                successMessage = "{0} contains text '{1}'.";
+                failureMessage = message ?? "{0} should have contained text '{1}' but its text was '{2}'.";
             }
             else
             {
-                if (shouldContain)
-                {
-                    successMessage = "{2} '{3}' contains text '{0}'.";
-                    failureMessage = message ?? "{2} '{3}' should have contained text '{0}' but its text was '{1}'.";
-                }
-                else
-                {
-                    successMessage = "{2} '{3}' does not contain text '{0}'.";
-                    failureMessage = message ?? "{2} '{3}' should not have contained text '{0}' but its text was '{1}'.";
-                }
-                var child = this.ShouldContainElement(locator, tag, logLevel: logLevel);
-                if (child.Success)
-                {
-                    element = child.Element;
-                }
-                else
-                {
-                    return child;
-                }
+                successMessage = "{0} does not contain text '{1}'.";
+                failureMessage = message ?? "{0} should not have contained text '{1}' but its text was '{2}'.";
             }
-            string elementText = element.Text;
+            string elementText = this.Text;
             string actualText = elementText;
             string expectedText = text;
             if (ignoreCase)
@@ -278,7 +260,7 @@ namespace DevToolsX.Testing.Selenium
             }
             bool contains = equals ? expectedText == actualText : expectedText?.Contains(text) ?? false;
             bool success = (shouldContain && contains) || (!shouldContain && !contains);
-            return this.Browser.AssertSuccess(success, successMessage, failureMessage, text, elementText, locator, tag);
+            return this.Browser.AssertSuccess(success, successMessage, failureMessage, this.LogName, text, elementText);
         }
 
         public string GetAttribute(string name)
@@ -286,93 +268,49 @@ namespace DevToolsX.Testing.Selenium
             return this.WebElement?.GetAttribute(name);
         }
 
-        public string GetElementAttribute(string locator, string name)
-        {
-            var child = this.FindOne(locator, required: false);
-            return child?.GetAttribute(name);
-        }
-
         public string GetCssValue(string name)
         {
             return this.WebElement?.GetCssValue(name);
         }
 
-        public string GetElementCssValue(string locator, string name)
-        {
-            var child = this.FindOne(locator, required: false);
-            return child?.GetCssValue(name);
-        }
-
         public AssertionResult ShouldBeEnabled()
         {
-            return this.Browser.AssertSuccess(this.IsEnabled, this.Name + " is enabled.", this.Name + " should have been enabled.");
-        }
-
-        public AssertionResult ShouldBeEnabled(string locator)
-        {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(child.Element.IsEnabled, "Element '{0}' is enabled.", "Element '{0}' should have been enabled.", locator);
+            return this.Browser.AssertSuccess(this.IsEnabled, "{0} is enabled.", "{0} should have been enabled.", this.LogName);
         }
 
         public AssertionResult ShouldBeDisabled()
         {
-            return this.Browser.AssertSuccess(!this.IsEnabled, this.Name + " is disabled.", this.Name + " should have been disabled.");
-        }
-
-        public AssertionResult ShouldBeDisabled(string locator)
-        {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(!child.Element.IsEnabled, "Element '{0}' is disabled.", "Element '{0}' should have been disabled.", locator);
+            return this.Browser.AssertSuccess(!this.IsEnabled, "{0} is disabled.", "{0} should have been disabled.", this.LogName);
         }
 
         public AssertionResult ShouldBeVisible()
         {
-            return this.Browser.AssertSuccess(this.IsVisible, this.Name + " is visible.", this.Name + " should have been visible.");
-        }
-
-        public AssertionResult ShouldBeVisible(string locator)
-        {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(child.Element.IsVisible, "Element '{0}' is visible.", "Element '{0}' should have been visible.", locator);
+            return this.Browser.AssertSuccess(this.IsVisible, "{0} is visible.", "{0} should have been visible.", this.LogName);
         }
 
         public AssertionResult ShouldNotBeVisible()
         {
-            return this.Browser.AssertSuccess(!this.IsVisible, this.Name + " is not visible.", this.Name + " should not have been visible.");
-        }
-
-        public AssertionResult ShouldNotBeVisible(string locator)
-        {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(!child.Element.IsVisible, "Element '{0}' is not visible.", "Element '{0}' should not have been visible.", locator);
+            return this.Browser.AssertSuccess(!this.IsVisible, "{0} is not visible.", "{0} should not have been visible.", this.LogName);
         }
 
         public AssertionResult ShouldBeFocused()
         {
-            return this.Browser.AssertSuccess(this.IsFocused, this.Name + " is focused.", this.Name + " should have been focused.");
-        }
-
-        public AssertionResult ShouldBeFocused(string locator)
-        {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(child.Element.IsFocused, "Element '{0}' is focused.", "Element '{0}' should have been focused.", locator);
+            return this.Browser.AssertSuccess(this.IsFocused, "{0} is focused.", "{0} should have been focused.", this.LogName);
         }
 
         public AssertionResult ShouldNotBeFocused()
         {
-            return this.Browser.AssertSuccess(!this.IsFocused, this.Name + " is not focused.", this.Name + " should not have been focused.");
+            return this.Browser.AssertSuccess(!this.IsFocused, "{0} is not focused.", "{0} should not have been focused.", this.LogName);
         }
 
-        public AssertionResult ShouldNotBeFocused(string locator)
+        public AssertionResult ShouldBeSelected()
         {
-            var child = this.ShouldContainElement(locator);
-            if (!child.Success) return child;
-            return this.Browser.AssertSuccess(!child.Element.IsFocused, "Element '{0}' is not focused.", "Element '{0}' should not have been focused.", locator);
+            return this.Browser.AssertSuccess(this.IsSelected, "{0} is selected.", "{0} should have been selected.", this.LogName);
+        }
+
+        public AssertionResult ShouldNotBeSelected()
+        {
+            return this.Browser.AssertSuccess(!this.IsSelected, "{0} is not selected.", "{0} should not have been selected.", this.LogName);
         }
 
         public void ClearText()
@@ -380,21 +318,27 @@ namespace DevToolsX.Testing.Selenium
             this.WebElement?.Clear();
         }
 
-        public void ClearElementText(string locator)
-        {
-            var child = this.FindOne(locator, required: false);
-            child?.ClearText();
-        }
-
         public void Click()
         {
             this.WebElement?.Click();
         }
 
-        public void ClickElement(string locator)
+        public void Select()
         {
-            var child = this.FindOne(locator, required: false);
-            child?.Click();
+            if (this.WebElement == null) return;
+            if (!this.WebElement.Selected)
+            {
+                this.WebElement.Click();
+            }
+        }
+
+        public void Unselect()
+        {
+            if (this.WebElement == null) return;
+            if (this.WebElement.Selected)
+            {
+                this.WebElement.Click();
+            }
         }
 
         public void DoubleClick()
@@ -411,68 +355,282 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public void FocusElement(string locator)
-        {
-            var child = this.FindOne(locator, required: false);
-            if (child == null) return;
-            var javaScriptExecutor = this.Browser.Driver as IJavaScriptExecutor;
-            if (javaScriptExecutor != null)
-            {
-                javaScriptExecutor.ExecuteScript("arguments[0].focus();", child);
-            }
-        }
-
         public void TypeText(string text)
         {
             this.WebElement?.SendKeys(text);
         }
 
-        public void TypeTextIntoElement(string locator, string text)
+        public Element GetLink(string locator)
         {
-            var child = this.FindOne(locator, required: false);
-            child?.WebElement.SendKeys(text);
-        }
-
-        public void ClickLink(string locator)
-        {
-            var child = this.FindOne(locator, tag: "a", required: false);
-            child?.WebElement.Click();
+            return this.FindElement(locator, "link", required: false);
         }
 
         public ImmutableArray<Element> GetAllLinks()
         {
-            return this.Find("tag:a");
+            return this.FindElements("tag:a", "link", required: false);
         }
 
         public AssertElementResult ShouldContainLink(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.ShouldContainElement(locator, "a", message, logLevel);
+            return this.ShouldContainElement(locator, "link", message, logLevel);
         }
 
         public AssertElementResult ShouldNotContainLink(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return this.ShouldNotContainElement(locator, "a", message, logLevel);
+            return this.ShouldNotContainElement(locator, "link", message, logLevel);
         }
 
-        public int GetElementCount(string locator)
+        public Form GetForm(string locator)
         {
-            return this.Find(locator, required: false).Length;
-        }
-        public AssertionResult LocatorShouldMatchNTimes(string locator, int n, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
-        {
-            int matchCount = this.GetElementCount(locator);
-            return this.Browser.AssertSuccess(matchCount == n, "Locator '{2}' matches {1} times.", message ?? "Locator '{2}' should have matched {0} times but matched {1} times.", n, matchCount, locator);
+            return new Form(this.FindElement(locator, "form", required: false));
         }
 
-        public int GetMatchingXPathCount(string xpath)
+        public ImmutableArray<Form> GetAllForms()
         {
-            return this.Find("xpath:" + xpath, required: false).Length;
+            return this.FindElements("tag:form", "form", required: false).Select(e => new Form(e)).ToImmutableArray();
         }
 
-        public AssertionResult XPathShouldMatchNTimes(string xpath, int n, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public AssertFormResult ShouldContainForm(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            int matchCount = this.GetMatchingXPathCount(xpath);
-            return this.Browser.AssertSuccess(matchCount == n, "XPath '{2}' matches {1} times.", message ?? "XPath '{2}' should have matched {0} times but matched {1} times.", n, matchCount, xpath);
+            Form child = this.GetForm(locator);
+            if (!child.Exists)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "form '" + locator + " ";
+            string successMessage = "{0} contains {1}.";
+            string failureMessage = message ?? "{0} should have contained {1} but did not.";
+            return this.Browser.AssertForm(child, successMessage, failureMessage, this.LogName, childName);
         }
+
+        public AssertFormResult ShouldNotContainForm(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            Form child = this.GetForm(locator);
+            if (child.Exists)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "form '" + locator + " ";
+            string successMessage = "{0} does not contain {1}.";
+            string failureMessage = message ?? "{0} should not have contained {1}.";
+            return this.Browser.AssertForm(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+        public Element GetCheckBox(string locator)
+        {
+            return this.FindElement(locator, tag: "checkbox", required: false);
+        }
+
+        public ImmutableArray<Element> GetAllCheckBoxes()
+        {
+            return this.FindElements("tag:input", "checkbox", required: false);
+        }
+
+        public AssertElementResult ShouldContainCheckBox(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldContainElement(locator, "checkbox", message, logLevel);
+        }
+
+        public AssertElementResult ShouldNotContainCheckBox(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldNotContainElement(locator, "checkbox", message, logLevel);
+        }
+
+        public void ChooseFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                this.Browser.LogError("File '{0}' does not exist on the local file system.", filePath);
+                throw new InvalidOperationException(string.Format("File '{0}' does not exist on the local file system.", filePath));
+            }
+            this.TypeText(filePath);
+        }
+
+        public Element GetTextField(string locator)
+        {
+            return this.FindElement(locator, "text field", required: false);
+        }
+
+        public ImmutableArray<Element> GetAllTextFields()
+        {
+            return this.FindElements("tag:input", "text field", required: false);
+        }
+
+        public AssertElementResult ShouldContainTextField(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldContainElement(locator, "text field", message, logLevel);
+        }
+
+        public AssertElementResult ShouldNotContainTextField(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldNotContainElement(locator, "text field", message, logLevel);
+        }
+
+
+        public Element GetTextArea(string locator)
+        {
+            return this.FindElement(locator, "text area", required: false);
+        }
+
+        public ImmutableArray<Element> GetAllTextAreas()
+        {
+            return this.FindElements("tag:input", "text area", required: false);
+        }
+
+        public AssertElementResult ShouldContainTextArea(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldContainElement(locator, "text area", message, logLevel);
+        }
+
+        public AssertElementResult ShouldNotContainTextArea(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldNotContainElement(locator, "text area", message, logLevel);
+        }
+
+
+        public Element GetButton(string locator)
+        {
+            return this.FindElement(locator, "button", required: false);
+        }
+
+        public ImmutableArray<Element> GetAllButtons()
+        {
+            return this.FindElements("tag:button", required: false);
+        }
+
+        public AssertElementResult ShouldContainButton(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldContainElement(locator, "button", message, logLevel);
+        }
+
+        public AssertElementResult ShouldNotContainButton(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldNotContainElement(locator, "button", message, logLevel);
+        }
+
+
+        public RadioGroup GetRadioGroup(string groupName)
+        {
+            var xpath = string.Format("xpath://input[@type='radio' and @name='{0}']", groupName);
+            var items = this.FindElements(xpath, required: false);
+            return new RadioGroup(this.Browser, this, xpath, "radio group", groupName, items);
+        }
+
+        public AssertRadioGroupResult ShouldContainRadioGroup(string groupName, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            RadioGroup child = this.GetRadioGroup(groupName);
+            if (!child.Exists)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "radio group '" + groupName + " ";
+            string successMessage = "{0} contains {1}.";
+            string failureMessage = message ?? "{0} should have contained {1} but did not.";
+            return this.Browser.AssertRadioGroup(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+        public AssertRadioGroupResult ShouldNotContainRadioGroup(string groupName, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            RadioGroup child = this.GetRadioGroup(groupName);
+            if (child.Exists)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "radio group '" + groupName + " ";
+            string successMessage = "{0} does not contain {1}.";
+            string failureMessage = message ?? "{0} should not have contained {1}.";
+            return this.Browser.AssertRadioGroup(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+
+        public Element GetRadioButton(string locator)
+        {
+            return this.FindElement(locator, tag: "radio button", required: false);
+        }
+
+        public AssertElementResult ShouldContainRadioButton(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldContainElement(locator, "radio button", message, logLevel);
+        }
+
+        public AssertElementResult ShouldNotContainRadioButton(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            return this.ShouldNotContainElement(locator, "radio button", message, logLevel);
+        }
+
+
+        public List GetList(string locator)
+        {
+            return new List(this.FindElement(locator, "list", required: false));
+        }
+
+        public ImmutableArray<List> GetAllLists()
+        {
+            return this.FindElements("tag:list", required: false).Select(e => new List(e)).ToImmutableArray();
+        }
+
+        public AssertListResult ShouldContainList(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            List child = this.GetList(locator);
+            if (child.WebElement == null)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "list '" + locator + " ";
+            string successMessage = "{0} contains {1}.";
+            string failureMessage = message ?? "{0} should have contained {1} but did not.";
+            return this.Browser.AssertList(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+        public AssertListResult ShouldNotContainList(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            List child = this.GetList(locator);
+            if (child.WebElement != null)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "list '" + locator + " ";
+            string successMessage = "{0} does not contain {1}.";
+            string failureMessage = message ?? "{0} should not have contained {1}.";
+            return this.Browser.AssertList(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+
+        public Table GetTable(string locator)
+        {
+            return new Table(this.FindElement(locator, "table", required: false));
+        }
+
+        public ImmutableArray<Table> GetAllTables()
+        {
+            return this.FindElements("tag:table", required: false).Select(e => new Table(e)).ToImmutableArray();
+        }
+
+        public AssertTableResult ShouldContainTable(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            Table child = this.GetTable(locator);
+            if (child.WebElement == null)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "table '" + locator + " ";
+            string successMessage = "{0} contains {1}.";
+            string failureMessage = message ?? "{0} should have contained {1} but did not.";
+            return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+        public AssertTableResult ShouldNotContainTable(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        {
+            Table child = this.GetTable(locator);
+            if (child.WebElement != null)
+            {
+                this.LogSource(logLevel);
+            }
+            string childName = "table '" + locator + " ";
+            string successMessage = "{0} does not contain {1}.";
+            string failureMessage = message ?? "{0} should not have contained {1}.";
+            return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
     }
 }

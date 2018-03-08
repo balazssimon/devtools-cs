@@ -167,5 +167,7 @@ namespace DevToolsX.Testing.Selenium
         {
             this.driver.Close();
         }
+
+
     }
 }

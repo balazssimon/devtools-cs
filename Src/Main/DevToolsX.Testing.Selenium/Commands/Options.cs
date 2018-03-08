@@ -53,7 +53,7 @@ namespace DevToolsX.Testing.Selenium
         }
 
         public void RegisterLocator<TLocator>(string prefix)
-            where TLocator: Locator, new()
+            where TLocator: Locator
         {
             if (locators.ContainsKey(prefix)) throw new ArgumentException($"Locator prefix '{prefix}' is already registered.", nameof(prefix));
             this.locators.Add(prefix, typeof(TLocator));
@@ -64,15 +64,19 @@ namespace DevToolsX.Testing.Selenium
             this.locators.Remove(prefix);
         }
 
-        internal Locator CreateLocator(string prefix, Browser browser, Element parent)
+        internal Locator CreateLocator(Browser browser, Element parent, string locator, string tag, bool required)
         {
+            if (locator == null) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
+            int colonIndex = locator.IndexOf(':');
+            if (colonIndex < 0) throw new ArgumentException($"Invalid locator syntax '{locator}'. Locators should start with a registered locator prefix.");
+            string prefix = locator.Substring(0, colonIndex).Trim();
             Type type;
             if (this.locators.TryGetValue(prefix, out type))
             {
-                Locator result = type.GetConstructor(Type.EmptyTypes).Invoke(null) as Locator;
+                Locator result = type.GetConstructor(new Type[] { typeof(Browser), typeof(Element), typeof(string), typeof(string), typeof(bool)}).
+                    Invoke(new object[] { browser, parent, locator, tag, required }) as Locator;
                 if (result != null)
                 {
-                    result.Init(browser, parent);
                     return result;
                 }
                 else

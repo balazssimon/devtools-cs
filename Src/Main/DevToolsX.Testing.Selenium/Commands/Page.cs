@@ -9,7 +9,7 @@ namespace DevToolsX.Testing.Selenium
     public class Page : Element
     {
         public Page(Browser browser) 
-            : base(browser, null, null)
+            : base(browser, null, null, null, null)
         {
         }
     }

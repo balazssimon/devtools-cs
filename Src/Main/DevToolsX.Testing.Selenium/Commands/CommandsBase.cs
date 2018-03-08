@@ -210,5 +210,33 @@ namespace DevToolsX.Testing.Selenium
             this.LogAssertionResult(result);
             return result;
         }
+
+        internal protected AssertFormResult AssertForm(Form form, string successMessage, string failureMessage, params object[] args)
+        {
+            var result = new AssertFormResult(form, successMessage, failureMessage, args);
+            this.LogAssertionResult(result);
+            return result;
+        }
+
+        internal protected AssertRadioGroupResult AssertRadioGroup(RadioGroup radioGroup, string successMessage, string failureMessage, params object[] args)
+        {
+            var result = new AssertRadioGroupResult(radioGroup, successMessage, failureMessage, args);
+            this.LogAssertionResult(result);
+            return result;
+        }
+
+        internal protected AssertListResult AssertList(List list, string successMessage, string failureMessage, params object[] args)
+        {
+            var result = new AssertListResult(list, successMessage, failureMessage, args);
+            this.LogAssertionResult(result);
+            return result;
+        }
+
+        internal protected AssertTableResult AssertTable(Table table, string successMessage, string failureMessage, params object[] args)
+        {
+            var result = new AssertTableResult(table, successMessage, failureMessage, args);
+            this.LogAssertionResult(result);
+            return result;
+        }
     }
 }

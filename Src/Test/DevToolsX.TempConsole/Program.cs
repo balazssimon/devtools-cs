@@ -33,7 +33,7 @@ namespace DevToolsX.TempConsole
             try
             {
                 Options options = new Options(LoggerFactory);
-                options.ScreenshotImageFormat = ImageFormat.Jpeg;
+                //options.ScreenshotImageFormat = ImageFormat.Jpeg;
                 using (Browser browser = new Browser(BrowserKind.Firefox, options))
                 {
                     TestDocWiki test = new TestDocWiki();

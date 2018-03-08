@@ -8,8 +8,8 @@ using DevToolsX.Testing.Selenium; //4:1
 
 namespace DevToolsX.TempConsole //1:1
 {
-    using __Hidden_TestDocWiki_841282595;
-    namespace __Hidden_TestDocWiki_841282595
+    using __Hidden_TestDocWiki_749626152;
+    namespace __Hidden_TestDocWiki_749626152
     {
         internal static class __Extensions
         {
@@ -54,8 +54,10 @@ namespace DevToolsX.TempConsole //1:1
         public string OpenPage(string url, string search) //6:1
         {
             StringBuilder __out = new StringBuilder();
+            Element input; //7:2
+            Element searchButton; //8:2
             bool __tmp2_outputWritten = false;
-            string __tmp3_line = "Open page '"; //7:1
+            string __tmp3_line = "Open page '"; //9:1
             if (!string.IsNullOrEmpty(__tmp3_line))
             {
                 __out.Append(__tmp3_line);
@@ -78,19 +80,19 @@ namespace DevToolsX.TempConsole //1:1
                     if (!__tmp4_last) __out.AppendLine(true);
                 }
             }
-            string __tmp5_line = "' in the browser: "; //7:17
+            string __tmp5_line = "' in the browser: "; //9:17
             if (!string.IsNullOrEmpty(__tmp5_line))
             {
                 __out.Append(__tmp5_line);
                 __tmp2_outputWritten = true;
             }
-            Browser.GoToUrl(url); //7:36
+            Browser.GoToUrl(url); //9:36
             if (__tmp2_outputWritten) __out.AppendLine(true);
             if (__tmp2_outputWritten)
             {
-                __out.AppendLine(false); //7:62
+                __out.AppendLine(false); //9:62
             }
-            __out.AppendLine(true); //8:1
+            __out.AppendLine(true); //10:1
             bool __tmp8_outputWritten = false;
             StringBuilder __tmp9 = new StringBuilder();
             __tmp9.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
@@ -111,14 +113,14 @@ namespace DevToolsX.TempConsole //1:1
             }
             if (__tmp8_outputWritten)
             {
-                __out.AppendLine(false); //9:30
+                __out.AppendLine(false); //11:30
             }
-            __out.AppendLine(true); //10:1
-            __out.Append(this.ProcessTemplateOutput("<br/>")); //11:1
-            __out.AppendLine(false); //11:6
             __out.AppendLine(true); //12:1
+            __out.Append(this.ProcessTemplateOutput("<br/>")); //13:1
+            __out.AppendLine(false); //13:6
+            __out.AppendLine(true); //14:1
             bool __tmp11_outputWritten = false;
-            string __tmp12_line = "The page title should be "; //13:1
+            string __tmp12_line = "The page title should be "; //15:1
             if (!string.IsNullOrEmpty(__tmp12_line))
             {
                 __out.Append(__tmp12_line);
@@ -141,7 +143,7 @@ namespace DevToolsX.TempConsole //1:1
                     if (!__tmp13_last) __out.AppendLine(true);
                 }
             }
-            string __tmp14_line = "."; //13:59
+            string __tmp14_line = "."; //15:59
             if (!string.IsNullOrEmpty(__tmp14_line))
             {
                 __out.Append(__tmp14_line);
@@ -150,18 +152,26 @@ namespace DevToolsX.TempConsole //1:1
             if (__tmp11_outputWritten) __out.AppendLine(true);
             if (__tmp11_outputWritten)
             {
-                __out.AppendLine(false); //13:60
+                __out.AppendLine(false); //15:60
             }
-            __out.AppendLine(true); //14:1
+            __out.AppendLine(true); //16:1
+            __out.Append(this.ProcessTemplateOutput("The page should have input ")); //17:1
+            input = Page.ShouldContainElement("name:q").Element;
+            __out.AppendLine(false); //17:81
+            __out.AppendLine(true); //18:1
+            __out.Append(this.ProcessTemplateOutput("The page should have button ")); //19:1
+            searchButton = Page.ShouldContainElement("name:btnK").Element;
+            __out.AppendLine(false); //19:92
+            __out.AppendLine(true); //20:1
             bool __tmp16_outputWritten = false;
-            string __tmp17_line = "The page should have input "; //15:1
+            string __tmp17_line = "Type '"; //21:1
             if (!string.IsNullOrEmpty(__tmp17_line))
             {
                 __out.Append(__tmp17_line);
                 __tmp16_outputWritten = true;
             }
             StringBuilder __tmp18 = new StringBuilder();
-            __tmp18.Append(this.ProcessTemplateOutput(Page.ShouldContainElement("name:q")));
+            __tmp18.Append(this.ProcessTemplateOutput(search));
             using(StreamReader __tmp18Reader = new StreamReader(this.__ToStream(__tmp18.ToString())))
             {
                 bool __tmp18_last = __tmp18Reader.EndOfStream;
@@ -174,52 +184,53 @@ namespace DevToolsX.TempConsole //1:1
                         __out.Append(__tmp18_line);
                         __tmp16_outputWritten = true;
                     }
-                    if (!__tmp18_last || __tmp16_outputWritten) __out.AppendLine(true);
+                    if (!__tmp18_last) __out.AppendLine(true);
                 }
             }
+            string __tmp19_line = "' into the search box: "; //21:15
+            if (!string.IsNullOrEmpty(__tmp19_line))
+            {
+                __out.Append(__tmp19_line);
+                __tmp16_outputWritten = true;
+            }
+            input.TypeText(search); //21:39
+            if (__tmp16_outputWritten) __out.AppendLine(true);
             if (__tmp16_outputWritten)
             {
-                __out.AppendLine(false); //15:65
+                __out.AppendLine(false); //21:67
             }
-            __out.AppendLine(true); //16:1
-            bool __tmp20_outputWritten = false;
-            string __tmp21_line = "The page should have button "; //17:1
-            if (!string.IsNullOrEmpty(__tmp21_line))
+            __out.AppendLine(true); //22:1
+            bool __tmp22_outputWritten = false;
+            StringBuilder __tmp23 = new StringBuilder();
+            __tmp23.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
+            using(StreamReader __tmp23Reader = new StreamReader(this.__ToStream(__tmp23.ToString())))
             {
-                __out.Append(__tmp21_line);
-                __tmp20_outputWritten = true;
-            }
-            StringBuilder __tmp22 = new StringBuilder();
-            __tmp22.Append(this.ProcessTemplateOutput(Page.ShouldContainElement("name:btnK")));
-            using(StreamReader __tmp22Reader = new StreamReader(this.__ToStream(__tmp22.ToString())))
-            {
-                bool __tmp22_last = __tmp22Reader.EndOfStream;
-                while(!__tmp22_last)
+                bool __tmp23_last = __tmp23Reader.EndOfStream;
+                while(!__tmp23_last)
                 {
-                    string __tmp22_line = __tmp22Reader.ReadLine();
-                    __tmp22_last = __tmp22Reader.EndOfStream;
-                    if ((__tmp22_last && !string.IsNullOrEmpty(__tmp22_line)) || (!__tmp22_last && __tmp22_line != null))
+                    string __tmp23_line = __tmp23Reader.ReadLine();
+                    __tmp23_last = __tmp23Reader.EndOfStream;
+                    if ((__tmp23_last && !string.IsNullOrEmpty(__tmp23_line)) || (!__tmp23_last && __tmp23_line != null))
                     {
-                        __out.Append(__tmp22_line);
-                        __tmp20_outputWritten = true;
+                        __out.Append(__tmp23_line);
+                        __tmp22_outputWritten = true;
                     }
-                    if (!__tmp22_last || __tmp20_outputWritten) __out.AppendLine(true);
+                    if (!__tmp23_last || __tmp22_outputWritten) __out.AppendLine(true);
                 }
             }
-            if (__tmp20_outputWritten)
+            if (__tmp22_outputWritten)
             {
-                __out.AppendLine(false); //17:69
+                __out.AppendLine(false); //23:30
             }
-            __out.AppendLine(true); //18:1
-            bool __tmp24_outputWritten = false;
-            string __tmp25_line = "Type '"; //19:1
-            if (!string.IsNullOrEmpty(__tmp25_line))
-            {
-                __out.Append(__tmp25_line);
-                __tmp24_outputWritten = true;
-            }
+            __out.AppendLine(true); //24:1
+            __out.Append(this.ProcessTemplateOutput("Press ENTER: ")); //25:1
+            input.TypeText("\n"); //25:15
+            Waiting.Wait(TimeSpan.FromSeconds(3)); //25:42
+            __out.AppendLine(false); //25:85
+            __out.AppendLine(true); //26:1
+            bool __tmp25_outputWritten = false;
             StringBuilder __tmp26 = new StringBuilder();
-            __tmp26.Append(this.ProcessTemplateOutput(search));
+            __tmp26.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
             using(StreamReader __tmp26Reader = new StreamReader(this.__ToStream(__tmp26.ToString())))
             {
                 bool __tmp26_last = __tmp26Reader.EndOfStream;
@@ -230,75 +241,16 @@ namespace DevToolsX.TempConsole //1:1
                     if ((__tmp26_last && !string.IsNullOrEmpty(__tmp26_line)) || (!__tmp26_last && __tmp26_line != null))
                     {
                         __out.Append(__tmp26_line);
-                        __tmp24_outputWritten = true;
+                        __tmp25_outputWritten = true;
                     }
-                    if (!__tmp26_last) __out.AppendLine(true);
+                    if (!__tmp26_last || __tmp25_outputWritten) __out.AppendLine(true);
                 }
             }
-            string __tmp27_line = "' into the search box: "; //19:15
-            if (!string.IsNullOrEmpty(__tmp27_line))
+            if (__tmp25_outputWritten)
             {
-                __out.Append(__tmp27_line);
-                __tmp24_outputWritten = true;
+                __out.AppendLine(false); //27:30
             }
-            Page.TypeTextIntoElement("name:q", search); //19:39
-            if (__tmp24_outputWritten) __out.AppendLine(true);
-            if (__tmp24_outputWritten)
-            {
-                __out.AppendLine(false); //19:87
-            }
-            __out.AppendLine(true); //20:1
-            bool __tmp30_outputWritten = false;
-            StringBuilder __tmp31 = new StringBuilder();
-            __tmp31.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
-            using(StreamReader __tmp31Reader = new StreamReader(this.__ToStream(__tmp31.ToString())))
-            {
-                bool __tmp31_last = __tmp31Reader.EndOfStream;
-                while(!__tmp31_last)
-                {
-                    string __tmp31_line = __tmp31Reader.ReadLine();
-                    __tmp31_last = __tmp31Reader.EndOfStream;
-                    if ((__tmp31_last && !string.IsNullOrEmpty(__tmp31_line)) || (!__tmp31_last && __tmp31_line != null))
-                    {
-                        __out.Append(__tmp31_line);
-                        __tmp30_outputWritten = true;
-                    }
-                    if (!__tmp31_last || __tmp30_outputWritten) __out.AppendLine(true);
-                }
-            }
-            if (__tmp30_outputWritten)
-            {
-                __out.AppendLine(false); //21:30
-            }
-            __out.AppendLine(true); //22:1
-            __out.Append(this.ProcessTemplateOutput("Press ENTER: ")); //23:1
-            Page.TypeTextIntoElement("name:q", "\n"); //23:15
-            Waiting.Wait(TimeSpan.FromSeconds(3)); //23:62
-            __out.AppendLine(false); //23:105
-            __out.AppendLine(true); //24:1
-            bool __tmp33_outputWritten = false;
-            StringBuilder __tmp34 = new StringBuilder();
-            __tmp34.Append(this.ProcessTemplateOutput(Screenshot.TakeScreenshot()));
-            using(StreamReader __tmp34Reader = new StreamReader(this.__ToStream(__tmp34.ToString())))
-            {
-                bool __tmp34_last = __tmp34Reader.EndOfStream;
-                while(!__tmp34_last)
-                {
-                    string __tmp34_line = __tmp34Reader.ReadLine();
-                    __tmp34_last = __tmp34Reader.EndOfStream;
-                    if ((__tmp34_last && !string.IsNullOrEmpty(__tmp34_line)) || (!__tmp34_last && __tmp34_line != null))
-                    {
-                        __out.Append(__tmp34_line);
-                        __tmp33_outputWritten = true;
-                    }
-                    if (!__tmp34_last || __tmp33_outputWritten) __out.AppendLine(true);
-                }
-            }
-            if (__tmp33_outputWritten)
-            {
-                __out.AppendLine(false); //25:30
-            }
-            __out.AppendLine(true); //26:1
+            __out.AppendLine(true); //28:1
             return __out.ToString();
         }
 

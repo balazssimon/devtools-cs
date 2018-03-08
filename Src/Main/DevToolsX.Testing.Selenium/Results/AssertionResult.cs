@@ -37,11 +37,55 @@ namespace DevToolsX.Testing.Selenium
     public class AssertElementResult : AssertionResult
     {
         public AssertElementResult(Element element, string successMessage, string failureMessage, params object[] args)
-            : base(element != null, successMessage, failureMessage, args)
+            : base(element.Exists, successMessage, failureMessage, args)
         {
             this.Element = element;
         }
 
         public Element Element { get; private set; }
+    }
+
+    public class AssertFormResult : AssertionResult
+    {
+        public AssertFormResult(Form form, string successMessage, string failureMessage, params object[] args)
+            : base(form.Exists, successMessage, failureMessage, args)
+        {
+            this.Form = form;
+        }
+
+        public Form Form { get; private set; }
+    }
+
+    public class AssertRadioGroupResult : AssertionResult
+    {
+        public AssertRadioGroupResult(RadioGroup radioGroup, string successMessage, string failureMessage, params object[] args)
+            : base(radioGroup.Exists, successMessage, failureMessage, args)
+        {
+            this.RadioGroup = radioGroup;
+        }
+
+        public RadioGroup RadioGroup { get; private set; }
+    }
+
+    public class AssertListResult : AssertionResult
+    {
+        public AssertListResult(List list, string successMessage, string failureMessage, params object[] args)
+            : base(list.Exists, successMessage, failureMessage, args)
+        {
+            this.List = list;
+        }
+
+        public List List { get; private set; }
+    }
+
+    public class AssertTableResult : AssertionResult
+    {
+        public AssertTableResult(Table table, string successMessage, string failureMessage, params object[] args)
+            : base(table.Exists, successMessage, failureMessage, args)
+        {
+            this.Table = table;
+        }
+
+        public Table Table { get; private set; }
     }
 }

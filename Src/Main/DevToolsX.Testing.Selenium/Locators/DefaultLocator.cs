@@ -20,11 +20,16 @@ namespace DevToolsX.Testing.Selenium.Locators
             attributes.Add("button", new string[] { "@id", "@name", "@value", "normalize-space(descendant-or-self::text())" });
         }
 
-        protected override ImmutableArray<Element> FindElements(string value, string tag)
+        public DefaultLocator(Browser browser, Element parent, string locatorText, string tag, bool required)
+            : base(browser, parent, locatorText, tag, required)
+        {
+        }
+
+        protected override ImmutableArray<Element> DoFindElements()
         {
             // TODO
-            var elements = this.SearchContext.FindElements(By.Id(value));
-            return this.FilterElements(elements, tag);
+            var elements = this.SearchContext.FindElements(By.Id(this.Value));
+            return this.FilterElements(elements);
         }
     }
 }
