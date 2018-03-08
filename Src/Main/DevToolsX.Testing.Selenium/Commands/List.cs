@@ -61,6 +61,11 @@ namespace DevToolsX.Testing.Selenium
             return this.FindElements(locator, "option", required: false);
         }
 
+        public ImmutableArray<Element> GetSelectedItems(string locator)
+        {
+            return this.GetItems(locator).Where(item => item.IsSelected).ToImmutableArray();
+        }
+
         public void SelectAll()
         {
             foreach (var item in this.Items)

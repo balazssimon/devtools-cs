@@ -632,6 +632,42 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertTable(child, successMessage, failureMessage, this.LogName, childName);
         }
 
+        private void CreateMarkerCssClass(IJavaScriptExecutor executor)
+        {
+            string css = "." + this.Options.ElementMarkerCssClassName + " { " + this.Options.ElementMarkerCss + " }";
+            css = css.Replace("'", "\\'");
+            string createCssClass = string.Format(
+                @"if (document.getElementsByClassName({0}).length === 0){
+                        var style = document.createElement('style');
+                        style.type = 'text/css';
+                        style.innerHTML = '{1}';
+                    }", this.Options.ElementMarkerCssClassName, css);
+            executor.ExecuteScript(createCssClass);
+        }
+
+        public void Mark()
+        {
+            if (this.WebElement == null) return;
+            IJavaScriptExecutor executor = this.Browser.Driver as IJavaScriptExecutor;
+            if (executor != null)
+            {
+                this.CreateMarkerCssClass(executor);
+                executor.ExecuteScript(string.Format("jQuery(arguments[0]).addClass('{0}');", this.Options.ElementMarkerCssClassName), this.WebElement);
+            }
+        }
+
+        public void Unmark()
+        {
+            if (this.WebElement == null) return;
+            IJavaScriptExecutor executor = this.Browser.Driver as IJavaScriptExecutor;
+            if (executor != null)
+            {
+                this.CreateMarkerCssClass(executor);
+                executor.ExecuteScript(string.Format("jQuery(arguments[0]).removeClass('{0}');", this.Options.ElementMarkerCssClassName), this.WebElement);
+            }
+        }
+
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj as Element);
