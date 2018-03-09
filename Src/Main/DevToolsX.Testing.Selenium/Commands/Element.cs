@@ -424,9 +424,14 @@ namespace DevToolsX.Testing.Selenium
             // TODO
         }
 
+        public void ScrollIntoView()
+        {
+            this.Browser.JavaScript.Execute("arguments[0].scrollIntoView(true);", this.WebElement);
+        }
+
         public void Focus()
         {
-            this.Browser.JavaScript.Execute("arguments[0].focus();", this);
+            this.Browser.JavaScript.Execute("arguments[0].focus();", this.WebElement);
         }
 
         public void TypeText(string text)

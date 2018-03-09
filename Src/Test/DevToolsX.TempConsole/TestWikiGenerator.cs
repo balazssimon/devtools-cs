@@ -16,16 +16,6 @@ namespace DevToolsX.TempConsole
             get { return this.Browser.Page; }
         }
 
-        private Wait wait;
-        public Wait Wait
-        {
-            get
-            {
-                if (wait == null) wait = new Wait(this.Browser);
-                return wait;
-            }
-        }
-
         private Screenshot screenshot;
         public Screenshot Screenshot
         {
@@ -34,6 +24,12 @@ namespace DevToolsX.TempConsole
                 if (screenshot == null) screenshot = new Screenshot(this.Browser);
                 return screenshot;
             }
+        }
+
+        protected string Wait(int seconds)
+        {
+            this.Browser.Wait.For(TimeSpan.FromSeconds(seconds));
+            return string.Empty;
         }
 
         protected virtual string ProcessTemplateOutput(object output)

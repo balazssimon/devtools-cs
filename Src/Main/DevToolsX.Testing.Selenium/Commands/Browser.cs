@@ -141,11 +141,6 @@ namespace DevToolsX.Testing.Selenium
             get;
         }
 
-        public Wait Waiting
-        {
-            get;
-        }
-
         public Alert Alert
         {
             get;

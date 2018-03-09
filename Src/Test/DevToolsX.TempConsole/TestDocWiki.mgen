@@ -8,31 +8,25 @@ template OpenPage(string url, string search)
 [Element searchButton]
 Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
-[Screenshot.TakeScreenshot()]
+[Screenshot.Capture()]
 ^
 <br/>
 ^
 The page title should be [Browser.TitleShouldBe("Google")].
 ^
 [input = Page.FindElement("name:q")]
-Type '[search]' into the search box: [void input.TypeText(search)]
+Type '[search]' into the search box: [void input.TypeText(search)][Wait(3)]
 ^
-[void input.Mark()]
-[void Wait.For(TimeSpan.FromSeconds(3))]
-[Screenshot.TakeScreenshot()]
-[void input.Unmark()]
+[Screenshot.Capture(input)]
 ^
 [searchButton = Page.FindElements("xpath://input[@class='lsb']")[0]]
 Press the <b>[searchButton.Value]</b> button:
 ^
-[void searchButton.Mark()]
-[Screenshot.TakeScreenshot()]
-[void searchButton.Unmark()]
+[Screenshot.Capture(searchButton)]
 ^
-[void searchButton.Click()]
-[void Wait.For(TimeSpan.FromSeconds(3))]
+[void searchButton.Click()][Wait(3)]
 ^
-[Screenshot.TakeScreenshot()]
+[Screenshot.Capture()]
 ^
 end template
 

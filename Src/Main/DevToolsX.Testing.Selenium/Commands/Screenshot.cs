@@ -18,12 +18,22 @@ namespace DevToolsX.Testing.Selenium
             this.screenshotTaker = this.Driver as ITakesScreenshot;
         }
 
-        public ImageResult TakeScreenshot(string fileName = null)
+        public ImageResult Capture(Element element)
+        {
+            return this.Capture(null, element);
+        }
+
+        public ImageResult Capture(string fileName = null, Element element = null)
         {
             if (this.screenshotTaker == null)
             {
                 this.LogError("The driver does not support screenshots.");
                 return null;
+            }
+            if (element != null)
+            {
+                element.ScrollIntoView();
+                element.Mark();
             }
             ScreenshotImageFormat format = this.GetImageFormat();
             if (string.IsNullOrWhiteSpace(fileName))
@@ -40,6 +50,10 @@ namespace DevToolsX.Testing.Selenium
             string filePath = Path.Combine(this.Options.ScreenshotDirectory, fileName);
             screenshot.SaveAsFile(filePath, this.GetImageFormat());
             this.LogInformation("Screenshot created: '{0}'", fileName);
+            if (element != null)
+            {
+                element.Unmark();
+            }
             return new ImageResult(fileName);
         }
 
