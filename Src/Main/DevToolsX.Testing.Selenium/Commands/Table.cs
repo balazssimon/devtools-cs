@@ -169,7 +169,7 @@ namespace DevToolsX.Testing.Selenium
             return new Element(this.Browser, this, locator, tag, null);
         }
 
-        public AssertElementResult RowShouldContain(int row, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element RowShouldContain(int row, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInRow(row, locator, tag, false);
             if (child.WebElement == null)
@@ -182,7 +182,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, row, childName);
         }
 
-        public AssertElementResult RowShouldNotContain(int row, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element RowShouldNotContain(int row, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInRow(row, locator, tag, false);
             if (child.WebElement != null)
@@ -195,7 +195,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, row, childName);
         }
 
-        public AssertElementResult ColumnShouldContain(int column, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element ColumnShouldContain(int column, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInColumn(column, locator, tag, false);
             if (child.WebElement == null)
@@ -208,7 +208,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, column, childName);
         }
 
-        public AssertElementResult ColumnShouldNotContain(int column, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element ColumnShouldNotContain(int column, string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInColumn(column, locator, tag, false);
             if (child.WebElement != null)
@@ -221,7 +221,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, column, childName);
         }
 
-        public AssertElementResult HeaderShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element HeaderShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInHeader(locator, tag, false);
             if (child.WebElement == null)
@@ -234,7 +234,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        public AssertElementResult HeaderShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element HeaderShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInHeader(locator, tag, false);
             if (child.WebElement != null)
@@ -247,7 +247,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        public AssertElementResult BodyShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element BodyShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInBody(locator, tag, false);
             if (child.WebElement == null)
@@ -260,7 +260,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        public AssertElementResult BodyShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element BodyShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInBody(locator, tag, false);
             if (child.WebElement != null)
@@ -273,7 +273,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        public AssertElementResult FooterShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element FooterShouldContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInFooter(locator, tag, false);
             if (child.WebElement == null)
@@ -286,7 +286,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
         }
 
-        public AssertElementResult FooterShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Element FooterShouldNotContain(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             Element child = this.FindElementInFooter(locator, tag, false);
             if (child.WebElement != null)

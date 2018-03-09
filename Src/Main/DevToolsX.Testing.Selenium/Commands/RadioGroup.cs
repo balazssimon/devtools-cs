@@ -28,6 +28,10 @@ namespace DevToolsX.Testing.Selenium
         public string TagKind { get; }
         public string GroupName { get; }
         public ImmutableArray<Element> Items { get; }
+        public string LogName
+        {
+            get { return string.Format("{0} '{1}'", this.TagKind ?? "Radio group", this.Locator); }
+        }
 
         public string Value
         {
@@ -44,7 +48,7 @@ namespace DevToolsX.Testing.Selenium
             get { return this.TryGetRadioGroupValue(out string value); }
         }
 
-        public AssertionResult ShouldHaveValue(string value, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public bool ShouldHaveValue(string value, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             string radioValue = null;
             string successMessage = "Radio group '{0}' is set to '{1}'.";
@@ -57,10 +61,12 @@ namespace DevToolsX.Testing.Selenium
             {
                 failureMessage = message ?? "Radio group '{0}' should have been set to '{1}' but had no selection.";
             }
-            return this.Browser.AssertSuccess(value == radioValue, successMessage, failureMessage, this.GroupName, value, radioValue);
+            bool success = value == radioValue;
+            this.Browser.AssertSuccess(success, successMessage, failureMessage, this.GroupName, value, radioValue);
+            return success;
         }
 
-        public AssertionResult ShouldNotBeSelected(string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public bool ShouldNotBeSelected(string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             string radioValue = null;
             bool selected = this.TryGetRadioGroupValue(out radioValue);

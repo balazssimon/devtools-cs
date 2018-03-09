@@ -109,7 +109,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public AssertionResult ShouldBeSelected(params string[] valuesOrTexts)
+        public bool ShouldBeSelected(params string[] valuesOrTexts)
         {
             bool expectedNotSelected = false;
             HashSet<string> valueSet = new HashSet<string>(valuesOrTexts);
@@ -136,7 +136,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertSuccess(success, successMessage, failureMessage, this.LogName, this.ValuesToString(valuesOrTexts), this.OptionsToString(this.SelectElement?.AllSelectedOptions));
         }
 
-        public AssertionResult ShouldNotBeSelected(params string[] valuesOrTexts)
+        public bool ShouldNotBeSelected(params string[] valuesOrTexts)
         {
             bool unexpectedSelected = false;
             HashSet<string> valueSet = new HashSet<string>(valuesOrTexts);
@@ -163,7 +163,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertSuccess(success, successMessage, failureMessage, this.LogName, this.ValuesToString(valuesOrTexts), this.OptionsToString(this.SelectElement?.AllSelectedOptions));
         }
 
-        public AssertionResult ShouldHaveSelection(params string[] valuesOrTexts)
+        public bool ShouldHaveSelection(params string[] valuesOrTexts)
         {
             bool expectedNotSelected = false;
             bool unexpectedSelected = false;
@@ -188,7 +188,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Browser.AssertSuccess(success, successMessage, failureMessage, this.LogName, this.ValuesToString(valuesOrTexts), this.OptionsToString(this.SelectElement?.AllSelectedOptions));
         }
 
-        public AssertionResult ShouldHaveNoSelection(string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public bool ShouldHaveNoSelection(string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
             var options = this.SelectElement?.AllSelectedOptions;
             string selectedOptions = string.Empty;

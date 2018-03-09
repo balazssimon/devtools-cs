@@ -180,68 +180,66 @@ namespace DevToolsX.Testing.Selenium
             return value;
         }
 
-        private void LogAssertionResult(AssertionResult assertionResult)
+        private void LogAssertionResult(bool success, string successMessage, string failureMessage, params object[] args)
         {
-            if (assertionResult.Success) this.LogInformation(assertionResult.SuccessMessage, assertionResult.Args);
-            else this.LogError(assertionResult.FailureMessage, assertionResult.Args);
+            if (success)
+            {
+                this.LogInformation(successMessage, args);
+            }
+            else
+            {
+                this.LogError(failureMessage, args);
+            }
         }
 
-        internal protected AssertionResult AssertSuccess(bool success, string successMessage, string failureMessage, params object[] args)
+        internal protected bool AssertSuccess(bool success, string successMessage, string failureMessage, params object[] args)
         {
-            var result = new AssertionResult(success, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
+            this.LogAssertionResult(success, successMessage, failureMessage, args);
+            if (!success && this.Options.ThrowExceptionOnAssertionError)
+            {
+                throw new AssertionException(failureMessage, args);
+            }
+            return success;
         }
 
-        internal protected AssertExpectedResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
+        internal protected string AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
         {
             successMessage = successMessage ?? name + " is '{1}'";
             failureMessage = failureMessage ?? name + " should have been '{0}' but it was '{1}'.";
-            var result = new AssertExpectedResult(expected == actual, expected, actual, successMessage, failureMessage);
-            this.LogAssertionResult(result);
-            return result;
+            bool success = expected == actual;
+            this.LogAssertionResult(success, successMessage, failureMessage, expected, actual);
+            if (!success && this.Options.ThrowExceptionOnAssertionError)
+            {
+                throw new AssertEqualsException(expected, actual, failureMessage, expected, actual);
+            }
+            return actual;
         }
 
-        internal protected AssertExpectedResult AssertExpected(bool success, string expected, string actual, string successMessage, string failureMessage)
+        internal protected TElement AssertElement<TElement>(TElement element)
+            where TElement : Element
         {
-            var result = new AssertExpectedResult(success, expected, actual, successMessage, failureMessage);
-            this.LogAssertionResult(result);
-            return result;
+            return this.AssertElement(element, "{0} contains {1}.", "{0} should have contained {1} but it did not.", element.Parent, element);
         }
 
-        internal protected AssertElementResult AssertElement(Element element, string successMessage, string failureMessage, params object[] args)
+        internal protected TElement AssertElement<TElement>(TElement element, string successMessage, string failureMessage, params object[] args)
+            where TElement : Element
         {
-            var result = new AssertElementResult(element, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
+            return this.AssertElement(element, element.Exists, successMessage, failureMessage, args);
         }
 
-        internal protected AssertFormResult AssertForm(Form form, string successMessage, string failureMessage, params object[] args)
+        internal protected TElement AssertElement<TElement>(TElement element, bool success, string successMessage, string failureMessage, params object[] args)
+            where TElement: Element
         {
-            var result = new AssertFormResult(form, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
-        }
-
-        internal protected AssertRadioGroupResult AssertRadioGroup(RadioGroup radioGroup, string successMessage, string failureMessage, params object[] args)
-        {
-            var result = new AssertRadioGroupResult(radioGroup, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
-        }
-
-        internal protected AssertListResult AssertList(List list, string successMessage, string failureMessage, params object[] args)
-        {
-            var result = new AssertListResult(list, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
-        }
-
-        internal protected AssertTableResult AssertTable(Table table, string successMessage, string failureMessage, params object[] args)
-        {
-            var result = new AssertTableResult(table, successMessage, failureMessage, args);
-            this.LogAssertionResult(result);
-            return result;
+            if (!success)
+            {
+                element.Parent.LogSource();
+            }
+            this.LogAssertionResult(success, successMessage, failureMessage, args);
+            if (!success && this.Options.ThrowExceptionOnAssertionError)
+            {
+                throw new AssertElementException(element, failureMessage, args);
+            }
+            return element;
         }
     }
 }

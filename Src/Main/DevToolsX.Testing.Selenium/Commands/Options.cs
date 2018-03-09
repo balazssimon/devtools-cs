@@ -24,6 +24,8 @@ namespace DevToolsX.Testing.Selenium
 
             this.JavaScriptDirectory = Directory.GetCurrentDirectory();
 
+            this.ThrowExceptionOnAssertionError = true;
+
             this.RegisterLocator<ClassLocator>("class");
             this.RegisterLocator<CssLocator>("css");
             this.RegisterLocator<DomLocator>("dom");
@@ -37,6 +39,8 @@ namespace DevToolsX.Testing.Selenium
             this.RegisterLocator<ScLocator>("scLocator");
             this.RegisterLocator<TagLocator>("tag");
             this.RegisterLocator<XPathLocator>("xpath");
+            this.RegisterLocator<TextLocator>("text");
+            this.RegisterLocator<PartialTextLocator>("partial text");
         }
 
         internal void RegisterDriver(IWebDriver driver)
@@ -150,5 +154,7 @@ namespace DevToolsX.Testing.Selenium
         public ImageFormat ScreenshotImageFormat { get; set; }
 
         public string JavaScriptDirectory { get; set; }
+
+        public bool ThrowExceptionOnAssertionError { get; set; }
     }
 }

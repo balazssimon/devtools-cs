@@ -8,8 +8,8 @@ using DevToolsX.Testing.Selenium; //4:1
 
 namespace DevToolsX.TempConsole //1:1
 {
-    using __Hidden_TestDocWiki_514317808;
-    namespace __Hidden_TestDocWiki_514317808
+    using __Hidden_TestDocWiki_908052620;
+    namespace __Hidden_TestDocWiki_908052620
     {
         internal static class __Extensions
         {
@@ -155,7 +155,7 @@ namespace DevToolsX.TempConsole //1:1
                 __out.AppendLine(false); //15:60
             }
             __out.AppendLine(true); //16:1
-            input = Page.FindElement("name:q");
+            input = Page.ShouldContainTextField("name:q");
             bool __tmp16_outputWritten = false;
             string __tmp17_line = "Type '"; //18:1
             if (!string.IsNullOrEmpty(__tmp17_line))
@@ -232,7 +232,7 @@ namespace DevToolsX.TempConsole //1:1
                 __out.AppendLine(false); //20:28
             }
             __out.AppendLine(true); //21:1
-            searchButton = Page.FindElements("xpath://input[@class='lsb']")[0];
+            searchButton = Page.ShouldContainElement("xpath:(//input[@class='lsb'])[1]");
             bool __tmp26_outputWritten = false;
             string __tmp27_line = "Press the <b>"; //23:1
             if (!string.IsNullOrEmpty(__tmp27_line))

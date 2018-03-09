@@ -14,12 +14,12 @@ Open page '[url]' in the browser: [void Browser.GoToUrl(url)]
 ^
 The page title should be [Browser.TitleShouldBe("Google")].
 ^
-[input = Page.FindElement("name:q")]
+[input = Page.ShouldContainTextField("name:q")]
 Type '[search]' into the search box: [void input.TypeText(search)][Wait(3)]
 ^
 [Screenshot.Capture(input)]
 ^
-[searchButton = Page.FindElements("xpath://input[@class='lsb']")[0]]
+[searchButton = Page.ShouldContainElement("xpath:(//input[@class='lsb'])[1]")]
 Press the <b>[searchButton.Value]</b> button:
 ^
 [Screenshot.Capture(searchButton)]

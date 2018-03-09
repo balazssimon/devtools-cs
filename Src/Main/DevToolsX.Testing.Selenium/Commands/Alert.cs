@@ -71,20 +71,22 @@ namespace DevToolsX.Testing.Selenium
             return null;
         }
 
-        public AssertionResult ShouldBePresent(string text, AlertAction action = AlertAction.Accept, TimeSpan timeout = default(TimeSpan))
+        public string ShouldBePresent(string text, AlertAction action = AlertAction.Accept, TimeSpan timeout = default(TimeSpan))
         {
             string message = this.Handle(action, timeout);
             string successMessage = "Alert message is '{0}'.";
             string failureMessage = "Alert message should have been '{0}' but it was '{1}'";
-            return this.AssertSuccess(text == null || (message != null && message == text), successMessage, failureMessage, text, message);
+            this.AssertSuccess(text == null || (message != null && message == text), successMessage, failureMessage, text, message);
+            return message;
         }
 
-        public AssertionResult ShouldNotBePresent(AlertAction action = AlertAction.Accept, TimeSpan timeout = default(TimeSpan))
+        public string ShouldNotBePresent(AlertAction action = AlertAction.Accept, TimeSpan timeout = default(TimeSpan))
         {
             string message = this.Handle(action, timeout);
             string successMessage = "Alert is not present.";
             string failureMessage = "Alert message should not have been present but it was '{0}'";
-            return this.AssertSuccess(message == null, successMessage, failureMessage, message);
+            this.AssertSuccess(message == null, successMessage, failureMessage, message);
+            return message;
         }
     }
 }

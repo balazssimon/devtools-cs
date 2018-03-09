@@ -165,32 +165,25 @@ namespace DevToolsX.Testing.Selenium.Locators
             this.Browser.Log(logLevel, exception, message, args);
         }
 
-        protected AssertionResult AssertSuccess(bool success, string successMessage, string failureMessage, params object[] args)
-        {
-            return this.Browser.AssertSuccess(success, successMessage, failureMessage, args);
-        }
-
-        protected AssertExpectedResult AssertExpected(bool success, string expected, string actual, string successMessage, string failureMessage)
-        {
-            return this.Browser.AssertExpected(success, expected, actual, successMessage, failureMessage);
-        }
-
-        protected AssertExpectedResult AssertEquals(string name, string expected, string actual, string successMessage = null, string failureMessage = null)
-        {
-            return this.Browser.AssertEquals(name, expected, actual, successMessage, failureMessage);
-        }
-
         public Element FindElement()
         {
             ImmutableArray<Element> result = this.FindElements();
-            if (result.Length == 0) return new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
+            if (result.Length == 0 || result.Length > 1)
+            {
+                Element nullResult = new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
+                if (result.Length > 1) this.Browser.AssertElement(nullResult, null, "More than one {0} found in {1}.", nullResult, nullResult.Parent);
+            }
+            else
+            {
+                this.LogInformation("{0} found in {1}.", result[0], result[0].Parent);
+            }
             return result[0];
         }
 
         public ImmutableArray<Element> FindElements()
         {
             ImmutableArray<Element> result = this.DoFindElements();
-            if (this.Required && result.Length == 0) throw new InvalidOperationException($"Locator '{this.GetType().Name}' could not find element '{this.Value}'.");
+            if (this.Required && result.Length == 0) this.Browser.AssertElement(new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null));
             return result;
         }
 

@@ -35,8 +35,17 @@ namespace DevToolsX.TempConsole
         protected virtual string ProcessTemplateOutput(object output)
         {
             if (output == null) return string.Empty;
-            AssertExpectedResult assertExpectedResult = output as AssertExpectedResult;
             ImageResult imageResult = output as ImageResult;
+            if (imageResult != null)
+            {
+                return "[[Media:" + imageResult.FilePath + "]]";
+            }
+            else
+            {
+                return output.ToString();
+            }
+
+            /*
             if (assertExpectedResult != null)
             {
                 if (assertExpectedResult.Success)
@@ -48,14 +57,7 @@ namespace DevToolsX.TempConsole
                     return assertExpectedResult.Expected + @"<span style=""background:#FF8080; text-decoration:line-through"">" + assertExpectedResult.Actual + "</span>";
                 }
             }
-            else if (imageResult != null)
-            {
-                return "[[Media:" + imageResult.FilePath + "]]";
-            }
-            else
-            {
-                return output.ToString();
-            }
+            */
         }
     }
 }

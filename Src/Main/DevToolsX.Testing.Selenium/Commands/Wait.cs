@@ -26,6 +26,11 @@ namespace DevToolsX.Testing.Selenium
             Thread.Sleep(timeout);
         }
 
+        public void For(int seconds)
+        {
+            Thread.Sleep(seconds * 1000);
+        }
+
         public T Until<T>(Func<IWebDriver,T> condition, TimeSpan timeout = default(TimeSpan), string message = null)
         {
             var wait = new WebDriverWait(this.Browser.Driver, timeout);

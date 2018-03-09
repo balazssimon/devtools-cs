@@ -93,7 +93,7 @@ namespace DevToolsX.Testing.Selenium
         /// </summary>
         /// <param name="title"></param>
         /// <returns></returns>
-        public AssertionResult TitleShouldBe(string title, string message = null)
+        public string TitleShouldBe(string title, string message = null)
         {
             return this.AssertEquals("Title", title, this.Title, message);
         }
@@ -116,7 +116,7 @@ namespace DevToolsX.Testing.Selenium
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public AssertionResult UrlShouldBe(string url, string message = null)
+        public string UrlShouldBe(string url, string message = null)
         {
             return this.AssertEquals("URL", url, this.Url);
         }
@@ -126,9 +126,10 @@ namespace DevToolsX.Testing.Selenium
         /// </summary>
         /// <param name="urlPart"></param>
         /// <returns></returns>
-        public AssertionResult UrlShouldContain(string urlPart, string message = null)
+        public string UrlShouldContain(string urlPart, string message = null)
         {
-            return this.AssertExpected(this.Url.Contains(urlPart), urlPart, this.Url, message ?? "URL should have contained '{0}' but it was '{1}'.", "URL is '{1}'.");
+            this.AssertSuccess(this.Url.Contains(urlPart), "URL contains '{0}'.", message ?? "URL should have contained '{0}' but it was '{1}'.", urlPart, this.Url);
+            return this.Url;
         }
 
         public string LogUrl()
