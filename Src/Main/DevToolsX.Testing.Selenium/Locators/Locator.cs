@@ -172,6 +172,7 @@ namespace DevToolsX.Testing.Selenium.Locators
             {
                 Element nullResult = new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
                 if (result.Length > 1) this.Browser.AssertElement(nullResult, null, "More than one {0} found in {1}.", nullResult, nullResult.Parent);
+                return nullResult;
             }
             else
             {
@@ -182,7 +183,16 @@ namespace DevToolsX.Testing.Selenium.Locators
 
         public ImmutableArray<Element> FindElements()
         {
-            ImmutableArray<Element> result = this.DoFindElements();
+            ImmutableArray<Element> result = ImmutableArray<Element>.Empty;
+            try
+            {
+                result = this.DoFindElements();
+            }
+            catch(Exception ex)
+            {
+                Element nullResult = new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
+                this.LogError(ex, "Error executing locator {0} in {1}.", nullResult, nullResult.Parent);
+            }
             if (this.Required && result.Length == 0) this.Browser.AssertElement(new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null));
             return result;
         }

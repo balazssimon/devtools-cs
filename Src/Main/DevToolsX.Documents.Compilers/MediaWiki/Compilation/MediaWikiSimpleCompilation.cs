@@ -9,9 +9,6 @@ using System.Linq;
 using System.Diagnostics;
 using System.Drawing;
 using DevToolsX.Documents.Utils;
-using MetaDslx.Languages.Antlr4Roslyn.Compilation;
-using DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax;
-using Antlr4.Runtime;
 using MetaDslx.Compiler;
 using System.Collections.Immutable;
 using System.Threading;
@@ -1128,13 +1125,13 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
     public class MediaWikiErrorCodes : ErrorCode
     {
-        public const string Antlr4RoslynCategory = "Antlr4Roslyn";
+        public const string MediaWikiCategory = "MediaWiki";
         public static readonly MediaWikiErrorCodes ERR_SyntaxError = new MediaWikiErrorCodes(1, DiagnosticSeverity.Error, 0, "Syntax error: {0}");
         public static readonly MediaWikiErrorCodes ERR_CloseOtherError = new MediaWikiErrorCodes(2, DiagnosticSeverity.Error, 0, "'{0}' should be closed but '{1}' is still open.");
         public static readonly MediaWikiErrorCodes ERR_CloseSelfError = new MediaWikiErrorCodes(3, DiagnosticSeverity.Error, 0, "'{0}' should be closed but it is still open.");
 
         public MediaWikiErrorCodes(int id, DiagnosticSeverity defaultSeverity, int warningLevel, string defaultMessage)
-            : base(Antlr4RoslynCategory, id, defaultSeverity, warningLevel, defaultMessage)
+            : base(MediaWikiCategory, id, defaultSeverity, warningLevel, defaultMessage)
         {
         }
     }

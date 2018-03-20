@@ -25,12 +25,11 @@ namespace DevToolsX.Testing.Selenium
 
         public static void Mark(Element element)
         {
-            if (element == null || element.Browser.JavaScript == null) return;
+            if (element == null || element.WebElement == null || element.Browser.JavaScript == null) return;
             MarkState markState;
             if (MarkState.markStates.TryGetValue(element, out markState)) return;
             string saveMarkStateCode =
-                @"var style = window.getComputedStyle(arguments[0], null);
-                    return [style.getPropertyValue('border'), style.getPropertyValue('border-color'), style.getPropertyValue('border-style')];";
+                @"var style = window.getComputedStyle(arguments[0], null); return [style.getPropertyValue('border'), style.getPropertyValue('border-color'), style.getPropertyValue('border-style')];";
             element.Browser.LogDebug("Executing JavaScript: {0}", saveMarkStateCode);
             string[] styleString = element.Browser.JavaScript.Execute(saveMarkStateCode, element.WebElement) as string[];
             string styleBeforeMark =
@@ -67,6 +66,7 @@ namespace DevToolsX.Testing.Selenium
 
         public static void Unmark(Element element)
         {
+            if (element == null || element.WebElement == null || element.Browser.JavaScript == null) return;
             MarkState markState;
             if (MarkState.markStates.TryGetValue(element, out markState))
             {
@@ -172,6 +172,26 @@ namespace DevToolsX.Testing.Selenium
         public bool Exists
         {
             get { return this.Locator == null || this.WebElement != null; }
+        }
+
+        public Element FindAncestorElement(string tag = null, bool required = false)
+        {
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:ancestor::{0}", tag), null, required).FindElement();
+        }
+
+        public Element GetAncestorElement(string tag = null)
+        {
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:ancestor::{0}", tag), null, true).FindElement();
+        }
+
+        public Element FindParentElement(string tag = null, bool required = false)
+        {
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:parent::{0}", tag), null, required).FindElement();
+        }
+
+        public Element GetParentElement(string tag = null)
+        {
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:parent::{0}", tag), null, true).FindElement();
         }
 
         public Element FindElement(string locator, string tag = null, bool required = false)
@@ -429,11 +449,13 @@ namespace DevToolsX.Testing.Selenium
 
         public void ScrollIntoView()
         {
+            if (this.WebElement == null) return;
             this.Browser.JavaScript.Execute("arguments[0].scrollIntoView(true);", this.WebElement);
         }
 
         public void Focus()
         {
+            if (this.WebElement == null) return;
             this.Browser.JavaScript.Execute("arguments[0].focus();", this.WebElement);
         }
 
