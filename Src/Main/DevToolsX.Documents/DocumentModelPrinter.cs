@@ -43,6 +43,8 @@ namespace DevToolsX.Documents
                 var list = item as List;
                 var table = item as Table;
                 var image = item as Image;
+                var lineBreak = item as LineBreak;
+                var pageBreak = item as PageBreak;
                 var childContainer = item as ContentContainer;
                 if (sectionTitle != null) this.Print(sectionTitle);
                 else if (paragraph != null) this.Print(paragraph);
@@ -52,6 +54,8 @@ namespace DevToolsX.Documents
                 else if (list != null) this.Print(list);
                 else if (table != null) this.Print(table);
                 else if (image != null) this.Print(image);
+                else if (lineBreak != null) this.Print(lineBreak);
+                else if (pageBreak != null) this.Print(pageBreak);
                 else if (childContainer != null) this.Print(childContainer);
             }
         }
@@ -115,5 +119,17 @@ namespace DevToolsX.Documents
         {
             this.generator.AddImage(image.FilePath);
         }
+
+        private void Print(LineBreak lineBreak)
+        {
+            this.generator.LineBreak();
+        }
+
+        private void Print(PageBreak pageBreak)
+        {
+            this.generator.NewPage();
+        }
+
+
     }
 }

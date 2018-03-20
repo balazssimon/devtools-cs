@@ -17,6 +17,7 @@ namespace DevToolsX.Documents
         void AddTableOfContents(int depth);
 
         void PageBreak();
+        void LineBreak();
 
         void BeginSectionTitle(int level, string label);
         void EndSectionTitle(int level, string label);

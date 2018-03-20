@@ -9,18 +9,72 @@ using System.Linq;
 using System.Diagnostics;
 using System.Drawing;
 using DevToolsX.Documents.Utils;
+using MetaDslx.Languages.Antlr4Roslyn.Compilation;
+using DevToolsX.Documents.Compilers.MediaWiki.Syntax.InternalSyntax;
+using Antlr4.Runtime;
+using MetaDslx.Compiler;
+using System.Collections.Immutable;
+using System.Threading;
+using MetaDslx.Compiler.References;
+using MetaDslx.Compiler.Diagnostics;
 
 namespace DevToolsX.Documents.Compilers.MediaWiki
 {
-    public class MediaWikiToDocumentModel
+    public class MediaWikiSimpleCompilation : SimpleCompilation
     {
-        public static ImmutableModel Compile(string mediaWikiText)
+        protected MediaWikiSimpleCompilation(string compilationName, MediaWikiCompilationOptions options, IEnumerable<SyntaxTree> syntaxTrees, ImmutableArray<MetadataReference> references) 
+            : base(compilationName, options, syntaxTrees, references)
         {
-            MediaWikiSyntaxTree tree = MediaWikiSyntaxTree.ParseText(mediaWikiText);
-            var root = tree.GetRoot();
-            MediaWikiToDocumentVisitor visitor = new MediaWikiToDocumentVisitor();
-            root.Accept(visitor);
-            return visitor.Model.ToImmutable();
+        }
+
+        public override Language Language => MediaWikiLanguage.Instance;
+
+        public new MediaWikiCompilationOptions Options
+        {
+            get { return (MediaWikiCompilationOptions)base.Options; }
+        }
+
+        protected override void Compile(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            foreach (var syntaxTree in this.SyntaxTrees)
+            {
+                var root = syntaxTree.GetRoot();
+                MediaWikiToDocumentVisitor visitor = new MediaWikiToDocumentVisitor(this.ModelBuilder, this.DiagnosticBag);
+                root.Accept(visitor);
+            }
+        }
+
+        protected override SimpleCompilation Update(string compilationName, CompilationOptions options, IEnumerable<SyntaxTree> syntaxTrees, ImmutableArray<MetadataReference> references)
+        {
+            return new MediaWikiSimpleCompilation(compilationName, (MediaWikiCompilationOptions)options, syntaxTrees, references);
+        }
+
+        public MediaWikiSimpleCompilation Clone()
+        {
+            return new MediaWikiSimpleCompilation(this.CompilationName, this.Options, this.SyntaxTrees, this.ExternalReferences);
+        }
+
+        /// <summary>
+        /// Creates a new compilation from scratch. Methods such as AddSyntaxTrees or AddReferences
+        /// on the returned object will allow to continue building up the Compilation incrementally.
+        /// </summary>
+        /// <param name="name">Simple compilation name.</param>
+        /// <param name="syntaxTrees">The syntax trees with the source code for the new compilation.</param>
+        /// <param name="references">The references for the new compilation.</param>
+        /// <param name="options">The compiler options to use.</param>
+        /// <returns>A new compilation.</returns>
+        public static MediaWikiSimpleCompilation Create(
+            string name,
+            IEnumerable<MediaWikiSyntaxTree> syntaxTrees = null,
+            IEnumerable<MetadataReference> references = null,
+            MediaWikiCompilationOptions options = null)
+        {
+            var validatedReferences = ValidateReferences<CompilationReference>(references);
+            return new MediaWikiSimpleCompilation(
+                name, 
+                options ?? new MediaWikiCompilationOptions(), 
+                syntaxTrees,
+                validatedReferences);
         }
     }
 
@@ -28,16 +82,18 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
     {
         private DocumentModelFactory factory;
         private MutableModel model;
+        private DiagnosticBag diagnostics;
         private DocumentBuilder document;
         private List<ContentContainerBuilder> containerStack = new List<ContentContainerBuilder>();
-        private Stack<string> formatStack = new Stack<string>();
+        private Stack<MarkupInfo> formatStack = new Stack<MarkupInfo>();
         private Stack<ListInfo> listStack = new Stack<ListInfo>();
         private Stack<TableInfo> tableStack = new Stack<TableInfo>();
         private bool addParagraphSpace = false;
 
-        public MediaWikiToDocumentVisitor()
+        public MediaWikiToDocumentVisitor(MutableModel model, DiagnosticBag diagnostics)
         {
-            this.model = new MutableModel();
+            this.model = model;
+            this.diagnostics = diagnostics;
             this.factory = new DocumentModelFactory(this.model);
             this.document = this.factory.Document();
         }
@@ -66,6 +122,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         private ContentContainerBuilder PopContainer()
         {
             int index = this.containerStack.Count - 1;
+            if (index < 0) return this.document;
             ContentContainerBuilder result = this.containerStack[index];
             this.containerStack.RemoveAt(index);
             return result;
@@ -74,6 +131,123 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         private void ClearContainer()
         {
             this.containerStack.Clear();
+        }
+
+        private void EnsureFormattingClearAtBeginning(SyntaxNode node)
+        {
+            foreach (var format in this.formatStack)
+            {
+                this.diagnostics.Add(Diagnostic.Create(format.StartSyntaxNode.GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                this.diagnostics.Add(Diagnostic.Create(node.GetFirstToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                this.PopContainer();
+            }
+            this.formatStack.Clear();
+        }
+
+        private void EnsureFormattingClearAtEnd(SyntaxNode node)
+        {
+            foreach (var format in this.formatStack)
+            {
+                this.diagnostics.Add(Diagnostic.Create(format.StartSyntaxNode.GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                this.diagnostics.Add(Diagnostic.Create(node.GetLastToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                this.PopContainer();
+            }
+            this.formatStack.Clear();
+        }
+
+        private void EnsureContainerClearAtBeginning(SyntaxNode node)
+        {
+            this.EnsureFormattingClearAtBeginning(node);
+            var container = this.PeekContainer();
+            if (container != this.document)
+            {
+                this.diagnostics.Add(Diagnostic.Create(node.GetFirstToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, container.GetType().Name));
+            }
+            this.ClearContainer();
+        }
+
+        private T EnsureContainerClosedAtBeginning<T>(SyntaxNode node)
+            where T : class, ContentContainerBuilder
+        {
+            this.EnsureFormattingClearAtBeginning(node);
+            var container = this.PopContainer();
+            var tContainer = container as T;
+            if (tContainer == null)
+            {
+                this.diagnostics.Add(Diagnostic.Create(node.GetFirstToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseOtherError, typeof(T).Name, container.GetType().Name));
+            }
+            return tContainer;
+        }
+
+        private T EnsureContainerClosedAtEnd<T>(SyntaxNode node)
+            where T : class, ContentContainerBuilder
+        {
+            this.EnsureFormattingClearAtEnd(node);
+            var container = this.PopContainer();
+            var tContainer = container as T;
+            if (tContainer == null)
+            {
+                this.diagnostics.Add(Diagnostic.Create(node.GetLastToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseOtherError, typeof(T).Name, container.GetType().Name));
+            }
+            return tContainer;
+        }
+        
+        private MarkupBuilder EnsureFormattingClosedAtBeginning(SyntaxNode node, string formatName)
+        {
+            var container = this.PeekContainer();
+            MarkupBuilder expectedContainer = null;
+            if (this.formatStack.Count > 0)
+            {
+                var format = this.formatStack.Peek();
+                expectedContainer = format.Markup;
+                if (format.Name != formatName)
+                {
+                    this.diagnostics.Add(Diagnostic.Create(format.StartSyntaxNode.GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                    this.diagnostics.Add(Diagnostic.Create(node.GetFirstToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                }
+                else
+                {
+                    this.formatStack.Pop();
+                }
+            }
+            if (container == expectedContainer)
+            {
+                this.PopContainer();
+            }
+            else
+            {
+                this.diagnostics.Add(Diagnostic.Create(node.GetFirstToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, formatName));
+            }
+            return expectedContainer;
+        }
+
+        private MarkupBuilder EnsureFormattingClosedAtEnd(SyntaxNode node, string formatName)
+        {
+            var container = this.PeekContainer();
+            MarkupBuilder expectedContainer = null;
+            if (this.formatStack.Count > 0)
+            {
+                var format = this.formatStack.Peek();
+                expectedContainer = format.Markup;
+                if (format.Name != formatName)
+                {
+                    this.diagnostics.Add(Diagnostic.Create(format.StartSyntaxNode.GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                    this.diagnostics.Add(Diagnostic.Create(node.GetLastToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, format.Name));
+                }
+                else
+                {
+                    this.formatStack.Pop();
+                }
+            }
+            if (container == expectedContainer)
+            {
+                this.PopContainer();
+            }
+            else
+            {
+                this.diagnostics.Add(Diagnostic.Create(node.GetLastToken().GetLocation(), MediaWikiErrorCodes.ERR_CloseSelfError, formatName));
+            }
+            return expectedContainer;
         }
 
         public override void DefaultVisit(SyntaxNode node)
@@ -92,27 +266,27 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitHeading(HeadingSyntax node)
         {
-            this.formatStack.Clear();
+            this.EnsureContainerClearAtBeginning(node);
+
             var heading = this.factory.SectionTitle();
             heading.Level = node.HeadingStart.THeading.ValueText.Length - 1;
             heading.Title = this.GetText(node.HeadingText).Trim();
             this.AddContent(heading);
-            this.ClearContainer();
             this.addParagraphSpace = false;
+
+            this.EnsureFormattingClearAtEnd(node);
         }
 
         public override void VisitParagraph(ParagraphSyntax node)
         {
-            this.formatStack.Clear();
+            this.EnsureFormattingClearAtBeginning(node);
+
             var paragraph = this.factory.Paragraph();
             this.AddContent(paragraph);
             this.PushContainer(paragraph);
             base.VisitParagraph(node);
-            if (!(this.PeekContainer() is ParagraphBuilder))
-            {
-                Console.WriteLine("ERROR: paragraph mismatch (position: " + node.Span.Start + ")");
-            }
-            this.PopContainer();
+
+            this.EnsureContainerClosedAtEnd<ParagraphBuilder>(node);
         }
 
         private void AddParagraphSpace()
@@ -220,7 +394,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             var container = this.PeekContainer() as ParagraphBuilder;
             if (container != null && container.Text.Count > 0)
             {
-                this.PopContainer();
+                this.EnsureContainerClosedAtBeginning<ParagraphBuilder>(node);
                 container = this.factory.Paragraph();
                 this.AddContent(container);
                 this.PushContainer(container);
@@ -245,22 +419,14 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             if (this.formatStack.Count > 0)
             {
                 var topFormatText = this.formatStack.Peek();
-                if (formatText == topFormatText)
+                if (formatText == topFormatText.Format)
                 {
-                    if (this.PeekContainer() is MarkupBuilder)
-                    {
-                        this.PopContainer();
-                    }
-                    else
-                    {
-                        Console.WriteLine("ERROR: markup mismatch (position: " + node.Span.Start + ")");
-                    }
-                    this.formatStack.Pop();
+                    this.EnsureFormattingClosedAtBeginning(node, formatText);
                     return;
                 }
             }
-            this.formatStack.Push(formatText);
             var markup = this.factory.Markup();
+            this.formatStack.Push(new MarkupInfo() { StartSyntaxNode = node, Markup = markup, Format = formatText });
             switch (formatText.Length)
             {
                 case 2:
@@ -298,15 +464,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             string name = node.HtmlTagName.GetText().ToString().ToLower();
             if (name == "br")
             {
-                var container = this.PeekContainer() as ParagraphBuilder;
-                if (container != null)
-                {
-                    this.PopContainer();
-                    container = this.factory.Paragraph();
-                    this.AddContent(container);
-                    this.PushContainer(container);
-                    this.addParagraphSpace = false;
-                }
+                this.AddContent(this.factory.LineBreak());
                 return;
             }
             bool bold = name == "b" || name == "strong";
@@ -364,6 +522,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 }
             }
             var markup = this.factory.Markup();
+            this.formatStack.Push(new MarkupInfo() { StartSyntaxNode = node, Markup = markup, HtmlTag = name });
             if (bold) markup.Kind.Add(MarkupKind.Bold);
             if (italic) markup.Kind.Add(MarkupKind.Italic);
             if (underline) markup.Kind.Add(MarkupKind.Underline);
@@ -385,7 +544,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 name == "code" || name == "pre" || name == "sub" || name == "sup" ||
                 name == "span" || name == "div" || name == "p")
             {
-                this.PopContainer();
+                this.EnsureFormattingClosedAtEnd(node, name);
             }
         }
 
@@ -394,15 +553,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             string name = node.HtmlTagName.GetText().ToString().ToLower();
             if (name == "br")
             {
-                var container = this.PeekContainer() as ParagraphBuilder;
-                if (container != null)
-                {
-                    this.PopContainer();
-                    container = this.factory.Paragraph();
-                    this.AddContent(container);
-                    this.PushContainer(container);
-                    this.addParagraphSpace = false;
-                }
+                this.AddContent(this.factory.LineBreak());
                 return;
             }
             base.VisitHtmlTagEmpty(node);
@@ -410,7 +561,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitHorizontalRule(HorizontalRuleSyntax node)
         {
-            if (this.PeekContainer() != this.document) return;
+            this.EnsureContainerClearAtBeginning(node);
             var pageBreak = this.factory.PageBreak();
             this.AddContent(pageBreak);
         }
@@ -437,6 +588,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitWikiList(WikiListSyntax node)
         {
+            this.EnsureFormattingClearAtBeginning(node);
             int listStackCount = this.listStack.Count;
             this.CreateListInfo(null, string.Empty);
             base.VisitWikiList(node);
@@ -501,6 +653,8 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitListItem(ListItemSyntax node)
         {
+            this.EnsureFormattingClearAtBeginning(node);
+
             string listStart = null;
             if (node.NormalListItem != null)
             {
@@ -532,7 +686,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 {
                     Console.WriteLine("ERROR: list mismatch (position: " + node.Span.Start + ")");
                 }
-                this.PopContainer();
+                this.EnsureContainerClosedAtEnd<ListItemBuilder>(node);
             }
             else
             {
@@ -548,6 +702,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 }
                 base.VisitListItem(node);
             }
+            this.EnsureFormattingClearAtEnd(node);
         }
 
         private ListInfo GetListInfo(string listStart)
@@ -795,7 +950,8 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitWikiTable(WikiTableSyntax node)
         {
-            this.formatStack.Clear();
+            this.EnsureFormattingClearAtBeginning(node);
+
             if (node.TableCaption != null)
             {
                 var tableCaptionParagraph = this.factory.Paragraph();
@@ -900,6 +1056,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
         public override void VisitTableCell(TableCellSyntax node)
         {
+            this.EnsureFormattingClearAtBeginning(node);
             var tableInfo = this.tableStack.Peek();
             if (tableInfo.RowIndex == 0)
             {
@@ -920,8 +1077,9 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
                 this.formatStack.Clear();
                 this.addParagraphSpace = false;
                 this.VisitCellText(node.CellText);
-                this.PopContainer();
+                this.EnsureContainerClosedAtEnd<TableCellBuilder>(node);
             }
+            this.EnsureFormattingClearAtEnd(node);
         }
 
         public override void VisitCellTextElement(CellTextElementSyntax node)
@@ -937,6 +1095,19 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
             }
         }
 
+
+        private class MarkupInfo
+        {
+            public string Name
+            {
+                get { return this.Format ?? this.HtmlTag; }
+            }
+
+            public string Format;
+            public string HtmlTag;
+            public SyntaxNode StartSyntaxNode;
+            public MarkupBuilder Markup;
+        }
 
         private class ListInfo
         {
@@ -955,5 +1126,16 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
 
     }
 
+    public class MediaWikiErrorCodes : ErrorCode
+    {
+        public const string Antlr4RoslynCategory = "Antlr4Roslyn";
+        public static readonly MediaWikiErrorCodes ERR_SyntaxError = new MediaWikiErrorCodes(1, DiagnosticSeverity.Error, 0, "Syntax error: {0}");
+        public static readonly MediaWikiErrorCodes ERR_CloseOtherError = new MediaWikiErrorCodes(2, DiagnosticSeverity.Error, 0, "'{0}' should be closed but '{1}' is still open.");
+        public static readonly MediaWikiErrorCodes ERR_CloseSelfError = new MediaWikiErrorCodes(3, DiagnosticSeverity.Error, 0, "'{0}' should be closed but it is still open.");
 
+        public MediaWikiErrorCodes(int id, DiagnosticSeverity defaultSeverity, int warningLevel, string defaultMessage)
+            : base(Antlr4RoslynCategory, id, defaultSeverity, warningLevel, defaultMessage)
+        {
+        }
+    }
 }

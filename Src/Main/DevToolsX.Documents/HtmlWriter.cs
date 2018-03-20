@@ -382,6 +382,11 @@ namespace DevToolsX.Documents
             
         }
 
+        public override void LineBreak()
+        {
+            Writer.WriteLine(@"<br/>");
+        }
+
         public override void AddImage(string path)
         {
             Writer.WriteLine(@"<img src=""" + path + @"""/>");

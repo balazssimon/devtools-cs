@@ -61,6 +61,7 @@ namespace DevToolsX.Documents.Symbols
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass TableCell;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass Image;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaProperty Image_FilePath;
+		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass LineBreak;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass PageBreak;
 		public static readonly global::MetaDslx.Languages.Meta.Symbols.MetaClass TableOfContents;
 	
@@ -109,6 +110,7 @@ namespace DevToolsX.Documents.Symbols
 			TableCell = DocumentModelBuilderInstance.instance.TableCell.ToImmutable(Model);
 			Image = DocumentModelBuilderInstance.instance.Image.ToImmutable(Model);
 			Image_FilePath = DocumentModelBuilderInstance.instance.Image_FilePath.ToImmutable(Model);
+			LineBreak = DocumentModelBuilderInstance.instance.LineBreak.ToImmutable(Model);
 			PageBreak = DocumentModelBuilderInstance.instance.PageBreak.ToImmutable(Model);
 			TableOfContents = DocumentModelBuilderInstance.instance.TableOfContents.ToImmutable(Model);
 	
@@ -143,6 +145,7 @@ namespace DevToolsX.Documents.Symbols
 				case "Table": return this.Table();
 				case "TableCell": return this.TableCell();
 				case "Image": return this.Image();
+				case "LineBreak": return this.LineBreak();
 				case "PageBreak": return this.PageBreak();
 				case "TableOfContents": return this.TableOfContents();
 				default:
@@ -256,6 +259,15 @@ namespace DevToolsX.Documents.Symbols
 		{
 			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new ImageId());
 			return (ImageBuilder)symbol;
+		}
+	
+		/// <summary>
+		/// Creates a new instance of LineBreak.
+		/// </summary>
+		public LineBreakBuilder LineBreak()
+		{
+			global::MetaDslx.Core.MutableSymbol symbol = this.CreateSymbol(new LineBreakId());
+			return (LineBreakBuilder)symbol;
 		}
 	
 		/// <summary>
@@ -611,6 +623,21 @@ namespace DevToolsX.Documents.Symbols
 		new Image ToImmutable(global::MetaDslx.Core.ImmutableModel model);
 	}
 	
+	public interface LineBreak : Content
+	{
+	
+	
+		new LineBreakBuilder ToMutable();
+		new LineBreakBuilder ToMutable(global::MetaDslx.Core.MutableModel model);
+	}
+	
+	public interface LineBreakBuilder : ContentBuilder
+	{
+	
+		new LineBreak ToImmutable();
+		new LineBreak ToImmutable(global::MetaDslx.Core.ImmutableModel model);
+	}
+	
 	public interface PageBreak : Content
 	{
 	
@@ -662,6 +689,7 @@ namespace DevToolsX.Documents.Symbols
 			Table.Initialize();
 			TableCell.Initialize();
 			Image.Initialize();
+			LineBreak.Initialize();
 			PageBreak.Initialize();
 			TableOfContents.Initialize();
 			properties.Add(DocumentModelDescriptor.Document.TitleProperty);
@@ -1188,6 +1216,31 @@ namespace DevToolsX.Documents.Symbols
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 			        new global::MetaDslx.Core.ModelPropertyTypeInfo(typeof(string), null),
 					() => global::DevToolsX.Documents.Symbols.DocumentModelInstance.Image_FilePath);
+		}
+	
+		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.LineBreak), typeof(global::DevToolsX.Documents.Symbols.LineBreakBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
+		public static class LineBreak
+		{
+			private static global::MetaDslx.Core.ModelSymbolInfo modelSymbolInfo;
+		
+			static LineBreak()
+			{
+				modelSymbolInfo = global::MetaDslx.Core.ModelSymbolInfo.GetDescriptorSymbolInfo(typeof(LineBreak));
+			}
+		
+			internal static void Initialize()
+			{
+			}
+		
+			public static global::MetaDslx.Core.ModelSymbolInfo SymbolInfo
+			{
+				get { return modelSymbolInfo; }
+			}
+		
+			public static global::MetaDslx.Languages.Meta.Symbols.MetaClass MetaClass
+			{
+				get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.LineBreak; }
+			}
 		}
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.PageBreak), typeof(global::DevToolsX.Documents.Symbols.PageBreakBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.Content) })]
@@ -3265,6 +3318,104 @@ namespace DevToolsX.Documents.Symbols.Internal
 		}
 	}
 	
+	internal class LineBreakId : global::MetaDslx.Core.SymbolId
+	{
+		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.LineBreak.SymbolInfo; } }
+	
+		public override global::MetaDslx.Core.ImmutableSymbolBase CreateImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return new LineBreakImpl(this, model);
+		}
+	
+		public override global::MetaDslx.Core.MutableSymbolBase CreateMutable(global::MetaDslx.Core.MutableModel model, bool creating)
+		{
+			return new LineBreakBuilderImpl(this, model, creating);
+		}
+	}
+	
+	internal class LineBreakImpl : global::MetaDslx.Core.ImmutableSymbolBase, LineBreak
+	{
+	
+		internal LineBreakImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.ImmutableModel model)
+			: base(id, model)
+		{
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.LineBreak; }
+		}
+	
+		public new LineBreakBuilder ToMutable()
+		{
+			return (LineBreakBuilder)base.ToMutable();
+		}
+	
+		public new LineBreakBuilder ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return (LineBreakBuilder)base.ToMutable(model);
+		}
+	
+		ContentBuilder Content.ToMutable()
+		{
+			return this.ToMutable();
+		}
+	
+		ContentBuilder Content.ToMutable(global::MetaDslx.Core.MutableModel model)
+		{
+			return this.ToMutable(model);
+		}
+	}
+	
+	internal class LineBreakBuilderImpl : global::MetaDslx.Core.MutableSymbolBase, LineBreakBuilder
+	{
+	
+		internal LineBreakBuilderImpl(global::MetaDslx.Core.SymbolId id, global::MetaDslx.Core.MutableModel model, bool creating)
+			: base(id, model, creating)
+		{
+		}
+	
+		protected override void MInit()
+		{
+			DocumentModelImplementationProvider.Implementation.LineBreak(this);
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaModel MMetaModel
+		{
+			get { return global::DevToolsX.Documents.Symbols.DocumentModelInstance.MetaModel; }
+		}
+	
+		public override global::MetaDslx.Languages.Meta.Symbols.MetaClass MMetaClass
+		{
+			get { return DocumentModelInstance.LineBreak; }
+		}
+	
+		public new LineBreak ToImmutable()
+		{
+			return (LineBreak)base.ToImmutable();
+		}
+	
+		public new LineBreak ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return (LineBreak)base.ToImmutable(model);
+		}
+	
+		Content ContentBuilder.ToImmutable()
+		{
+			return this.ToImmutable();
+		}
+	
+		Content ContentBuilder.ToImmutable(global::MetaDslx.Core.ImmutableModel model)
+		{
+			return this.ToImmutable(model);
+		}
+	}
+	
 	internal class PageBreakId : global::MetaDslx.Core.SymbolId
 	{
 		public override global::MetaDslx.Core.ModelSymbolInfo SymbolInfo { get { return global::DevToolsX.Documents.Symbols.DocumentModelDescriptor.PageBreak.SymbolInfo; } }
@@ -3479,7 +3630,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaExternalTypeBuilder Color;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Document;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Document_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp34;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp35;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaEnumBuilder MarkupKind;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp5;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp6;
@@ -3515,16 +3666,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder SectionTitle;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Level;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp37;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp30;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Paragraph;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Paragraph_Alignment;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Text_Text;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp38;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp36;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Label_Name;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp30;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp34;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Reference;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_DocumentName;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_LabelName;
@@ -3538,7 +3689,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder List_Items;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder ListItem;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ListItem_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp35;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp32;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Table;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadColumnCount;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadRowCount;
@@ -3548,12 +3699,13 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder TableCell;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Image;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Image_FilePath;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp32;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp37;
+		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder LineBreak;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder PageBreak;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder TableOfContents;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp31;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp33;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp36;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp38;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp39;
 	
 		internal DocumentModelBuilderInstance()
@@ -3596,7 +3748,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Color = factory.MetaExternalType();
 			Document = factory.MetaClass();
 			Document_Title = factory.MetaProperty();
-			__tmp34 = factory.MetaAnnotation();
+			__tmp35 = factory.MetaAnnotation();
 			MarkupKind = factory.MetaEnum();
 			__tmp5 = factory.MetaEnumLiteral();
 			__tmp6 = factory.MetaEnumLiteral();
@@ -3632,16 +3784,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			SectionTitle = factory.MetaClass();
 			SectionTitle_Level = factory.MetaProperty();
 			SectionTitle_Title = factory.MetaProperty();
-			__tmp37 = factory.MetaAnnotation();
+			__tmp30 = factory.MetaAnnotation();
 			SectionTitle_Label = factory.MetaProperty();
 			Paragraph = factory.MetaClass();
 			Paragraph_Alignment = factory.MetaProperty();
 			Text = factory.MetaClass();
 			Text_Text = factory.MetaProperty();
-			__tmp38 = factory.MetaAnnotation();
+			__tmp36 = factory.MetaAnnotation();
 			Label = factory.MetaClass();
 			Label_Name = factory.MetaProperty();
-			__tmp30 = factory.MetaAnnotation();
+			__tmp34 = factory.MetaAnnotation();
 			Reference = factory.MetaClass();
 			Reference_DocumentName = factory.MetaProperty();
 			Reference_LabelName = factory.MetaProperty();
@@ -3655,7 +3807,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			List_Items = factory.MetaProperty();
 			ListItem = factory.MetaClass();
 			ListItem_Title = factory.MetaProperty();
-			__tmp35 = factory.MetaAnnotation();
+			__tmp32 = factory.MetaAnnotation();
 			Table = factory.MetaClass();
 			Table_HeadColumnCount = factory.MetaProperty();
 			Table_HeadRowCount = factory.MetaProperty();
@@ -3665,12 +3817,13 @@ namespace DevToolsX.Documents.Symbols.Internal
 			TableCell = factory.MetaClass();
 			Image = factory.MetaClass();
 			Image_FilePath = factory.MetaProperty();
-			__tmp32 = factory.MetaAnnotation();
+			__tmp37 = factory.MetaAnnotation();
+			LineBreak = factory.MetaClass();
 			PageBreak = factory.MetaClass();
 			TableOfContents = factory.MetaClass();
 			__tmp31 = factory.MetaCollectionType();
 			__tmp33 = factory.MetaCollectionType();
-			__tmp36 = factory.MetaCollectionType();
+			__tmp38 = factory.MetaCollectionType();
 			__tmp39 = factory.MetaCollectionType();
 	
 			// __tmp1.MetaModel = null;
@@ -3709,6 +3862,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp3.Declarations.AddLazy(() => Table);
 			__tmp3.Declarations.AddLazy(() => TableCell);
 			__tmp3.Declarations.AddLazy(() => Image);
+			__tmp3.Declarations.AddLazy(() => LineBreak);
 			__tmp3.Declarations.AddLazy(() => PageBreak);
 			__tmp3.Declarations.AddLazy(() => TableOfContents);
 			__tmp4.Name = "DocumentModel";
@@ -3728,14 +3882,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Document.IsAbstract = null;
 			Document.SuperClasses.AddLazy(() => ContentContainer);
 			Document.Properties.AddLazy(() => Document_Title);
-			Document_Title.Annotations.AddLazy(() => __tmp34);
+			Document_Title.Annotations.AddLazy(() => __tmp35);
 			Document_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Document_Title.Name = "Title";
 			Document_Title.Documentation = null;
 			// Document_Title.Kind = null;
 			Document_Title.ClassLazy = () => Document;
-			__tmp34.Name = "Name";
-			__tmp34.Documentation = null;
+			__tmp35.Name = "Name";
+			__tmp35.Documentation = null;
 			MarkupKind.MetaModelLazy = () => __tmp4;
 			MarkupKind.NamespaceLazy = () => __tmp3;
 			MarkupKind.Documentation = null;
@@ -3889,7 +4043,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			ContentContainer.IsAbstract = true;
 			ContentContainer.SuperClasses.AddLazy(() => Content);
 			ContentContainer.Properties.AddLazy(() => ContentContainer_Text);
-			ContentContainer_Text.TypeLazy = () => __tmp31;
+			ContentContainer_Text.TypeLazy = () => __tmp33;
 			ContentContainer_Text.Name = "Text";
 			ContentContainer_Text.Documentation = null;
 			// ContentContainer_Text.Kind = null;
@@ -3908,14 +4062,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			SectionTitle_Level.Documentation = null;
 			// SectionTitle_Level.Kind = null;
 			SectionTitle_Level.ClassLazy = () => SectionTitle;
-			SectionTitle_Title.Annotations.AddLazy(() => __tmp37);
+			SectionTitle_Title.Annotations.AddLazy(() => __tmp30);
 			SectionTitle_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			SectionTitle_Title.Name = "Title";
 			SectionTitle_Title.Documentation = null;
 			// SectionTitle_Title.Kind = null;
 			SectionTitle_Title.ClassLazy = () => SectionTitle;
-			__tmp37.Name = "Name";
-			__tmp37.Documentation = null;
+			__tmp30.Name = "Name";
+			__tmp30.Documentation = null;
 			SectionTitle_Label.TypeLazy = () => Label;
 			SectionTitle_Label.Name = "Label";
 			SectionTitle_Label.Documentation = null;
@@ -3940,14 +4094,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Text.IsAbstract = null;
 			Text.SuperClasses.AddLazy(() => Content);
 			Text.Properties.AddLazy(() => Text_Text);
-			Text_Text.Annotations.AddLazy(() => __tmp38);
+			Text_Text.Annotations.AddLazy(() => __tmp36);
 			Text_Text.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Text_Text.Name = "Text";
 			Text_Text.Documentation = null;
 			// Text_Text.Kind = null;
 			Text_Text.ClassLazy = () => Text;
-			__tmp38.Name = "Name";
-			__tmp38.Documentation = null;
+			__tmp36.Name = "Name";
+			__tmp36.Documentation = null;
 			Label.MetaModelLazy = () => __tmp4;
 			Label.NamespaceLazy = () => __tmp3;
 			Label.Documentation = null;
@@ -3955,14 +4109,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Label.IsAbstract = null;
 			Label.SuperClasses.AddLazy(() => Content);
 			Label.Properties.AddLazy(() => Label_Name);
-			Label_Name.Annotations.AddLazy(() => __tmp30);
+			Label_Name.Annotations.AddLazy(() => __tmp34);
 			Label_Name.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Label_Name.Name = "Name";
 			Label_Name.Documentation = null;
 			// Label_Name.Kind = null;
 			Label_Name.ClassLazy = () => Label;
-			__tmp30.Name = "Name";
-			__tmp30.Documentation = null;
+			__tmp34.Name = "Name";
+			__tmp34.Documentation = null;
 			Reference.MetaModelLazy = () => __tmp4;
 			Reference.NamespaceLazy = () => __tmp3;
 			Reference.Documentation = null;
@@ -3996,7 +4150,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Markup.Properties.AddLazy(() => Markup_Kind);
 			Markup.Properties.AddLazy(() => Markup_ForegroundColor);
 			Markup.Properties.AddLazy(() => Markup_BackgroundColor);
-			Markup_Kind.TypeLazy = () => __tmp33;
+			Markup_Kind.TypeLazy = () => __tmp31;
 			Markup_Kind.Name = "Kind";
 			Markup_Kind.Documentation = null;
 			// Markup_Kind.Kind = null;
@@ -4024,7 +4178,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			List_Kind.Documentation = null;
 			// List_Kind.Kind = null;
 			List_Kind.ClassLazy = () => List;
-			List_Items.TypeLazy = () => __tmp36;
+			List_Items.TypeLazy = () => __tmp39;
 			List_Items.Name = "Items";
 			List_Items.Documentation = null;
 			// List_Items.Kind = null;
@@ -4036,14 +4190,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// ListItem.IsAbstract = null;
 			ListItem.SuperClasses.AddLazy(() => ContentContainer);
 			ListItem.Properties.AddLazy(() => ListItem_Title);
-			ListItem_Title.Annotations.AddLazy(() => __tmp35);
+			ListItem_Title.Annotations.AddLazy(() => __tmp32);
 			ListItem_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			ListItem_Title.Name = "Title";
 			ListItem_Title.Documentation = null;
 			// ListItem_Title.Kind = null;
 			ListItem_Title.ClassLazy = () => ListItem;
-			__tmp35.Name = "Name";
-			__tmp35.Documentation = null;
+			__tmp32.Name = "Name";
+			__tmp32.Documentation = null;
 			Table.MetaModelLazy = () => __tmp4;
 			Table.NamespaceLazy = () => __tmp3;
 			Table.Documentation = null;
@@ -4075,7 +4229,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Table_RowCount.Documentation = null;
 			Table_RowCount.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaPropertyKind.Derived;
 			Table_RowCount.ClassLazy = () => Table;
-			Table_Cells.TypeLazy = () => __tmp39;
+			Table_Cells.TypeLazy = () => __tmp38;
 			Table_Cells.Name = "Cells";
 			Table_Cells.Documentation = null;
 			// Table_Cells.Kind = null;
@@ -4093,14 +4247,20 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Image.IsAbstract = null;
 			Image.SuperClasses.AddLazy(() => Content);
 			Image.Properties.AddLazy(() => Image_FilePath);
-			Image_FilePath.Annotations.AddLazy(() => __tmp32);
+			Image_FilePath.Annotations.AddLazy(() => __tmp37);
 			Image_FilePath.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Image_FilePath.Name = "FilePath";
 			Image_FilePath.Documentation = null;
 			// Image_FilePath.Kind = null;
 			Image_FilePath.ClassLazy = () => Image;
-			__tmp32.Name = "Name";
-			__tmp32.Documentation = null;
+			__tmp37.Name = "Name";
+			__tmp37.Documentation = null;
+			LineBreak.MetaModelLazy = () => __tmp4;
+			LineBreak.NamespaceLazy = () => __tmp3;
+			LineBreak.Documentation = null;
+			LineBreak.Name = "LineBreak";
+			// LineBreak.IsAbstract = null;
+			LineBreak.SuperClasses.AddLazy(() => Content);
 			PageBreak.MetaModelLazy = () => __tmp4;
 			PageBreak.NamespaceLazy = () => __tmp3;
 			PageBreak.Documentation = null;
@@ -4114,13 +4274,13 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// TableOfContents.IsAbstract = null;
 			TableOfContents.SuperClasses.AddLazy(() => Content);
 			__tmp31.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp31.InnerTypeLazy = () => Content;
+			__tmp31.InnerTypeLazy = () => MarkupKind;
 			__tmp33.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp33.InnerTypeLazy = () => MarkupKind;
-			__tmp36.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp36.InnerTypeLazy = () => ListItem;
+			__tmp33.InnerTypeLazy = () => Content;
+			__tmp38.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp38.InnerTypeLazy = () => TableCell;
 			__tmp39.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp39.InnerTypeLazy = () => TableCell;
+			__tmp39.InnerTypeLazy = () => ListItem;
 	
 			foreach (global::MetaDslx.Core.MutableSymbol symbol in this.Model.Symbols)
 			{
@@ -4495,6 +4655,31 @@ namespace DevToolsX.Documents.Symbols.Internal
 		/// Calls the super constructors of Image
 		/// </summary>
 		protected virtual void CallImageSuperConstructors(ImageBuilder _this)
+		{
+			this.Content(_this);
+		}
+	
+	
+		/// <summary>
+		/// Implements the constructor: LineBreak()
+		/// </summary>
+		/// Direct superclasses: 
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		/// All superclasses:
+		/// <ul>
+		///     <li>Content</li>
+		/// </ul>
+		public virtual void LineBreak(LineBreakBuilder _this)
+		{
+			this.CallLineBreakSuperConstructors(_this);
+		}
+	
+		/// <summary>
+		/// Calls the super constructors of LineBreak
+		/// </summary>
+		protected virtual void CallLineBreakSuperConstructors(LineBreakBuilder _this)
 		{
 			this.Content(_this);
 		}

@@ -4,6 +4,7 @@ using DevToolsX.Documents.Compilers.MediaWiki.Syntax;
 using DevToolsX.Documents.Office;
 using DevToolsX.Documents.Symbols;
 using DevToolsX.Testing.Selenium;
+using MetaDslx.Compiler.Diagnostics;
 using MetaDslx.Core;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -30,9 +31,9 @@ namespace DevToolsX.TempConsole
 
         static void Main(string[] args)
         {
-            try
-            {
-                Options options = new Options(LoggerFactory);
+            /*try
+            {*/
+                /*Options options = new Options(LoggerFactory);
                 options.ImplicitWaitTimeout = TimeSpan.FromSeconds(3);
                 //options.ScreenshotImageFormat = ImageFormat.Jpeg;
                 using (Browser browser = new Browser(BrowserKind.Firefox, options))
@@ -46,22 +47,28 @@ namespace DevToolsX.TempConsole
                         printer.Print();
                     }
                     
-                    /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
+                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
                     {
                         printer.Print();
-                    }*/
+                    }
                     //Console.ReadLine();
-                }
-                /*string text = string.Empty;
+                }*/
+                string text = string.Empty;
                 using (StreamReader reader = new StreamReader(@"..\..\test.wiki"))
                 {
                     text = reader.ReadToEnd();
                 }
-                ImmutableModel model = MediaWikiToDocumentModel.Compile(text);
+                var tree = MediaWikiSyntaxTree.ParseText(text);
+                var compilation = MediaWikiSimpleCompilation.Create("wiki").AddSyntaxTrees(tree);
+                ImmutableModel model = compilation.Model;
+                foreach (var diagnostic in compilation.GetDiagnostics())
+                {
+                    Console.WriteLine(DiagnosticFormatter.Instance.Format(diagnostic));
+                }
                 using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                 {
                     printer.Print();
-                }*/
+                }
                 /*using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateLatexDocument("test.tex")))
                 {
                     printer.Print();
@@ -70,16 +77,14 @@ namespace DevToolsX.TempConsole
                 {
                     printer.Print();
                 }*/
-            }
+            /*}
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-            }
+            }*/
         }
     }
 
 
 }
 
-/*
-*/

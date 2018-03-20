@@ -131,6 +131,10 @@
 		string FilePath;
 	}
 
+	class LineBreak : Content
+	{
+	}
+
 	class PageBreak : Content
 	{
 	}

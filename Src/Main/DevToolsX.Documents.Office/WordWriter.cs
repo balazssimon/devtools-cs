@@ -411,7 +411,7 @@ namespace DevToolsX.Documents.Office
             }
         }
 
-        public void WriteLine()
+        public void LineBreak()
         {
             this.word.Selection.InsertBreak(WdBreakType.wdLineBreak);
         }
@@ -430,6 +430,10 @@ namespace DevToolsX.Documents.Office
             this.word.Selection.InlineShapes.AddPicture(path);
         }
 
+        public void WriteLine()
+        {
+            this.word.Selection.TypeParagraph();
+        }
 
         private struct Markup
         {

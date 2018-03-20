@@ -33,8 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MetaDslx.Core">
-      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+    <Reference Include="MetaDslx.Compiler.Antlr4, Version=0.9.0.0, Culture=neutral, PublicKeyToken=7c14c8817c721b1e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.Compiler.Antlr4\bin\Release\netstandard2.0\MetaDslx.Compiler.Antlr4.dll</HintPath>
+    </Reference>
+    <Reference Include="MetaDslx.Core, Version=0.9.0.0, Culture=neutral, PublicKeyToken=7c14c8817c721b1e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.Core\bin\Release\netstandard2.0\MetaDslx.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

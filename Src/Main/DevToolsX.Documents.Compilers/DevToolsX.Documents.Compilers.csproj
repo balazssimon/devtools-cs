@@ -15,10 +15,10 @@
 
   <ItemGroup>
     <Reference Include="MetaDslx.Compiler.Antlr4">
-      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Compiler.Antlr4.dll</HintPath>
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.Compiler.Antlr4\bin\Release\netstandard2.0\MetaDslx.Compiler.Antlr4.dll</HintPath>
     </Reference>
     <Reference Include="MetaDslx.Core">
-      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.Core\bin\Release\netstandard2.0\MetaDslx.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
 

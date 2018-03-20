@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <Reference Include="MetaDslx.Core">
-      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.VisualStudio\bin\Release\MetaDslx.Core.dll</HintPath>
+      <HintPath>..\..\..\..\meta-cs\Src\Main\MetaDslx.Core\bin\Release\netstandard2.0\MetaDslx.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
 

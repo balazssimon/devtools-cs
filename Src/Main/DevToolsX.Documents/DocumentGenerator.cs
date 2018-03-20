@@ -203,7 +203,7 @@ namespace DevToolsX.Documents
 
         public void LineBreak()
         {
-            this.writer.WriteLine();
+            this.writer.LineBreak();
             this.appendSpace = false;
         }
 

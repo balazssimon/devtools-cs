@@ -358,6 +358,11 @@ namespace DevToolsX.Documents
             Writer.WriteLine();
         }
 
+        public override void LineBreak()
+        {
+            Writer.WriteLine(@"\\");
+        }
+
         public override void AddImage(string path)
         {
             Writer.WriteLine();
