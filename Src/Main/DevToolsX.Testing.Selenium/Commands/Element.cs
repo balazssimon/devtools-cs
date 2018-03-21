@@ -57,9 +57,11 @@ namespace DevToolsX.Testing.Selenium
                 sb.Append("'; ");
                 styleBeforeMark = sb.ToString();
             }
+            styleBeforeMark = @"arguments[0].style.outline = ''; arguments[0].style.outlineOffset = '';";
             MarkState.markStates.Add(element, new MarkState(element, styleBeforeMark));
             string markCode =
-                @"arguments[0].style.border = '4px'; arguments[0].style.borderColor = 'red'; arguments[0].style.borderStyle = 'solid';";
+                @"arguments[0].style.outline = 'red solid 4px'; arguments[0].style.outlineOffset = '-4px';";
+            //@"arguments[0].style.setProperty('border', '4px', 'important'); arguments[0].style.setProperty('border-color', 'red', 'important'); arguments[0].style.setProperty('border-style', 'solid', 'important');";
             element.Browser.LogDebug("Executing JavaScript: {0}", markCode);
             element.Browser.JavaScript.Execute(markCode, element.WebElement);
         }
