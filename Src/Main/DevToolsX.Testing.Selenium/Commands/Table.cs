@@ -8,6 +8,11 @@ namespace DevToolsX.Testing.Selenium
 {
     public class Table : Element
     {
+        private static XPaths TableXPaths = new XPaths("xpath:./tr[count(th) > 0]", "xpath:./tr[count(th) = 0]", null, "xpath:./th|./td");
+        private static XPaths TTableXPaths = new XPaths("xpath:./thead/tr", "xpath:./tbody/tr", "xpath:./tfoot/tr", "xpath:./th|./td");
+        private static XPaths NgxTableXPaths = new XPaths("xpath:.//datatable-header", "xpath:.//datatable-body//datatable-body-row", "xpath:.//datatable-footer", "xpath:.//datatable-header-cell|.//datatable-body-cell|.//datatable-footer-cell");
+
+        private XPaths xpaths;
         private ImmutableArray<Element>? headerCache;
         private ImmutableArray<Element>? bodyCache;
         private ImmutableArray<Element>? footerCache;
@@ -24,7 +29,7 @@ namespace DevToolsX.Testing.Selenium
         {
         }
 
-        public ImmutableArray<Element> Rows
+        public ImmutableArray<Element> RowElements
         {
             get
             {
@@ -33,7 +38,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public ImmutableArray<Element> Header
+        public ImmutableArray<Element> HeaderRowElements
         {
             get
             {
@@ -42,7 +47,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public ImmutableArray<Element> Body
+        public ImmutableArray<Element> BodyRowElements
         {
             get
             {
@@ -51,7 +56,7 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
-        public ImmutableArray<Element> Footer
+        public ImmutableArray<Element> FooterRowElements
         {
             get
             {
@@ -67,20 +72,51 @@ namespace DevToolsX.Testing.Selenium
 
         private void CacheRows()
         {
+            if (this.WebElement == null) return;
             List<Element> rows = new List<Element>();
-            this.headerCache = this.FindElements("xpath:./thead/tr");
-            rows.AddRange(this.headerCache);
-            this.bodyCache = this.FindElements("xpath:./tbody/tr");
-            rows.AddRange(this.bodyCache);
-            this.footerCache = this.FindElements("xpath:./tfoot/tr");
-            rows.AddRange(this.footerCache);
-            if (rows.Count == 0)
+            if (this.WebElement.TagName.ToLower() == "ngx-datatable")
             {
-                this.bodyCache = this.FindElements("xpath:./tr");
-                rows.AddRange(this.bodyCache);
+                this.Browser.LogDebug("Table is '{0}'.", "ngx-datatable");
+                this.xpaths = NgxTableXPaths;
+                this.CacheRows(this.xpaths, rows);
+            }
+            else
+            {
+                this.xpaths = TTableXPaths;
+                this.CacheRows(this.xpaths, rows);
+                if (rows.Count == 0)
+                {
+                    this.xpaths = TableXPaths;
+                    this.CacheRows(this.xpaths, rows);
+                    this.Browser.LogDebug("Table is '{0}'.", "table");
+                }
+                else
+                {
+                    this.Browser.LogDebug("Table is '{0}'.", "ttable");
+                }
             }
             this.rowCache = rows.ToImmutableArray();
             this.cellCache = new ImmutableArray<Element>?[rows.Count];
+            this.Browser.LogDebug("Found {0} rows.", rows.Count);
+        }
+
+        private void CacheRows(XPaths xpaths, List<Element> rows)
+        {
+            if (xpaths.Header != null)
+            {
+                this.headerCache = this.FindElements(xpaths.Header);
+                rows.AddRange(this.headerCache);
+            }
+            if (xpaths.Body != null)
+            {
+                this.bodyCache = this.FindElements(xpaths.Body);
+                rows.AddRange(this.bodyCache);
+            }
+            if (xpaths.Footer != null)
+            {
+                this.footerCache = this.FindElements(xpaths.Footer);
+                rows.AddRange(this.footerCache);
+            }
         }
 
         public Element GetCell(int row, int column)
@@ -96,13 +132,13 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> GetRow(int row)
         {
-            if (row < 0) row = this.Rows.Length + row;
-            if (row >= 0 && row < this.Rows.Length)
+            if (row < 0) row = this.RowElements.Length + row;
+            if (row >= 0 && row < this.RowElements.Length)
             {
                 if (this.cellCache[row] == null)
                 {
-                    var rowElement = this.Rows[row];
-                    this.cellCache[row] = rowElement.FindElements("xpath:./th|./td");
+                    var rowElement = this.RowElements[row];
+                    this.cellCache[row] = rowElement.FindElements(this.xpaths.Cell);
                 }
                 return this.cellCache[row] ?? ImmutableArray<Element>.Empty;
             }
@@ -111,12 +147,24 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> GetColumn(int column)
         {
-            Element[] result = new Element[this.Rows.Length];
-            for (int i = 0; i < this.Rows.Length; i++)
+            Element[] result = new Element[this.RowElements.Length];
+            for (int i = 0; i < this.RowElements.Length; i++)
             {
                 result[i] = this.GetCell(i, column);
             }
             return result.ToImmutableArray();
+        }
+
+        public int IndexOf(ImmutableArray<Element> cells, string locator, string tag = null)
+        {
+            int index = 0;
+            foreach (var cell in cells)
+            {
+                Element result = cell.FindElement(locator, tag, required: false);
+                if (result.WebElement != null) return index;
+                ++index;
+            }
+            return -1;
         }
 
         public Element FindElementInRow(int row, string locator, string tag = null, bool required = true)
@@ -141,7 +189,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindElementInHeader(string locator, string tag = null, bool required = true)
         {
-            foreach (var rowElement in this.Header)
+            foreach (var rowElement in this.HeaderRowElements)
             {
                 Element result = rowElement.FindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
@@ -151,7 +199,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindElementInBody(string locator, string tag = null, bool required = true)
         {
-            foreach (var rowElement in this.Body)
+            foreach (var rowElement in this.BodyRowElements)
             {
                 Element result = rowElement.FindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
@@ -161,7 +209,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindElementInFooter(string locator, string tag = null, bool required = true)
         {
-            foreach (var rowElement in this.Footer)
+            foreach (var rowElement in this.FooterRowElements)
             {
                 Element result = rowElement.FindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
@@ -297,6 +345,23 @@ namespace DevToolsX.Testing.Selenium
             string successMessage = "Footer of {0} does not contain {1}.";
             string failureMessage = message ?? "Footer of {0} should not have contained {1}.";
             return this.Browser.AssertElement(child, successMessage, failureMessage, this.LogName, childName);
+        }
+
+
+        private class XPaths
+        {
+            public XPaths(string header, string body, string footer, string cell)
+            {
+                this.Header = header;
+                this.Body = body;
+                this.Footer = footer;
+                this.Cell = cell;
+            }
+
+            public string Header { get; private set; }
+            public string Body { get; private set; }
+            public string Footer { get; private set; }
+            public string Cell { get; private set; }
         }
     }
 }

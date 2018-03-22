@@ -421,26 +421,28 @@ namespace DevToolsX.Testing.Selenium
             this.WebElement?.Clear();
         }
 
-        public void Click()
+        public void Click(bool directClick = false)
         {
-            this.WebElement?.Click();
+            if (this.WebElement == null) return;
+            if (directClick) this.Browser.JavaScript.Execute("arguments[0].click();", this.WebElement);
+            else this.WebElement.Click();
         }
 
-        public void Select()
+        public void Select(bool directClick = false)
         {
             if (this.WebElement == null) return;
             if (!this.WebElement.Selected)
             {
-                this.WebElement.Click();
+                this.Click(directClick);
             }
         }
 
-        public void Unselect()
+        public void Unselect(bool directClick = false)
         {
             if (this.WebElement == null) return;
             if (this.WebElement.Selected)
             {
-                this.WebElement.Click();
+                this.Click(directClick);
             }
         }
 
@@ -736,29 +738,29 @@ namespace DevToolsX.Testing.Selenium
         }
 
 
-        public Table FindTable(string locator)
+        public Table FindTable(string locator, string tag = "table")
         {
-            return new Table(this.FindElement(locator, "table"));
+            return new Table(this.FindElement(locator, tag));
         }
 
-        public Table GetTable(string locator)
+        public Table GetTable(string locator, string tag = "table")
         {
-            return new Table(this.GetElement(locator, "table"));
+            return new Table(this.GetElement(locator, tag));
         }
 
-        public ImmutableArray<Table> FindAllTables()
+        public ImmutableArray<Table> FindAllTables(string tag = "table")
         {
-            return this.FindElements("tag:table").Select(e => new Table(e)).ToImmutableArray();
+            return this.FindElements(string.Format("tag:{0}", tag)).Select(e => new Table(e)).ToImmutableArray();
         }
 
-        public Table ShouldContainTable(string locator, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Table ShouldContainTable(string locator, string tag = "table", string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return new Table(this.ShouldContainElement(locator, "table", message));
+            return new Table(this.ShouldContainElement(locator, tag, message));
         }
 
-        public Table ShouldNotContainTable(string locator, string tag = null, string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
+        public Table ShouldNotContainTable(string locator, string tag = "table", string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)
         {
-            return new Table(this.ShouldNotContainElement(locator, "table", message));
+            return new Table(this.ShouldNotContainElement(locator, tag, message));
         }
 
         public void Mark()
