@@ -15,7 +15,7 @@ namespace DevToolsX.Testing.Selenium.Locators
 
         protected override ImmutableArray<Element> DoFindElements()
         {
-            var elements = this.SearchContext.FindElements(By.XPath(string.Format("//*[contains(., '{0}')]", this.Value.Replace("'", "\\'"))));
+            var elements = this.SearchContext.FindElements(By.XPath(string.Format(".//*[contains(., '{0}')]", this.Value.Replace("'", "\\'"))));
             return this.FilterElements(elements);
         }
     }

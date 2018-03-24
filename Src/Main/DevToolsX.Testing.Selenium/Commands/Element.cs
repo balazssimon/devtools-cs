@@ -446,6 +446,18 @@ namespace DevToolsX.Testing.Selenium
             }
         }
 
+        public void SetCheckBox(bool isSelected)
+        {
+            if (this.IsSelected)
+            {
+                if (!isSelected) this.Unselect(true);
+            }
+            else
+            {
+                if (isSelected) this.Select(true);
+            }
+        }
+
         public void DoubleClick()
         {
             // TODO
