@@ -537,12 +537,7 @@ namespace DevToolsX.Documents.Compilers.MediaWiki
         public override void VisitHtmlTagClose(HtmlTagCloseSyntax node)
         {
             string name = node.HtmlTagName.GetText().ToString().ToLower();
-            if (name == "b" || name == "strong" || name == "i" || name == "em" ||
-                name == "code" || name == "pre" || name == "sub" || name == "sup" ||
-                name == "span" || name == "div" || name == "p")
-            {
-                this.EnsureFormattingClosedAtEnd(node, name);
-            }
+            this.EnsureFormattingClosedAtEnd(node, name);
         }
 
         public override void VisitHtmlTagEmpty(HtmlTagEmptySyntax node)

@@ -33,28 +33,29 @@ namespace DevToolsX.TempConsole
         {
             /*try
             {*/
-                /*Options options = new Options(LoggerFactory);
-                options.ImplicitWaitTimeout = TimeSpan.FromSeconds(3);
-                //options.ScreenshotImageFormat = ImageFormat.Jpeg;
-                using (Browser browser = new Browser(BrowserKind.Firefox, options))
+            /*Options options = new Options(LoggerFactory);
+            options.ImplicitWaitTimeout = TimeSpan.FromSeconds(3);
+            //options.ScreenshotImageFormat = ImageFormat.Jpeg;
+            using (Browser browser = new Browser(BrowserKind.Firefox, options))
+            {
+                TestDocWiki test = new TestDocWiki();
+                test.Browser = browser;
+                string wikiText = test.OpenPage("http://www.google.com", "apple");
+                ImmutableModel model = MediaWikiToDocumentModel.Compile(wikiText);
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
                 {
-                    TestDocWiki test = new TestDocWiki();
-                    test.Browser = browser;
-                    string wikiText = test.OpenPage("http://www.google.com", "apple");
-                    ImmutableModel model = MediaWikiToDocumentModel.Compile(wikiText);
-                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
-                    {
-                        printer.Print();
-                    }
-                    
-                    using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
-                    {
-                        printer.Print();
-                    }
-                    //Console.ReadLine();
-                }*/
+                    printer.Print();
+                }
+
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateDocument(new WordWriter("Doc1.docx", true))))
+                {
+                    printer.Print();
+                }
+                //Console.ReadLine();
+            }*/
+            string fileName = "test1";
                 string text = string.Empty;
-                using (StreamReader reader = new StreamReader(@"..\..\test.wiki"))
+                using (StreamReader reader = new StreamReader(@"..\..\"+fileName+".wiki"))
                 {
                     text = reader.ReadToEnd();
                 }
@@ -65,7 +66,7 @@ namespace DevToolsX.TempConsole
                 {
                     Console.WriteLine(DiagnosticFormatter.Instance.Format(diagnostic));
                 }
-                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument("test.html")))
+                using (DocumentModelPrinter printer = new DocumentModelPrinter(model, DocumentGenerator.CreateHtmlDocument(fileName+".html")))
                 {
                     printer.Print();
                 }
