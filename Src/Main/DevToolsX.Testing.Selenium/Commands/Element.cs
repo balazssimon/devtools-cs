@@ -107,7 +107,12 @@ namespace DevToolsX.Testing.Selenium
         public Element Parent { get; }
         public string Locator { get; }
         public string TagKind { get; }
-        public IWebElement WebElement { get; }
+        public IWebElement WebElement { get; private set; }
+
+        internal void UpdateWebElement(IWebElement webElement)
+        {
+            this.WebElement = webElement;
+        }
 
         public ElementWait Wait
         {
@@ -142,7 +147,7 @@ namespace DevToolsX.Testing.Selenium
             return this.Name.ToLower();
         }
 
-        protected string LogName
+        internal string LogName
         {
             get
             {
@@ -183,7 +188,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element GetAncestorElement(string tag = null)
         {
-            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:ancestor::{0}", tag), null, true).FindElement();
+            return this.FindAncestorElement(tag, true);
         }
 
         public Element FindParentElement(string tag = null, bool required = false)
@@ -193,32 +198,47 @@ namespace DevToolsX.Testing.Selenium
 
         public Element GetParentElement(string tag = null)
         {
-            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:parent::{0}", tag), null, true).FindElement();
+            return this.FindParentElement(tag, true);
         }
 
         public Element FindElement(string locator, string tag = null, bool required = false)
         {
-            return this.Options.CreateLocator(this.Browser, this, locator, tag, required).FindElement();
+            var result = this.InternalFindElement(locator, tag, required);
+            if (result.WebElement != null)
+            {
+                this.Logger.LogInformation("{0} found in {1}.", this.LogName, this.Parent?.LogName ?? "browser");
+            }
+            return result;
         }
 
         public ImmutableArray<Element> FindElements(string locator, string tag = null, bool required = false)
+        {
+            return this.InternalFindElements(locator, tag, required);
+        }
+
+        internal Element InternalFindElement(string locator, string tag = null, bool required = false)
+        {
+            return this.Options.CreateLocator(this.Browser, this, locator, tag, required).FindElement();
+        }
+
+        internal ImmutableArray<Element> InternalFindElements(string locator, string tag = null, bool required = false)
         {
             return this.Options.CreateLocator(this.Browser, this, locator, tag, required).FindElements();
         }
 
         public Element GetElement(string locator, string tag = null)
         {
-            return this.Options.CreateLocator(this.Browser, this, locator, tag, true).FindElement();
+            return this.FindElement(locator, tag, true);
         }
 
         public ImmutableArray<Element> GetElements(string locator, string tag = null)
         {
-            return this.Options.CreateLocator(this.Browser, this, locator, tag, true).FindElements();
+            return this.FindElements(locator, tag, true);
         }
 
         public int GetElementCount(string locator)
         {
-            return this.FindElements(locator).Length;
+            return this.InternalFindElements(locator).Length;
         }
 
         public int LocatorShouldMatchNTimes(string locator, int n)
@@ -230,7 +250,7 @@ namespace DevToolsX.Testing.Selenium
 
         public int GetMatchingXPathCount(string xpath)
         {
-            return this.FindElements("xpath:" + xpath).Length;
+            return this.InternalFindElements("xpath:" + xpath).Length;
         }
 
         public int XPathShouldMatchNTimes(string xpath, int n)
@@ -288,7 +308,7 @@ namespace DevToolsX.Testing.Selenium
         public bool ContainsText(string text)
         {
             string locator = string.Format("xpath://*[contains(., {0})]", Utils.EscapeXpathValue(text));
-            return this.FindElement(locator) != null;
+            return this.InternalFindElement(locator) != null;
         }
 
         public string LogSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Debug)
@@ -304,15 +324,15 @@ namespace DevToolsX.Testing.Selenium
 
         public Element ShouldContainElement(string locator, string tag = null, string message = null)
         {
-            Element child = this.FindElement(locator, tag);
+            Element child = this.InternalFindElement(locator, tag);
             string successMessage = "{0} contains {1}.";
             string failureMessage = message ?? "{0} should have contained {1} but did not.";
-            return this.Browser.AssertElement(this.FindElement(locator, tag), successMessage, failureMessage, this.LogName, child.LogName);
+            return this.Browser.AssertElement(this.InternalFindElement(locator, tag), successMessage, failureMessage, this.LogName, child.LogName);
         }
 
         public Element ShouldNotContainElement(string locator, string tag = null, string message = null)
         {
-            Element child = this.FindElement(locator, tag);
+            Element child = this.InternalFindElement(locator, tag);
             string successMessage = "{0} does not contain {1}.";
             string failureMessage = message ?? "{0} should not have contained {1}.";
             return this.Browser.AssertElement(child, !child.Exists, successMessage, failureMessage, this.LogName, child.LogName);
@@ -483,7 +503,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindLink(string locator)
         {
-            return this.FindElement(locator, "link");
+            return this.InternalFindElement(locator, "link");
         }
 
         public Element GetLink(string locator)
@@ -493,7 +513,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllLinks()
         {
-            return this.FindElements("tag:a", "link");
+            return this.InternalFindElements("tag:a", "link");
         }
 
         public Element ShouldContainLink(string locator, string message = null)
@@ -509,7 +529,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Form FindForm(string locator)
         {
-            return new Form(this.FindElement(locator, "form"));
+            return new Form(this.InternalFindElement(locator, "form"));
         }
 
         public Form GetForm(string locator)
@@ -519,7 +539,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Form> FindAllForms()
         {
-            return this.FindElements("tag:form", "form").Select(e => new Form(e)).ToImmutableArray();
+            return this.InternalFindElements("tag:form", "form").Select(e => new Form(e)).ToImmutableArray();
         }
 
         public Form ShouldContainForm(string locator, string message = null)
@@ -535,7 +555,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindLabel(string locator)
         {
-            return this.FindElement(locator, tag: "label");
+            return this.InternalFindElement(locator, tag: "label");
         }
 
         public Element GetLabel(string locator)
@@ -545,7 +565,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllLabels()
         {
-            return this.FindElements("tag:input", "label");
+            return this.InternalFindElements("tag:input", "label");
         }
 
         public Element ShouldContainLabel(string locator, string message = null)
@@ -561,7 +581,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindCheckBox(string locator)
         {
-            return this.FindElement(locator, tag: "checkbox");
+            return this.InternalFindElement(locator, tag: "checkbox");
         }
 
         public Element GetCheckBox(string locator)
@@ -571,7 +591,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllCheckBoxes()
         {
-            return this.FindElements("tag:input", "checkbox");
+            return this.InternalFindElements("tag:input", "checkbox");
         }
 
         public Element ShouldContainCheckBox(string locator, string message = null)
@@ -598,7 +618,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindTextField(string locator)
         {
-            return this.FindElement(locator, "text field");
+            return this.InternalFindElement(locator, "text field");
         }
 
         public Element GetTextField(string locator)
@@ -608,7 +628,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllTextFields()
         {
-            return this.FindElements("tag:input", "text field");
+            return this.InternalFindElements("tag:input", "text field");
         }
 
         public Element ShouldContainTextField(string locator, string message = null)
@@ -624,7 +644,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindTextArea(string locator)
         {
-            return this.FindElement(locator, "text area");
+            return this.InternalFindElement(locator, "text area");
         }
 
         public Element GetTextArea(string locator)
@@ -634,7 +654,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllTextAreas()
         {
-            return this.FindElements("tag:input", "text area");
+            return this.InternalFindElements("tag:input", "text area");
         }
 
         public Element ShouldContainTextArea(string locator, string message = null)
@@ -650,7 +670,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindButton(string locator)
         {
-            return this.FindElement(locator, "button");
+            return this.InternalFindElement(locator, "button");
         }
 
         public Element GetButton(string locator)
@@ -660,7 +680,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> FindAllButtons()
         {
-            return this.FindElements("tag:button");
+            return this.InternalFindElements("tag:button");
         }
 
         public Element ShouldContainButton(string locator, string message = null)
@@ -677,7 +697,7 @@ namespace DevToolsX.Testing.Selenium
         public RadioGroup FindRadioGroup(string groupName)
         {
             var xpath = string.Format("xpath://input[@type='radio' and @name='{0}']", groupName);
-            var items = this.FindElements(xpath);
+            var items = this.InternalFindElements(xpath);
             return new RadioGroup(this.Browser, this, xpath, "radio group", groupName, items);
         }
 
@@ -705,7 +725,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindRadioButton(string locator)
         {
-            return this.FindElement(locator, tag: "radio button");
+            return this.InternalFindElement(locator, tag: "radio button");
         }
 
         public Element GetRadioButton(string locator)
@@ -726,7 +746,7 @@ namespace DevToolsX.Testing.Selenium
 
         public List FindList(string locator)
         {
-            return new List(this.FindElement(locator, "list"));
+            return new List(this.InternalFindElement(locator, "list"));
         }
 
         public List GetList(string locator)
@@ -736,7 +756,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<List> FindAllLists()
         {
-            return this.FindElements("tag:list").Select(e => new List(e)).ToImmutableArray();
+            return this.InternalFindElements("tag:list").Select(e => new List(e)).ToImmutableArray();
         }
 
         public List ShouldContainList(string locator, string message = null)
@@ -752,7 +772,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Table FindTable(string locator, string tag = "table")
         {
-            return new Table(this.FindElement(locator, tag));
+            return new Table(this.InternalFindElement(locator, tag));
         }
 
         public Table GetTable(string locator, string tag = "table")
@@ -762,7 +782,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Table> FindAllTables(string tag = "table")
         {
-            return this.FindElements(string.Format("tag:{0}", tag)).Select(e => new Table(e)).ToImmutableArray();
+            return this.InternalFindElements(string.Format("tag:{0}", tag)).Select(e => new Table(e)).ToImmutableArray();
         }
 
         public Table ShouldContainTable(string locator, string tag = "table", string message = null, Microsoft.Extensions.Logging.LogLevel logLevel = Microsoft.Extensions.Logging.LogLevel.Information)

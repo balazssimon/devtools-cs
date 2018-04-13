@@ -58,7 +58,7 @@ namespace DevToolsX.Testing.Selenium
 
         public ImmutableArray<Element> GetItems(string locator)
         {
-            return this.FindElements(locator, "option", required: false);
+            return this.InternalFindElements(locator, "option", required: false);
         }
 
         public ImmutableArray<Element> GetSelectedItems(string locator)

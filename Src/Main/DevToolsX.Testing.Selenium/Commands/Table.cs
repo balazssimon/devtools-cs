@@ -104,17 +104,17 @@ namespace DevToolsX.Testing.Selenium
         {
             if (xpaths.Header != null)
             {
-                this.headerCache = this.FindElements(xpaths.Header);
+                this.headerCache = this.InternalFindElements(xpaths.Header);
                 rows.AddRange(this.headerCache);
             }
             if (xpaths.Body != null)
             {
-                this.bodyCache = this.FindElements(xpaths.Body);
+                this.bodyCache = this.InternalFindElements(xpaths.Body);
                 rows.AddRange(this.bodyCache);
             }
             if (xpaths.Footer != null)
             {
-                this.footerCache = this.FindElements(xpaths.Footer);
+                this.footerCache = this.InternalFindElements(xpaths.Footer);
                 rows.AddRange(this.footerCache);
             }
         }
@@ -138,7 +138,7 @@ namespace DevToolsX.Testing.Selenium
                 if (this.cellCache[row] == null)
                 {
                     var rowElement = this.RowElements[row];
-                    this.cellCache[row] = rowElement.FindElements(this.xpaths.Cell);
+                    this.cellCache[row] = rowElement.InternalFindElements(this.xpaths.Cell);
                 }
                 return this.cellCache[row] ?? ImmutableArray<Element>.Empty;
             }
@@ -160,7 +160,7 @@ namespace DevToolsX.Testing.Selenium
             int index = 0;
             foreach (var cell in cells)
             {
-                Element result = cell.FindElement(locator, tag, required: false);
+                Element result = cell.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return index;
                 ++index;
             }
@@ -171,7 +171,7 @@ namespace DevToolsX.Testing.Selenium
         {
             foreach (var rowElement in this.GetRow(row))
             {
-                Element result = rowElement.FindElement(locator, tag, required: false);
+                Element result = rowElement.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
             }
             return new Element(this.Browser, this, locator, tag, null);
@@ -181,7 +181,7 @@ namespace DevToolsX.Testing.Selenium
         {
             foreach (var rowElement in this.GetColumn(column))
             {
-                Element result = rowElement.FindElement(locator, tag, required: false);
+                Element result = rowElement.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
             }
             return new Element(this.Browser, this, locator, tag, null);
@@ -191,7 +191,7 @@ namespace DevToolsX.Testing.Selenium
         {
             foreach (var rowElement in this.HeaderRowElements)
             {
-                Element result = rowElement.FindElement(locator, tag, required: false);
+                Element result = rowElement.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
             }
             return new Element(this.Browser, this, locator, tag, null);
@@ -201,7 +201,7 @@ namespace DevToolsX.Testing.Selenium
         {
             foreach (var rowElement in this.BodyRowElements)
             {
-                Element result = rowElement.FindElement(locator, tag, required: false);
+                Element result = rowElement.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
             }
             return new Element(this.Browser, this, locator, tag, null);
@@ -211,7 +211,7 @@ namespace DevToolsX.Testing.Selenium
         {
             foreach (var rowElement in this.FooterRowElements)
             {
-                Element result = rowElement.FindElement(locator, tag, required: false);
+                Element result = rowElement.InternalFindElement(locator, tag, required: false);
                 if (result.WebElement != null) return result;
             }
             return new Element(this.Browser, this, locator, tag, null);

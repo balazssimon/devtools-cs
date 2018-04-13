@@ -167,33 +167,58 @@ namespace DevToolsX.Testing.Selenium.Locators
 
         public Element FindElement()
         {
-            ImmutableArray<Element> result = this.FindElements();
+            return this.FindElement(this.Required ? this.Options.TimeOutForGet : this.Options.TimeOutForFind);
+        }
+
+        public Element FindElement(TimeSpan timeout)
+        {
+            ImmutableArray<Element> result = this.FindElementsWithTimeout(timeout);
             if (result.Length == 0 || result.Length > 1)
             {
                 Element nullResult = new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
                 if (result.Length > 1) this.Browser.AssertElement(nullResult, null, "More than one {0} found in {1}.", nullResult, nullResult.Parent);
+                else if (this.Required) this.Browser.AssertElement(nullResult, null, "{0} not found in {1}.", nullResult, nullResult.Parent);
                 return nullResult;
-            }
-            else
-            {
-                this.LogInformation("{0} found in {1}.", result[0], result[0].Parent);
             }
             return result[0];
         }
 
         public ImmutableArray<Element> FindElements()
         {
+            return this.FindElements(this.Required ? this.Options.TimeOutForGet : this.Options.TimeOutForFind);
+        }
+
+        public ImmutableArray<Element> FindElements(TimeSpan timeout)
+        {
             ImmutableArray<Element> result = ImmutableArray<Element>.Empty;
-            try
-            {
-                result = this.DoFindElements();
-            }
-            catch(Exception ex)
+            result = this.FindElementsWithTimeout(timeout);
+            if (this.Required && result.Length == 0) this.Browser.AssertElement(new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null));
+            return result;
+        }
+
+        private ImmutableArray<Element> FindElementsWithTimeout(TimeSpan timeout)
+        {
+            ImmutableArray<Element> result = ImmutableArray<Element>.Empty;
+            Exception exception = null;
+            this.Browser.Wait.Until(
+                wd =>
+                {
+                    try
+                    {
+                        exception = null;
+                        result = this.DoFindElements();
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+                    return result.Length > 0;
+                }, timeout: timeout);
+            if (exception != null)
             {
                 Element nullResult = new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null);
-                this.LogError(ex, "Error executing locator {0} in {1}.", nullResult, nullResult.Parent);
+                this.LogError(exception, "Error executing locator {0} in {1}.", nullResult, nullResult.Parent);
             }
-            if (this.Required && result.Length == 0) this.Browser.AssertElement(new Element(this.Browser, this.Parent, this.LocatorText, this.Tag, null));
             return result;
         }
 

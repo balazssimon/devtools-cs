@@ -19,6 +19,9 @@ namespace DevToolsX.Testing.Selenium
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
             this.loggerFactory = loggerFactory;
 
+            this.TimeOutForGet = TimeSpan.FromSeconds(60);
+            this.TimeOutForFind = TimeSpan.FromSeconds(0);
+
             this.ScreenshotDirectory = Directory.GetCurrentDirectory();
             this.ScreenshotImageFormat = ImageFormat.Png;
 
@@ -77,7 +80,7 @@ namespace DevToolsX.Testing.Selenium
             Type type;
             if (this.locators.TryGetValue(prefix, out type))
             {
-                Locator result = type.GetConstructor(new Type[] { typeof(Browser), typeof(Element), typeof(string), typeof(string), typeof(bool)}).
+                Locator result = type.GetConstructor(new Type[] { typeof(Browser), typeof(Element), typeof(string), typeof(string), typeof(bool) }).
                     Invoke(new object[] { browser, parent, locator, tag, required }) as Locator;
                 if (result != null)
                 {
@@ -132,6 +135,9 @@ namespace DevToolsX.Testing.Selenium
                 }
             }
         }
+
+        public TimeSpan TimeOutForGet { get; set; }
+        public TimeSpan TimeOutForFind { get; set; }
 
         private TimeSpan asynchronousJavaScriptTimeout = TimeSpan.Zero;
         public TimeSpan AsynchronousJavaScriptTimeout

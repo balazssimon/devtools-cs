@@ -43,6 +43,27 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediaWikiParser.ag4</DependentUpon>
     </None>
+    <None Update="SeleniumUserInterface\Symbols\SeleniumUserInterface.mm">
+      <Generator>MetaModelGenerator</Generator>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceLexer.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>SeleniumUserInterfaceLexer.g4</LastGenOutput>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceLexer.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUserInterfaceLexer.ag4</DependentUpon>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceParser.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>SeleniumUserInterfaceParser.g4</LastGenOutput>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceParser.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUserInterfaceParser.ag4</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>
