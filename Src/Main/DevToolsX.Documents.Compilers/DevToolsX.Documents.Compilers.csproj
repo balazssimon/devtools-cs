@@ -23,6 +23,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="SeleniumUI\Symbols\SeleniumUI.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUI.mm</DependentUpon>
+    </Compile>
+    <Compile Update="SeleniumUserInterface\Symbols\SeleniumUI.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUI.mm</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="MediaWiki\Syntax\InternalSyntax\MediaWikiLexer.ag4">
       <Generator>Antlr4RoslynGenerator</Generator>
       <LastGenOutput>MediaWikiLexer.g4</LastGenOutput>
@@ -43,21 +56,54 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediaWikiParser.ag4</DependentUpon>
     </None>
-    <None Update="SeleniumUserInterface\Symbols\SeleniumUserInterface.mm">
-      <Generator>MetaModelGenerator</Generator>
+    <None Update="SeleniumUI\Symbols\SeleniumUI.mm">
+      <Generator>MetaGenerator</Generator>
+      <LastGenOutput>SeleniumUI.cs</LastGenOutput>
     </None>
-    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceLexer.ag4">
+    <None Update="SeleniumUI\Syntax\InternalSyntax\SeleniumUILexer.ag4">
       <Generator>Antlr4RoslynGenerator</Generator>
-      <LastGenOutput>SeleniumUserInterfaceLexer.g4</LastGenOutput>
+      <LastGenOutput>SeleniumUILexer.g4</LastGenOutput>
+    </None>
+    <None Update="SeleniumUI\Syntax\InternalSyntax\SeleniumUILexer.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUILexer.ag4</DependentUpon>
+    </None>
+    <None Update="SeleniumUI\Syntax\InternalSyntax\SeleniumUIParser.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>SeleniumUIParser.g4</LastGenOutput>
+    </None>
+    <None Update="SeleniumUI\Syntax\InternalSyntax\SeleniumUIParser.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUIParser.ag4</DependentUpon>
+    </None>
+    <None Update="SeleniumUserInterface\Symbols\SeleniumUI.mm">
+      <Generator>MetaGenerator</Generator>
+      <LastGenOutput>SeleniumUI.cs</LastGenOutput>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUILexer.ag4">
+      <Generator>Antlr4RoslynGenerator</Generator>
+      <LastGenOutput>SeleniumUILexer.g4</LastGenOutput>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUILexer.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUILexer.ag4</DependentUpon>
+    </None>
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUIParser.g4">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SeleniumUIParser.ag4</DependentUpon>
     </None>
     <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceLexer.g4">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SeleniumUserInterfaceLexer.ag4</DependentUpon>
     </None>
-    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceParser.ag4">
+    <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUIParser.ag4">
       <Generator>Antlr4RoslynGenerator</Generator>
-      <LastGenOutput>SeleniumUserInterfaceParser.g4</LastGenOutput>
+      <LastGenOutput>SeleniumUIParser.g4</LastGenOutput>
     </None>
     <None Update="SeleniumUserInterface\Syntax\InternalSyntax\SeleniumUserInterfaceParser.g4">
       <DesignTime>True</DesignTime>

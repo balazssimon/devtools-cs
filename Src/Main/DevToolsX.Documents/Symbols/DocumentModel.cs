@@ -721,7 +721,7 @@ namespace DevToolsX.Documents.Symbols
 		{
 		}
 	
-		public const string Uri = "http://devtoolsx.documents.documentmodel/1.0";
+		public const string Uri = "http://DevToolsX/Documents/DocumentModel/1.0";
 	
 		[global::MetaDslx.Core.ModelSymbolDescriptorAttribute(typeof(global::DevToolsX.Documents.Symbols.Document), typeof(global::DevToolsX.Documents.Symbols.DocumentBuilder), BaseSymbolDescriptors = new global::System.Type[] { typeof(DocumentModelDescriptor.ContentContainer) })]
 		public static class Document
@@ -3630,7 +3630,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaExternalTypeBuilder Color;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Document;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Document_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp35;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp34;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaEnumBuilder MarkupKind;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp5;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaEnumLiteralBuilder __tmp6;
@@ -3666,16 +3666,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder SectionTitle;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Level;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp30;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp37;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder SectionTitle_Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Paragraph;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Paragraph_Alignment;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Text;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Text_Text;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp36;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp32;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Label;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Label_Name;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp34;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp38;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Reference;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_DocumentName;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Reference_LabelName;
@@ -3689,7 +3689,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder List_Items;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder ListItem;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder ListItem_Title;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp32;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp39;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Table;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadColumnCount;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Table_HeadRowCount;
@@ -3699,14 +3699,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder TableCell;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder Image;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaPropertyBuilder Image_FilePath;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp37;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaAnnotationBuilder __tmp33;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder LineBreak;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder PageBreak;
 		internal global::MetaDslx.Languages.Meta.Symbols.MetaClassBuilder TableOfContents;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp30;
 		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp31;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp33;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp38;
-		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp39;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp35;
+		private global::MetaDslx.Languages.Meta.Symbols.MetaCollectionTypeBuilder __tmp36;
 	
 		internal DocumentModelBuilderInstance()
 		{
@@ -3748,7 +3748,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Color = factory.MetaExternalType();
 			Document = factory.MetaClass();
 			Document_Title = factory.MetaProperty();
-			__tmp35 = factory.MetaAnnotation();
+			__tmp34 = factory.MetaAnnotation();
 			MarkupKind = factory.MetaEnum();
 			__tmp5 = factory.MetaEnumLiteral();
 			__tmp6 = factory.MetaEnumLiteral();
@@ -3784,16 +3784,16 @@ namespace DevToolsX.Documents.Symbols.Internal
 			SectionTitle = factory.MetaClass();
 			SectionTitle_Level = factory.MetaProperty();
 			SectionTitle_Title = factory.MetaProperty();
-			__tmp30 = factory.MetaAnnotation();
+			__tmp37 = factory.MetaAnnotation();
 			SectionTitle_Label = factory.MetaProperty();
 			Paragraph = factory.MetaClass();
 			Paragraph_Alignment = factory.MetaProperty();
 			Text = factory.MetaClass();
 			Text_Text = factory.MetaProperty();
-			__tmp36 = factory.MetaAnnotation();
+			__tmp32 = factory.MetaAnnotation();
 			Label = factory.MetaClass();
 			Label_Name = factory.MetaProperty();
-			__tmp34 = factory.MetaAnnotation();
+			__tmp38 = factory.MetaAnnotation();
 			Reference = factory.MetaClass();
 			Reference_DocumentName = factory.MetaProperty();
 			Reference_LabelName = factory.MetaProperty();
@@ -3807,7 +3807,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			List_Items = factory.MetaProperty();
 			ListItem = factory.MetaClass();
 			ListItem_Title = factory.MetaProperty();
-			__tmp32 = factory.MetaAnnotation();
+			__tmp39 = factory.MetaAnnotation();
 			Table = factory.MetaClass();
 			Table_HeadColumnCount = factory.MetaProperty();
 			Table_HeadRowCount = factory.MetaProperty();
@@ -3817,14 +3817,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			TableCell = factory.MetaClass();
 			Image = factory.MetaClass();
 			Image_FilePath = factory.MetaProperty();
-			__tmp37 = factory.MetaAnnotation();
+			__tmp33 = factory.MetaAnnotation();
 			LineBreak = factory.MetaClass();
 			PageBreak = factory.MetaClass();
 			TableOfContents = factory.MetaClass();
+			__tmp30 = factory.MetaCollectionType();
 			__tmp31 = factory.MetaCollectionType();
-			__tmp33 = factory.MetaCollectionType();
-			__tmp38 = factory.MetaCollectionType();
-			__tmp39 = factory.MetaCollectionType();
+			__tmp35 = factory.MetaCollectionType();
+			__tmp36 = factory.MetaCollectionType();
 	
 			// __tmp1.MetaModel = null;
 			// __tmp1.Namespace = null;
@@ -3867,7 +3867,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			__tmp3.Declarations.AddLazy(() => TableOfContents);
 			__tmp4.Name = "DocumentModel";
 			__tmp4.Documentation = null;
-			__tmp4.Uri = "http://devtoolsx.documents.documentmodel/1.0";
+			__tmp4.Uri = "http://DevToolsX/Documents/DocumentModel/1.0";
 			__tmp4.NamespaceLazy = () => __tmp3;
 			Color.Name = "Color";
 			Color.Documentation = null;
@@ -3882,14 +3882,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Document.IsAbstract = null;
 			Document.SuperClasses.AddLazy(() => ContentContainer);
 			Document.Properties.AddLazy(() => Document_Title);
-			Document_Title.Annotations.AddLazy(() => __tmp35);
+			Document_Title.Annotations.AddLazy(() => __tmp34);
 			Document_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Document_Title.Name = "Title";
 			Document_Title.Documentation = null;
 			// Document_Title.Kind = null;
 			Document_Title.ClassLazy = () => Document;
-			__tmp35.Name = "Name";
-			__tmp35.Documentation = null;
+			__tmp34.Name = "Name";
+			__tmp34.Documentation = null;
 			MarkupKind.MetaModelLazy = () => __tmp4;
 			MarkupKind.NamespaceLazy = () => __tmp3;
 			MarkupKind.Documentation = null;
@@ -4043,7 +4043,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			ContentContainer.IsAbstract = true;
 			ContentContainer.SuperClasses.AddLazy(() => Content);
 			ContentContainer.Properties.AddLazy(() => ContentContainer_Text);
-			ContentContainer_Text.TypeLazy = () => __tmp33;
+			ContentContainer_Text.TypeLazy = () => __tmp31;
 			ContentContainer_Text.Name = "Text";
 			ContentContainer_Text.Documentation = null;
 			// ContentContainer_Text.Kind = null;
@@ -4062,14 +4062,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			SectionTitle_Level.Documentation = null;
 			// SectionTitle_Level.Kind = null;
 			SectionTitle_Level.ClassLazy = () => SectionTitle;
-			SectionTitle_Title.Annotations.AddLazy(() => __tmp30);
+			SectionTitle_Title.Annotations.AddLazy(() => __tmp37);
 			SectionTitle_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			SectionTitle_Title.Name = "Title";
 			SectionTitle_Title.Documentation = null;
 			// SectionTitle_Title.Kind = null;
 			SectionTitle_Title.ClassLazy = () => SectionTitle;
-			__tmp30.Name = "Name";
-			__tmp30.Documentation = null;
+			__tmp37.Name = "Name";
+			__tmp37.Documentation = null;
 			SectionTitle_Label.TypeLazy = () => Label;
 			SectionTitle_Label.Name = "Label";
 			SectionTitle_Label.Documentation = null;
@@ -4094,14 +4094,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Text.IsAbstract = null;
 			Text.SuperClasses.AddLazy(() => Content);
 			Text.Properties.AddLazy(() => Text_Text);
-			Text_Text.Annotations.AddLazy(() => __tmp36);
+			Text_Text.Annotations.AddLazy(() => __tmp32);
 			Text_Text.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Text_Text.Name = "Text";
 			Text_Text.Documentation = null;
 			// Text_Text.Kind = null;
 			Text_Text.ClassLazy = () => Text;
-			__tmp36.Name = "Name";
-			__tmp36.Documentation = null;
+			__tmp32.Name = "Name";
+			__tmp32.Documentation = null;
 			Label.MetaModelLazy = () => __tmp4;
 			Label.NamespaceLazy = () => __tmp3;
 			Label.Documentation = null;
@@ -4109,14 +4109,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Label.IsAbstract = null;
 			Label.SuperClasses.AddLazy(() => Content);
 			Label.Properties.AddLazy(() => Label_Name);
-			Label_Name.Annotations.AddLazy(() => __tmp34);
+			Label_Name.Annotations.AddLazy(() => __tmp38);
 			Label_Name.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Label_Name.Name = "Name";
 			Label_Name.Documentation = null;
 			// Label_Name.Kind = null;
 			Label_Name.ClassLazy = () => Label;
-			__tmp34.Name = "Name";
-			__tmp34.Documentation = null;
+			__tmp38.Name = "Name";
+			__tmp38.Documentation = null;
 			Reference.MetaModelLazy = () => __tmp4;
 			Reference.NamespaceLazy = () => __tmp3;
 			Reference.Documentation = null;
@@ -4150,7 +4150,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Markup.Properties.AddLazy(() => Markup_Kind);
 			Markup.Properties.AddLazy(() => Markup_ForegroundColor);
 			Markup.Properties.AddLazy(() => Markup_BackgroundColor);
-			Markup_Kind.TypeLazy = () => __tmp31;
+			Markup_Kind.TypeLazy = () => __tmp36;
 			Markup_Kind.Name = "Kind";
 			Markup_Kind.Documentation = null;
 			// Markup_Kind.Kind = null;
@@ -4178,7 +4178,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			List_Kind.Documentation = null;
 			// List_Kind.Kind = null;
 			List_Kind.ClassLazy = () => List;
-			List_Items.TypeLazy = () => __tmp39;
+			List_Items.TypeLazy = () => __tmp30;
 			List_Items.Name = "Items";
 			List_Items.Documentation = null;
 			// List_Items.Kind = null;
@@ -4190,14 +4190,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// ListItem.IsAbstract = null;
 			ListItem.SuperClasses.AddLazy(() => ContentContainer);
 			ListItem.Properties.AddLazy(() => ListItem_Title);
-			ListItem_Title.Annotations.AddLazy(() => __tmp32);
+			ListItem_Title.Annotations.AddLazy(() => __tmp39);
 			ListItem_Title.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			ListItem_Title.Name = "Title";
 			ListItem_Title.Documentation = null;
 			// ListItem_Title.Kind = null;
 			ListItem_Title.ClassLazy = () => ListItem;
-			__tmp32.Name = "Name";
-			__tmp32.Documentation = null;
+			__tmp39.Name = "Name";
+			__tmp39.Documentation = null;
 			Table.MetaModelLazy = () => __tmp4;
 			Table.NamespaceLazy = () => __tmp3;
 			Table.Documentation = null;
@@ -4229,7 +4229,7 @@ namespace DevToolsX.Documents.Symbols.Internal
 			Table_RowCount.Documentation = null;
 			Table_RowCount.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaPropertyKind.Derived;
 			Table_RowCount.ClassLazy = () => Table;
-			Table_Cells.TypeLazy = () => __tmp38;
+			Table_Cells.TypeLazy = () => __tmp35;
 			Table_Cells.Name = "Cells";
 			Table_Cells.Documentation = null;
 			// Table_Cells.Kind = null;
@@ -4247,14 +4247,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			// Image.IsAbstract = null;
 			Image.SuperClasses.AddLazy(() => Content);
 			Image.Properties.AddLazy(() => Image_FilePath);
-			Image_FilePath.Annotations.AddLazy(() => __tmp37);
+			Image_FilePath.Annotations.AddLazy(() => __tmp33);
 			Image_FilePath.TypeLazy = () => global::MetaDslx.Languages.Meta.Symbols.MetaInstance.String.ToMutable();
 			Image_FilePath.Name = "FilePath";
 			Image_FilePath.Documentation = null;
 			// Image_FilePath.Kind = null;
 			Image_FilePath.ClassLazy = () => Image;
-			__tmp37.Name = "Name";
-			__tmp37.Documentation = null;
+			__tmp33.Name = "Name";
+			__tmp33.Documentation = null;
 			LineBreak.MetaModelLazy = () => __tmp4;
 			LineBreak.NamespaceLazy = () => __tmp3;
 			LineBreak.Documentation = null;
@@ -4273,14 +4273,14 @@ namespace DevToolsX.Documents.Symbols.Internal
 			TableOfContents.Name = "TableOfContents";
 			// TableOfContents.IsAbstract = null;
 			TableOfContents.SuperClasses.AddLazy(() => Content);
+			__tmp30.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp30.InnerTypeLazy = () => ListItem;
 			__tmp31.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp31.InnerTypeLazy = () => MarkupKind;
-			__tmp33.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp33.InnerTypeLazy = () => Content;
-			__tmp38.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp38.InnerTypeLazy = () => TableCell;
-			__tmp39.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
-			__tmp39.InnerTypeLazy = () => ListItem;
+			__tmp31.InnerTypeLazy = () => Content;
+			__tmp35.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp35.InnerTypeLazy = () => TableCell;
+			__tmp36.Kind = global::MetaDslx.Languages.Meta.Symbols.MetaCollectionKind.List;
+			__tmp36.InnerTypeLazy = () => MarkupKind;
 	
 			foreach (global::MetaDslx.Core.MutableSymbol symbol in this.Model.Symbols)
 			{

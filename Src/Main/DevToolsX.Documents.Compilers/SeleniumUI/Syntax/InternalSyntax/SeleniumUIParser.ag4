@@ -1,0 +1,56 @@
+﻿parser grammar SeleniumUIParser;
+
+options
+{
+	tokenVocab = SeleniumUILexer;
+	generateCompiler = true;
+}
+
+$Root
+main: $Property(Symbols) namespace* EOF;
+
+$SymbolDef(symbolType=Namespace,nestingProperty=Declarations,merge=true)
+namespace : KNamespace qualifiedName namespaceBody;
+
+$Body
+namespaceBody: TOpenBrace declaration* TCloseBrace;
+
+$Property(Declarations)
+declaration: tag | page;
+
+$SymbolDef(Tag)
+tag: KTag name typeSpecifier? TSemicolon;
+
+typeSpecifier: TColon $Property(TypeName) $Value qualifier;
+
+$SymbolDef(Page)
+page: KPage name elementBody;
+
+$Property(Elements)
+$SymbolDef(Element)
+element: KElement name tagSpecifier? locatorSpecifier elementBody;
+
+tagSpecifier: TColon $Property(Tag) $SymbolUse(Tag) qualifier;
+
+locatorSpecifier: TAssign $Property(Locator) $Value string;
+
+elementBody: emptyElementBody | childElementsBody;
+
+emptyElementBody: TSemicolon;
+
+$Body
+childElementsBody: TOpenBrace element* TCloseBrace;
+
+$Name
+qualifiedName: qualifier;
+
+$Name
+name: identifier;
+
+$Qualifier
+qualifier: identifier (TDot identifier)*;
+
+$Identifier
+identifier: LIdentifier;
+
+string: LRegularString | LDoubleQuoteVerbatimString | LSingleQuoteVerbatimString;

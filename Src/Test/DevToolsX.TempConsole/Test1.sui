@@ -1,0 +1,13 @@
+﻿namespace GoogleTest
+{
+	tag TextField: TextField;
+	tag Button: Button;
+
+	page GoogleMain
+	{
+		element SearchField: TextField = "name:q";
+		element Search: Button = "xpath:(//input[@class='lsb'])[1]";
+	}
+
+	page GoogleSearchResults;
+}

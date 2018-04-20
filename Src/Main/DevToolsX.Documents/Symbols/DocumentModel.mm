@@ -1,6 +1,6 @@
 ﻿namespace DevToolsX.Documents.Symbols
 {
-	metamodel DocumentModel(Uri="http://devtoolsx.documents.documentmodel/1.0"); 
+	metamodel DocumentModel(Uri="http://DevToolsX/Documents/DocumentModel/1.0"); 
 
 	extern struct System.Drawing.Color Color;
 
