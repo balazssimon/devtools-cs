@@ -108,18 +108,6 @@ public partial class SeleniumUIParserBaseListener : ISeleniumUIParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTypeSpecifier([NotNull] SeleniumUIParser.TypeSpecifierContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="SeleniumUIParser.page"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPage([NotNull] SeleniumUIParser.PageContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="SeleniumUIParser.page"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPage([NotNull] SeleniumUIParser.PageContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="SeleniumUIParser.element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -132,29 +120,29 @@ public partial class SeleniumUIParserBaseListener : ISeleniumUIParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitElement([NotNull] SeleniumUIParser.ElementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="SeleniumUIParser.tagSpecifier"/>.
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.elementOrPage"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTagSpecifier([NotNull] SeleniumUIParser.TagSpecifierContext context) { }
+	public virtual void EnterElementOrPage([NotNull] SeleniumUIParser.ElementOrPageContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="SeleniumUIParser.tagSpecifier"/>.
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.elementOrPage"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTagSpecifier([NotNull] SeleniumUIParser.TagSpecifierContext context) { }
+	public virtual void ExitElementOrPage([NotNull] SeleniumUIParser.ElementOrPageContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.baseElement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context) { }
+	public virtual void EnterBaseElement([NotNull] SeleniumUIParser.BaseElementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.baseElement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context) { }
+	public virtual void ExitBaseElement([NotNull] SeleniumUIParser.BaseElementContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="SeleniumUIParser.elementBody"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -191,6 +179,66 @@ public partial class SeleniumUIParserBaseListener : ISeleniumUIParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitChildElementsBody([NotNull] SeleniumUIParser.ChildElementsBodyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.childElement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterChildElement([NotNull] SeleniumUIParser.ChildElementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.childElement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitChildElement([NotNull] SeleniumUIParser.ChildElementContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.elementTypeSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElementTypeSpecifier([NotNull] SeleniumUIParser.ElementTypeSpecifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.elementTypeSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElementTypeSpecifier([NotNull] SeleniumUIParser.ElementTypeSpecifierContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.htmlTagLocatorSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterHtmlTagLocatorSpecifier([NotNull] SeleniumUIParser.HtmlTagLocatorSpecifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.htmlTagLocatorSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitHtmlTagLocatorSpecifier([NotNull] SeleniumUIParser.HtmlTagLocatorSpecifierContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.htmlTagSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterHtmlTagSpecifier([NotNull] SeleniumUIParser.HtmlTagSpecifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.htmlTagSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitHtmlTagSpecifier([NotNull] SeleniumUIParser.HtmlTagSpecifierContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="SeleniumUIParser.qualifiedName"/>.
 	/// <para>The default implementation does nothing.</para>

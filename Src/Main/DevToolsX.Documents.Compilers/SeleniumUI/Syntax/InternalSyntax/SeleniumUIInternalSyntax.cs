@@ -953,9 +953,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	internal class DeclarationGreen : SeleniumUIGreenNode
 	{
 	    private TagGreen tag;
-	    private PageGreen page;
+	    private ElementGreen element;
 	
-	    public DeclarationGreen(SeleniumUISyntaxKind kind, TagGreen tag, PageGreen page)
+	    public DeclarationGreen(SeleniumUISyntaxKind kind, TagGreen tag, ElementGreen element)
 	        : base(kind, null, null)
 	    {
 			if (tag != null)
@@ -963,14 +963,14 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tag);
 				this.tag = tag;
 			}
-			if (page != null)
+			if (element != null)
 			{
-				this.AdjustFlagsAndWidth(page);
-				this.page = page;
+				this.AdjustFlagsAndWidth(element);
+				this.element = element;
 			}
 	    }
 	
-	    public DeclarationGreen(SeleniumUISyntaxKind kind, TagGreen tag, PageGreen page, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public DeclarationGreen(SeleniumUISyntaxKind kind, TagGreen tag, ElementGreen element, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (tag != null)
@@ -978,17 +978,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tag);
 				this.tag = tag;
 			}
-			if (page != null)
+			if (element != null)
 			{
-				this.AdjustFlagsAndWidth(page);
-				this.page = page;
+				this.AdjustFlagsAndWidth(element);
+				this.element = element;
 			}
 	    }
 	
 		public override int SlotCount { get { return 2; } }
 	
 	    public TagGreen Tag { get { return this.tag; } }
-	    public PageGreen Page { get { return this.page; } }
+	    public ElementGreen Element { get { return this.element; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
@@ -1000,19 +1000,19 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	        switch (index)
 	        {
 	            case 0: return this.tag;
-	            case 1: return this.page;
+	            case 1: return this.element;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new DeclarationGreen(this.Kind, this.tag, this.page, diagnostics, this.GetAnnotations());
+	        return new DeclarationGreen(this.Kind, this.tag, this.element, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new DeclarationGreen(this.Kind, this.tag, this.page, this.GetDiagnostics(), annotations);
+	        return new DeclarationGreen(this.Kind, this.tag, this.element, this.GetDiagnostics(), annotations);
 	    }
 	
 	    public DeclarationGreen Update(TagGreen tag)
@@ -1031,11 +1031,11 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	        return this;
 	    }
 	
-	    public DeclarationGreen Update(PageGreen page)
+	    public DeclarationGreen Update(ElementGreen element)
 	    {
-	        if (this.page != page)
+	        if (this.element != element)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Declaration(page);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Declaration(element);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -1051,11 +1051,12 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	internal class TagGreen : SeleniumUIGreenNode
 	{
 	    private InternalSyntaxToken kTag;
-	    private NameGreen name;
 	    private TypeSpecifierGreen typeSpecifier;
+	    private NameGreen name;
+	    private HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier;
 	    private InternalSyntaxToken tSemicolon;
 	
-	    public TagGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kTag, NameGreen name, TypeSpecifierGreen typeSpecifier, InternalSyntaxToken tSemicolon)
+	    public TagGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kTag, TypeSpecifierGreen typeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, InternalSyntaxToken tSemicolon)
 	        : base(kind, null, null)
 	    {
 			if (kTag != null)
@@ -1063,15 +1064,20 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(kTag);
 				this.kTag = kTag;
 			}
+			if (typeSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(typeSpecifier);
+				this.typeSpecifier = typeSpecifier;
+			}
 			if (name != null)
 			{
 				this.AdjustFlagsAndWidth(name);
 				this.name = name;
 			}
-			if (typeSpecifier != null)
+			if (htmlTagLocatorSpecifier != null)
 			{
-				this.AdjustFlagsAndWidth(typeSpecifier);
-				this.typeSpecifier = typeSpecifier;
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
 			}
 			if (tSemicolon != null)
 			{
@@ -1080,7 +1086,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public TagGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kTag, NameGreen name, TypeSpecifierGreen typeSpecifier, InternalSyntaxToken tSemicolon, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public TagGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kTag, TypeSpecifierGreen typeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, InternalSyntaxToken tSemicolon, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (kTag != null)
@@ -1088,15 +1094,20 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(kTag);
 				this.kTag = kTag;
 			}
+			if (typeSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(typeSpecifier);
+				this.typeSpecifier = typeSpecifier;
+			}
 			if (name != null)
 			{
 				this.AdjustFlagsAndWidth(name);
 				this.name = name;
 			}
-			if (typeSpecifier != null)
+			if (htmlTagLocatorSpecifier != null)
 			{
-				this.AdjustFlagsAndWidth(typeSpecifier);
-				this.typeSpecifier = typeSpecifier;
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
 			}
 			if (tSemicolon != null)
 			{
@@ -1105,11 +1116,12 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-		public override int SlotCount { get { return 4; } }
+		public override int SlotCount { get { return 5; } }
 	
 	    public InternalSyntaxToken KTag { get { return this.kTag; } }
-	    public NameGreen Name { get { return this.name; } }
 	    public TypeSpecifierGreen TypeSpecifier { get { return this.typeSpecifier; } }
+	    public NameGreen Name { get { return this.name; } }
+	    public HtmlTagLocatorSpecifierGreen HtmlTagLocatorSpecifier { get { return this.htmlTagLocatorSpecifier; } }
 	    public InternalSyntaxToken TSemicolon { get { return this.tSemicolon; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
@@ -1122,31 +1134,33 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	        switch (index)
 	        {
 	            case 0: return this.kTag;
-	            case 1: return this.name;
-	            case 2: return this.typeSpecifier;
-	            case 3: return this.tSemicolon;
+	            case 1: return this.typeSpecifier;
+	            case 2: return this.name;
+	            case 3: return this.htmlTagLocatorSpecifier;
+	            case 4: return this.tSemicolon;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TagGreen(this.Kind, this.kTag, this.name, this.typeSpecifier, this.tSemicolon, diagnostics, this.GetAnnotations());
+	        return new TagGreen(this.Kind, this.kTag, this.typeSpecifier, this.name, this.htmlTagLocatorSpecifier, this.tSemicolon, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TagGreen(this.Kind, this.kTag, this.name, this.typeSpecifier, this.tSemicolon, this.GetDiagnostics(), annotations);
+	        return new TagGreen(this.Kind, this.kTag, this.typeSpecifier, this.name, this.htmlTagLocatorSpecifier, this.tSemicolon, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TagGreen Update(InternalSyntaxToken kTag, NameGreen name, TypeSpecifierGreen typeSpecifier, InternalSyntaxToken tSemicolon)
+	    public TagGreen Update(InternalSyntaxToken kTag, TypeSpecifierGreen typeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, InternalSyntaxToken tSemicolon)
 	    {
 	        if (this.kTag != kTag ||
-				this.name != name ||
 				this.typeSpecifier != typeSpecifier ||
+				this.name != name ||
+				this.htmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
 				this.tSemicolon != tSemicolon)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Tag(kTag, name, typeSpecifier, tSemicolon);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Tag(kTag, typeSpecifier, name, htmlTagLocatorSpecifier, tSemicolon);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -1161,17 +1175,11 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 	internal class TypeSpecifierGreen : SeleniumUIGreenNode
 	{
-	    private InternalSyntaxToken tColon;
 	    private QualifierGreen qualifier;
 	
-	    public TypeSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier)
+	    public TypeSpecifierGreen(SeleniumUISyntaxKind kind, QualifierGreen qualifier)
 	        : base(kind, null, null)
 	    {
-			if (tColon != null)
-			{
-				this.AdjustFlagsAndWidth(tColon);
-				this.tColon = tColon;
-			}
 			if (qualifier != null)
 			{
 				this.AdjustFlagsAndWidth(qualifier);
@@ -1179,14 +1187,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public TypeSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public TypeSpecifierGreen(SeleniumUISyntaxKind kind, QualifierGreen qualifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
-			if (tColon != null)
-			{
-				this.AdjustFlagsAndWidth(tColon);
-				this.tColon = tColon;
-			}
 			if (qualifier != null)
 			{
 				this.AdjustFlagsAndWidth(qualifier);
@@ -1194,9 +1197,8 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-		public override int SlotCount { get { return 2; } }
+		public override int SlotCount { get { return 1; } }
 	
-	    public InternalSyntaxToken TColon { get { return this.tColon; } }
 	    public QualifierGreen Qualifier { get { return this.qualifier; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
@@ -1208,28 +1210,26 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	    {
 	        switch (index)
 	        {
-	            case 0: return this.tColon;
-	            case 1: return this.qualifier;
+	            case 0: return this.qualifier;
 	            default: return null;
 	        }
 	    }
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TypeSpecifierGreen(this.Kind, this.tColon, this.qualifier, diagnostics, this.GetAnnotations());
+	        return new TypeSpecifierGreen(this.Kind, this.qualifier, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TypeSpecifierGreen(this.Kind, this.tColon, this.qualifier, this.GetDiagnostics(), annotations);
+	        return new TypeSpecifierGreen(this.Kind, this.qualifier, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TypeSpecifierGreen Update(InternalSyntaxToken tColon, QualifierGreen qualifier)
+	    public TypeSpecifierGreen Update(QualifierGreen qualifier)
 	    {
-	        if (this.tColon != tColon ||
-				this.qualifier != qualifier)
+	        if (this.qualifier != qualifier)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.TypeSpecifier(tColon, qualifier);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.TypeSpecifier(qualifier);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -1242,133 +1242,36 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	    }
 	}
 	
-	internal class PageGreen : SeleniumUIGreenNode
-	{
-	    private InternalSyntaxToken kPage;
-	    private NameGreen name;
-	    private ElementBodyGreen elementBody;
-	
-	    public PageGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kPage, NameGreen name, ElementBodyGreen elementBody)
-	        : base(kind, null, null)
-	    {
-			if (kPage != null)
-			{
-				this.AdjustFlagsAndWidth(kPage);
-				this.kPage = kPage;
-			}
-			if (name != null)
-			{
-				this.AdjustFlagsAndWidth(name);
-				this.name = name;
-			}
-			if (elementBody != null)
-			{
-				this.AdjustFlagsAndWidth(elementBody);
-				this.elementBody = elementBody;
-			}
-	    }
-	
-	    public PageGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kPage, NameGreen name, ElementBodyGreen elementBody, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
-	        : base(kind, diagnostics, annotations)
-	    {
-			if (kPage != null)
-			{
-				this.AdjustFlagsAndWidth(kPage);
-				this.kPage = kPage;
-			}
-			if (name != null)
-			{
-				this.AdjustFlagsAndWidth(name);
-				this.name = name;
-			}
-			if (elementBody != null)
-			{
-				this.AdjustFlagsAndWidth(elementBody);
-				this.elementBody = elementBody;
-			}
-	    }
-	
-		public override int SlotCount { get { return 3; } }
-	
-	    public InternalSyntaxToken KPage { get { return this.kPage; } }
-	    public NameGreen Name { get { return this.name; } }
-	    public ElementBodyGreen ElementBody { get { return this.elementBody; } }
-	
-	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
-	    {
-	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.PageSyntax(this, parent, position);
-	    }
-	
-	    public override GreenNode GetSlot(int index)
-	    {
-	        switch (index)
-	        {
-	            case 0: return this.kPage;
-	            case 1: return this.name;
-	            case 2: return this.elementBody;
-	            default: return null;
-	        }
-	    }
-	
-	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
-	    {
-	        return new PageGreen(this.Kind, this.kPage, this.name, this.elementBody, diagnostics, this.GetAnnotations());
-	    }
-	
-	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
-	    {
-	        return new PageGreen(this.Kind, this.kPage, this.name, this.elementBody, this.GetDiagnostics(), annotations);
-	    }
-	
-	    public PageGreen Update(InternalSyntaxToken kPage, NameGreen name, ElementBodyGreen elementBody)
-	    {
-	        if (this.kPage != kPage ||
-				this.name != name ||
-				this.elementBody != elementBody)
-	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Page(kPage, name, elementBody);
-	            var diags = this.GetDiagnostics();
-	            if (diags != null && diags.Length > 0)
-	               newNode = newNode.WithDiagnostics(diags);
-	            var annotations = this.GetAnnotations();
-	            if (annotations != null && annotations.Length > 0)
-	               newNode = newNode.WithAnnotations(annotations);
-				return (PageGreen)newNode;
-	        }
-	        return this;
-	    }
-	}
-	
 	internal class ElementGreen : SeleniumUIGreenNode
 	{
-	    private InternalSyntaxToken kElement;
+	    private ElementOrPageGreen elementOrPage;
 	    private NameGreen name;
-	    private TagSpecifierGreen tagSpecifier;
-	    private LocatorSpecifierGreen locatorSpecifier;
+	    private BaseElementGreen baseElement;
+	    private HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier;
 	    private ElementBodyGreen elementBody;
 	
-	    public ElementGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kElement, NameGreen name, TagSpecifierGreen tagSpecifier, LocatorSpecifierGreen locatorSpecifier, ElementBodyGreen elementBody)
+	    public ElementGreen(SeleniumUISyntaxKind kind, ElementOrPageGreen elementOrPage, NameGreen name, BaseElementGreen baseElement, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody)
 	        : base(kind, null, null)
 	    {
-			if (kElement != null)
+			if (elementOrPage != null)
 			{
-				this.AdjustFlagsAndWidth(kElement);
-				this.kElement = kElement;
+				this.AdjustFlagsAndWidth(elementOrPage);
+				this.elementOrPage = elementOrPage;
 			}
 			if (name != null)
 			{
 				this.AdjustFlagsAndWidth(name);
 				this.name = name;
 			}
-			if (tagSpecifier != null)
+			if (baseElement != null)
 			{
-				this.AdjustFlagsAndWidth(tagSpecifier);
-				this.tagSpecifier = tagSpecifier;
+				this.AdjustFlagsAndWidth(baseElement);
+				this.baseElement = baseElement;
 			}
-			if (locatorSpecifier != null)
+			if (htmlTagLocatorSpecifier != null)
 			{
-				this.AdjustFlagsAndWidth(locatorSpecifier);
-				this.locatorSpecifier = locatorSpecifier;
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
 			}
 			if (elementBody != null)
 			{
@@ -1377,28 +1280,28 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public ElementGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken kElement, NameGreen name, TagSpecifierGreen tagSpecifier, LocatorSpecifierGreen locatorSpecifier, ElementBodyGreen elementBody, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public ElementGreen(SeleniumUISyntaxKind kind, ElementOrPageGreen elementOrPage, NameGreen name, BaseElementGreen baseElement, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
-			if (kElement != null)
+			if (elementOrPage != null)
 			{
-				this.AdjustFlagsAndWidth(kElement);
-				this.kElement = kElement;
+				this.AdjustFlagsAndWidth(elementOrPage);
+				this.elementOrPage = elementOrPage;
 			}
 			if (name != null)
 			{
 				this.AdjustFlagsAndWidth(name);
 				this.name = name;
 			}
-			if (tagSpecifier != null)
+			if (baseElement != null)
 			{
-				this.AdjustFlagsAndWidth(tagSpecifier);
-				this.tagSpecifier = tagSpecifier;
+				this.AdjustFlagsAndWidth(baseElement);
+				this.baseElement = baseElement;
 			}
-			if (locatorSpecifier != null)
+			if (htmlTagLocatorSpecifier != null)
 			{
-				this.AdjustFlagsAndWidth(locatorSpecifier);
-				this.locatorSpecifier = locatorSpecifier;
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
 			}
 			if (elementBody != null)
 			{
@@ -1409,10 +1312,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 		public override int SlotCount { get { return 5; } }
 	
-	    public InternalSyntaxToken KElement { get { return this.kElement; } }
+	    public ElementOrPageGreen ElementOrPage { get { return this.elementOrPage; } }
 	    public NameGreen Name { get { return this.name; } }
-	    public TagSpecifierGreen TagSpecifier { get { return this.tagSpecifier; } }
-	    public LocatorSpecifierGreen LocatorSpecifier { get { return this.locatorSpecifier; } }
+	    public BaseElementGreen BaseElement { get { return this.baseElement; } }
+	    public HtmlTagLocatorSpecifierGreen HtmlTagLocatorSpecifier { get { return this.htmlTagLocatorSpecifier; } }
 	    public ElementBodyGreen ElementBody { get { return this.elementBody; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
@@ -1424,10 +1327,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	    {
 	        switch (index)
 	        {
-	            case 0: return this.kElement;
+	            case 0: return this.elementOrPage;
 	            case 1: return this.name;
-	            case 2: return this.tagSpecifier;
-	            case 3: return this.locatorSpecifier;
+	            case 2: return this.baseElement;
+	            case 3: return this.htmlTagLocatorSpecifier;
 	            case 4: return this.elementBody;
 	            default: return null;
 	        }
@@ -1435,23 +1338,23 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new ElementGreen(this.Kind, this.kElement, this.name, this.tagSpecifier, this.locatorSpecifier, this.elementBody, diagnostics, this.GetAnnotations());
+	        return new ElementGreen(this.Kind, this.elementOrPage, this.name, this.baseElement, this.htmlTagLocatorSpecifier, this.elementBody, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new ElementGreen(this.Kind, this.kElement, this.name, this.tagSpecifier, this.locatorSpecifier, this.elementBody, this.GetDiagnostics(), annotations);
+	        return new ElementGreen(this.Kind, this.elementOrPage, this.name, this.baseElement, this.htmlTagLocatorSpecifier, this.elementBody, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public ElementGreen Update(InternalSyntaxToken kElement, NameGreen name, TagSpecifierGreen tagSpecifier, LocatorSpecifierGreen locatorSpecifier, ElementBodyGreen elementBody)
+	    public ElementGreen Update(ElementOrPageGreen elementOrPage, NameGreen name, BaseElementGreen baseElement, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody)
 	    {
-	        if (this.kElement != kElement ||
+	        if (this.elementOrPage != elementOrPage ||
 				this.name != name ||
-				this.tagSpecifier != tagSpecifier ||
-				this.locatorSpecifier != locatorSpecifier ||
+				this.baseElement != baseElement ||
+				this.htmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
 				this.elementBody != elementBody)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Element(kElement, name, tagSpecifier, locatorSpecifier, elementBody);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.Element(elementOrPage, name, baseElement, htmlTagLocatorSpecifier, elementBody);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -1464,12 +1367,81 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	    }
 	}
 	
-	internal class TagSpecifierGreen : SeleniumUIGreenNode
+	internal class ElementOrPageGreen : SeleniumUIGreenNode
+	{
+	    private InternalSyntaxToken elementOrPage;
+	
+	    public ElementOrPageGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken elementOrPage)
+	        : base(kind, null, null)
+	    {
+			if (elementOrPage != null)
+			{
+				this.AdjustFlagsAndWidth(elementOrPage);
+				this.elementOrPage = elementOrPage;
+			}
+	    }
+	
+	    public ElementOrPageGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken elementOrPage, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (elementOrPage != null)
+			{
+				this.AdjustFlagsAndWidth(elementOrPage);
+				this.elementOrPage = elementOrPage;
+			}
+	    }
+	
+		public override int SlotCount { get { return 1; } }
+	
+	    public InternalSyntaxToken ElementOrPage { get { return this.elementOrPage; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.ElementOrPageSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.elementOrPage;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new ElementOrPageGreen(this.Kind, this.elementOrPage, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new ElementOrPageGreen(this.Kind, this.elementOrPage, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public ElementOrPageGreen Update(InternalSyntaxToken elementOrPage)
+	    {
+	        if (this.elementOrPage != elementOrPage)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.ElementOrPage(elementOrPage);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ElementOrPageGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class BaseElementGreen : SeleniumUIGreenNode
 	{
 	    private InternalSyntaxToken tColon;
 	    private QualifierGreen qualifier;
 	
-	    public TagSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier)
+	    public BaseElementGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier)
 	        : base(kind, null, null)
 	    {
 			if (tColon != null)
@@ -1484,7 +1456,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public TagSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public BaseElementGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tColon, QualifierGreen qualifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (tColon != null)
@@ -1506,7 +1478,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
 	    {
-	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.TagSpecifierSyntax(this, parent, position);
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.BaseElementSyntax(this, parent, position);
 	    }
 	
 	    public override GreenNode GetSlot(int index)
@@ -1521,110 +1493,27 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new TagSpecifierGreen(this.Kind, this.tColon, this.qualifier, diagnostics, this.GetAnnotations());
+	        return new BaseElementGreen(this.Kind, this.tColon, this.qualifier, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new TagSpecifierGreen(this.Kind, this.tColon, this.qualifier, this.GetDiagnostics(), annotations);
+	        return new BaseElementGreen(this.Kind, this.tColon, this.qualifier, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public TagSpecifierGreen Update(InternalSyntaxToken tColon, QualifierGreen qualifier)
+	    public BaseElementGreen Update(InternalSyntaxToken tColon, QualifierGreen qualifier)
 	    {
 	        if (this.tColon != tColon ||
 				this.qualifier != qualifier)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.TagSpecifier(tColon, qualifier);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.BaseElement(tColon, qualifier);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
-				return (TagSpecifierGreen)newNode;
-	        }
-	        return this;
-	    }
-	}
-	
-	internal class LocatorSpecifierGreen : SeleniumUIGreenNode
-	{
-	    private InternalSyntaxToken tAssign;
-	    private StringGreen _string;
-	
-	    public LocatorSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tAssign, StringGreen _string)
-	        : base(kind, null, null)
-	    {
-			if (tAssign != null)
-			{
-				this.AdjustFlagsAndWidth(tAssign);
-				this.tAssign = tAssign;
-			}
-			if (_string != null)
-			{
-				this.AdjustFlagsAndWidth(_string);
-				this._string = _string;
-			}
-	    }
-	
-	    public LocatorSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tAssign, StringGreen _string, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
-	        : base(kind, diagnostics, annotations)
-	    {
-			if (tAssign != null)
-			{
-				this.AdjustFlagsAndWidth(tAssign);
-				this.tAssign = tAssign;
-			}
-			if (_string != null)
-			{
-				this.AdjustFlagsAndWidth(_string);
-				this._string = _string;
-			}
-	    }
-	
-		public override int SlotCount { get { return 2; } }
-	
-	    public InternalSyntaxToken TAssign { get { return this.tAssign; } }
-	    public StringGreen String { get { return this._string; } }
-	
-	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
-	    {
-	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.LocatorSpecifierSyntax(this, parent, position);
-	    }
-	
-	    public override GreenNode GetSlot(int index)
-	    {
-	        switch (index)
-	        {
-	            case 0: return this.tAssign;
-	            case 1: return this._string;
-	            default: return null;
-	        }
-	    }
-	
-	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
-	    {
-	        return new LocatorSpecifierGreen(this.Kind, this.tAssign, this._string, diagnostics, this.GetAnnotations());
-	    }
-	
-	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
-	    {
-	        return new LocatorSpecifierGreen(this.Kind, this.tAssign, this._string, this.GetDiagnostics(), annotations);
-	    }
-	
-	    public LocatorSpecifierGreen Update(InternalSyntaxToken tAssign, StringGreen _string)
-	    {
-	        if (this.tAssign != tAssign ||
-				this._string != _string)
-	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.LocatorSpecifier(tAssign, _string);
-	            var diags = this.GetDiagnostics();
-	            if (diags != null && diags.Length > 0)
-	               newNode = newNode.WithDiagnostics(diags);
-	            var annotations = this.GetAnnotations();
-	            if (annotations != null && annotations.Length > 0)
-	               newNode = newNode.WithAnnotations(annotations);
-				return (LocatorSpecifierGreen)newNode;
+				return (BaseElementGreen)newNode;
 	        }
 	        return this;
 	    }
@@ -1800,10 +1689,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	internal class ChildElementsBodyGreen : SeleniumUIGreenNode
 	{
 	    private InternalSyntaxToken tOpenBrace;
-	    private InternalSyntaxNodeList element;
+	    private InternalSyntaxNodeList childElement;
 	    private InternalSyntaxToken tCloseBrace;
 	
-	    public ChildElementsBodyGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList element, InternalSyntaxToken tCloseBrace)
+	    public ChildElementsBodyGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList childElement, InternalSyntaxToken tCloseBrace)
 	        : base(kind, null, null)
 	    {
 			if (tOpenBrace != null)
@@ -1811,10 +1700,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tOpenBrace);
 				this.tOpenBrace = tOpenBrace;
 			}
-			if (element != null)
+			if (childElement != null)
 			{
-				this.AdjustFlagsAndWidth(element);
-				this.element = element;
+				this.AdjustFlagsAndWidth(childElement);
+				this.childElement = childElement;
 			}
 			if (tCloseBrace != null)
 			{
@@ -1823,7 +1712,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	    }
 	
-	    public ChildElementsBodyGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList element, InternalSyntaxToken tCloseBrace, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	    public ChildElementsBodyGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList childElement, InternalSyntaxToken tCloseBrace, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
 	        : base(kind, diagnostics, annotations)
 	    {
 			if (tOpenBrace != null)
@@ -1831,10 +1720,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				this.AdjustFlagsAndWidth(tOpenBrace);
 				this.tOpenBrace = tOpenBrace;
 			}
-			if (element != null)
+			if (childElement != null)
 			{
-				this.AdjustFlagsAndWidth(element);
-				this.element = element;
+				this.AdjustFlagsAndWidth(childElement);
+				this.childElement = childElement;
 			}
 			if (tCloseBrace != null)
 			{
@@ -1846,7 +1735,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 		public override int SlotCount { get { return 3; } }
 	
 	    public InternalSyntaxToken TOpenBrace { get { return this.tOpenBrace; } }
-	    public InternalSyntaxNodeList Element { get { return this.element; } }
+	    public InternalSyntaxNodeList ChildElement { get { return this.childElement; } }
 	    public InternalSyntaxToken TCloseBrace { get { return this.tCloseBrace; } }
 	
 	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
@@ -1859,7 +1748,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	        switch (index)
 	        {
 	            case 0: return this.tOpenBrace;
-	            case 1: return this.element;
+	            case 1: return this.childElement;
 	            case 2: return this.tCloseBrace;
 	            default: return null;
 	        }
@@ -1867,21 +1756,21 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	
 	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
 	    {
-	        return new ChildElementsBodyGreen(this.Kind, this.tOpenBrace, this.element, this.tCloseBrace, diagnostics, this.GetAnnotations());
+	        return new ChildElementsBodyGreen(this.Kind, this.tOpenBrace, this.childElement, this.tCloseBrace, diagnostics, this.GetAnnotations());
 	    }
 	
 	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
 	    {
-	        return new ChildElementsBodyGreen(this.Kind, this.tOpenBrace, this.element, this.tCloseBrace, this.GetDiagnostics(), annotations);
+	        return new ChildElementsBodyGreen(this.Kind, this.tOpenBrace, this.childElement, this.tCloseBrace, this.GetDiagnostics(), annotations);
 	    }
 	
-	    public ChildElementsBodyGreen Update(InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList element, InternalSyntaxToken tCloseBrace)
+	    public ChildElementsBodyGreen Update(InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList childElement, InternalSyntaxToken tCloseBrace)
 	    {
 	        if (this.tOpenBrace != tOpenBrace ||
-				this.element != element ||
+				this.childElement != childElement ||
 				this.tCloseBrace != tCloseBrace)
 	        {
-	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElementsBody(tOpenBrace, element, tCloseBrace);
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElementsBody(tOpenBrace, childElement, tCloseBrace);
 	            var diags = this.GetDiagnostics();
 	            if (diags != null && diags.Length > 0)
 	               newNode = newNode.WithDiagnostics(diags);
@@ -1889,6 +1778,449 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
 				return (ChildElementsBodyGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class ChildElementGreen : SeleniumUIGreenNode
+	{
+	    private ElementTypeSpecifierGreen elementTypeSpecifier;
+	    private NameGreen name;
+	    private HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier;
+	    private ElementBodyGreen elementBody;
+	
+	    public ChildElementGreen(SeleniumUISyntaxKind kind, ElementTypeSpecifierGreen elementTypeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody)
+	        : base(kind, null, null)
+	    {
+			if (elementTypeSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(elementTypeSpecifier);
+				this.elementTypeSpecifier = elementTypeSpecifier;
+			}
+			if (name != null)
+			{
+				this.AdjustFlagsAndWidth(name);
+				this.name = name;
+			}
+			if (htmlTagLocatorSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
+			}
+			if (elementBody != null)
+			{
+				this.AdjustFlagsAndWidth(elementBody);
+				this.elementBody = elementBody;
+			}
+	    }
+	
+	    public ChildElementGreen(SeleniumUISyntaxKind kind, ElementTypeSpecifierGreen elementTypeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (elementTypeSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(elementTypeSpecifier);
+				this.elementTypeSpecifier = elementTypeSpecifier;
+			}
+			if (name != null)
+			{
+				this.AdjustFlagsAndWidth(name);
+				this.name = name;
+			}
+			if (htmlTagLocatorSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(htmlTagLocatorSpecifier);
+				this.htmlTagLocatorSpecifier = htmlTagLocatorSpecifier;
+			}
+			if (elementBody != null)
+			{
+				this.AdjustFlagsAndWidth(elementBody);
+				this.elementBody = elementBody;
+			}
+	    }
+	
+		public override int SlotCount { get { return 4; } }
+	
+	    public ElementTypeSpecifierGreen ElementTypeSpecifier { get { return this.elementTypeSpecifier; } }
+	    public NameGreen Name { get { return this.name; } }
+	    public HtmlTagLocatorSpecifierGreen HtmlTagLocatorSpecifier { get { return this.htmlTagLocatorSpecifier; } }
+	    public ElementBodyGreen ElementBody { get { return this.elementBody; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.ChildElementSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.elementTypeSpecifier;
+	            case 1: return this.name;
+	            case 2: return this.htmlTagLocatorSpecifier;
+	            case 3: return this.elementBody;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new ChildElementGreen(this.Kind, this.elementTypeSpecifier, this.name, this.htmlTagLocatorSpecifier, this.elementBody, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new ChildElementGreen(this.Kind, this.elementTypeSpecifier, this.name, this.htmlTagLocatorSpecifier, this.elementBody, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public ChildElementGreen Update(ElementTypeSpecifierGreen elementTypeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody)
+	    {
+	        if (this.elementTypeSpecifier != elementTypeSpecifier ||
+				this.name != name ||
+				this.htmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
+				this.elementBody != elementBody)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElement(elementTypeSpecifier, name, htmlTagLocatorSpecifier, elementBody);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ChildElementGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class ElementTypeSpecifierGreen : SeleniumUIGreenNode
+	{
+	    private QualifierGreen qualifier;
+	
+	    public ElementTypeSpecifierGreen(SeleniumUISyntaxKind kind, QualifierGreen qualifier)
+	        : base(kind, null, null)
+	    {
+			if (qualifier != null)
+			{
+				this.AdjustFlagsAndWidth(qualifier);
+				this.qualifier = qualifier;
+			}
+	    }
+	
+	    public ElementTypeSpecifierGreen(SeleniumUISyntaxKind kind, QualifierGreen qualifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (qualifier != null)
+			{
+				this.AdjustFlagsAndWidth(qualifier);
+				this.qualifier = qualifier;
+			}
+	    }
+	
+		public override int SlotCount { get { return 1; } }
+	
+	    public QualifierGreen Qualifier { get { return this.qualifier; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.ElementTypeSpecifierSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.qualifier;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new ElementTypeSpecifierGreen(this.Kind, this.qualifier, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new ElementTypeSpecifierGreen(this.Kind, this.qualifier, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public ElementTypeSpecifierGreen Update(QualifierGreen qualifier)
+	    {
+	        if (this.qualifier != qualifier)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.ElementTypeSpecifier(qualifier);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ElementTypeSpecifierGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class HtmlTagLocatorSpecifierGreen : SeleniumUIGreenNode
+	{
+	    private InternalSyntaxToken tAssign;
+	    private HtmlTagSpecifierGreen htmlTagSpecifier;
+	    private LocatorSpecifierGreen locatorSpecifier;
+	
+	    public HtmlTagLocatorSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tAssign, HtmlTagSpecifierGreen htmlTagSpecifier, LocatorSpecifierGreen locatorSpecifier)
+	        : base(kind, null, null)
+	    {
+			if (tAssign != null)
+			{
+				this.AdjustFlagsAndWidth(tAssign);
+				this.tAssign = tAssign;
+			}
+			if (htmlTagSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(htmlTagSpecifier);
+				this.htmlTagSpecifier = htmlTagSpecifier;
+			}
+			if (locatorSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(locatorSpecifier);
+				this.locatorSpecifier = locatorSpecifier;
+			}
+	    }
+	
+	    public HtmlTagLocatorSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tAssign, HtmlTagSpecifierGreen htmlTagSpecifier, LocatorSpecifierGreen locatorSpecifier, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (tAssign != null)
+			{
+				this.AdjustFlagsAndWidth(tAssign);
+				this.tAssign = tAssign;
+			}
+			if (htmlTagSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(htmlTagSpecifier);
+				this.htmlTagSpecifier = htmlTagSpecifier;
+			}
+			if (locatorSpecifier != null)
+			{
+				this.AdjustFlagsAndWidth(locatorSpecifier);
+				this.locatorSpecifier = locatorSpecifier;
+			}
+	    }
+	
+		public override int SlotCount { get { return 3; } }
+	
+	    public InternalSyntaxToken TAssign { get { return this.tAssign; } }
+	    public HtmlTagSpecifierGreen HtmlTagSpecifier { get { return this.htmlTagSpecifier; } }
+	    public LocatorSpecifierGreen LocatorSpecifier { get { return this.locatorSpecifier; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.HtmlTagLocatorSpecifierSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.tAssign;
+	            case 1: return this.htmlTagSpecifier;
+	            case 2: return this.locatorSpecifier;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new HtmlTagLocatorSpecifierGreen(this.Kind, this.tAssign, this.htmlTagSpecifier, this.locatorSpecifier, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new HtmlTagLocatorSpecifierGreen(this.Kind, this.tAssign, this.htmlTagSpecifier, this.locatorSpecifier, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public HtmlTagLocatorSpecifierGreen Update(InternalSyntaxToken tAssign, HtmlTagSpecifierGreen htmlTagSpecifier, LocatorSpecifierGreen locatorSpecifier)
+	    {
+	        if (this.tAssign != tAssign ||
+				this.htmlTagSpecifier != htmlTagSpecifier ||
+				this.locatorSpecifier != locatorSpecifier)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.HtmlTagLocatorSpecifier(tAssign, htmlTagSpecifier, locatorSpecifier);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (HtmlTagLocatorSpecifierGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class HtmlTagSpecifierGreen : SeleniumUIGreenNode
+	{
+	    private InternalSyntaxToken tOpenBracket;
+	    private StringGreen _string;
+	    private InternalSyntaxToken tCloseBracket;
+	
+	    public HtmlTagSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBracket, StringGreen _string, InternalSyntaxToken tCloseBracket)
+	        : base(kind, null, null)
+	    {
+			if (tOpenBracket != null)
+			{
+				this.AdjustFlagsAndWidth(tOpenBracket);
+				this.tOpenBracket = tOpenBracket;
+			}
+			if (_string != null)
+			{
+				this.AdjustFlagsAndWidth(_string);
+				this._string = _string;
+			}
+			if (tCloseBracket != null)
+			{
+				this.AdjustFlagsAndWidth(tCloseBracket);
+				this.tCloseBracket = tCloseBracket;
+			}
+	    }
+	
+	    public HtmlTagSpecifierGreen(SeleniumUISyntaxKind kind, InternalSyntaxToken tOpenBracket, StringGreen _string, InternalSyntaxToken tCloseBracket, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (tOpenBracket != null)
+			{
+				this.AdjustFlagsAndWidth(tOpenBracket);
+				this.tOpenBracket = tOpenBracket;
+			}
+			if (_string != null)
+			{
+				this.AdjustFlagsAndWidth(_string);
+				this._string = _string;
+			}
+			if (tCloseBracket != null)
+			{
+				this.AdjustFlagsAndWidth(tCloseBracket);
+				this.tCloseBracket = tCloseBracket;
+			}
+	    }
+	
+		public override int SlotCount { get { return 3; } }
+	
+	    public InternalSyntaxToken TOpenBracket { get { return this.tOpenBracket; } }
+	    public StringGreen String { get { return this._string; } }
+	    public InternalSyntaxToken TCloseBracket { get { return this.tCloseBracket; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.HtmlTagSpecifierSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this.tOpenBracket;
+	            case 1: return this._string;
+	            case 2: return this.tCloseBracket;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new HtmlTagSpecifierGreen(this.Kind, this.tOpenBracket, this._string, this.tCloseBracket, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new HtmlTagSpecifierGreen(this.Kind, this.tOpenBracket, this._string, this.tCloseBracket, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public HtmlTagSpecifierGreen Update(InternalSyntaxToken tOpenBracket, StringGreen _string, InternalSyntaxToken tCloseBracket)
+	    {
+	        if (this.tOpenBracket != tOpenBracket ||
+				this._string != _string ||
+				this.tCloseBracket != tCloseBracket)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.HtmlTagSpecifier(tOpenBracket, _string, tCloseBracket);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (HtmlTagSpecifierGreen)newNode;
+	        }
+	        return this;
+	    }
+	}
+	
+	internal class LocatorSpecifierGreen : SeleniumUIGreenNode
+	{
+	    private StringGreen _string;
+	
+	    public LocatorSpecifierGreen(SeleniumUISyntaxKind kind, StringGreen _string)
+	        : base(kind, null, null)
+	    {
+			if (_string != null)
+			{
+				this.AdjustFlagsAndWidth(_string);
+				this._string = _string;
+			}
+	    }
+	
+	    public LocatorSpecifierGreen(SeleniumUISyntaxKind kind, StringGreen _string, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+	        : base(kind, diagnostics, annotations)
+	    {
+			if (_string != null)
+			{
+				this.AdjustFlagsAndWidth(_string);
+				this._string = _string;
+			}
+	    }
+	
+		public override int SlotCount { get { return 1; } }
+	
+	    public StringGreen String { get { return this._string; } }
+	
+	    public override SyntaxNode CreateRed(SyntaxNode parent, int position)
+	    {
+	        return new global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.LocatorSpecifierSyntax(this, parent, position);
+	    }
+	
+	    public override GreenNode GetSlot(int index)
+	    {
+	        switch (index)
+	        {
+	            case 0: return this._string;
+	            default: return null;
+	        }
+	    }
+	
+	    public override GreenNode WithDiagnostics(DiagnosticInfo[] diagnostics)
+	    {
+	        return new LocatorSpecifierGreen(this.Kind, this._string, diagnostics, this.GetAnnotations());
+	    }
+	
+	    public override GreenNode WithAnnotations(SyntaxAnnotation[] annotations)
+	    {
+	        return new LocatorSpecifierGreen(this.Kind, this._string, this.GetDiagnostics(), annotations);
+	    }
+	
+	    public LocatorSpecifierGreen Update(StringGreen _string)
+	    {
+	        if (this._string != _string)
+	        {
+	            GreenNode newNode = SeleniumUILanguage.Instance.InternalSyntaxFactory.LocatorSpecifier(_string);
+	            var diags = this.GetDiagnostics();
+	            if (diags != null && diags.Length > 0)
+	               newNode = newNode.WithDiagnostics(diags);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (LocatorSpecifierGreen)newNode;
 	        }
 	        return this;
 	    }
@@ -2544,18 +2876,18 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public DeclarationGreen Declaration(PageGreen page, bool errorNode = false)
+		public DeclarationGreen Declaration(ElementGreen element, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
-		        if (page == null) throw new ArgumentNullException(nameof(page));
+		        if (element == null) throw new ArgumentNullException(nameof(element));
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.Declaration, page, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.Declaration, element, out hash);
 			if (cached != null) return (DeclarationGreen)cached;
-			var result = new DeclarationGreen(SeleniumUISyntaxKind.Declaration, null, page);
+			var result = new DeclarationGreen(SeleniumUISyntaxKind.Declaration, null, element);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -2563,35 +2895,34 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public TagGreen Tag(InternalSyntaxToken kTag, NameGreen name, TypeSpecifierGreen typeSpecifier, InternalSyntaxToken tSemicolon, bool errorNode = false)
+		public TagGreen Tag(InternalSyntaxToken kTag, TypeSpecifierGreen typeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, InternalSyntaxToken tSemicolon, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
 				if (kTag == null) throw new ArgumentNullException(nameof(kTag));
 				if (kTag.RawKind != (int)SeleniumUISyntaxKind.KTag) throw new ArgumentException(nameof(kTag));
+				if (typeSpecifier == null) throw new ArgumentNullException(nameof(typeSpecifier));
 				if (name == null) throw new ArgumentNullException(nameof(name));
 				if (tSemicolon == null) throw new ArgumentNullException(nameof(tSemicolon));
 				if (tSemicolon.RawKind != (int)SeleniumUISyntaxKind.TSemicolon) throw new ArgumentException(nameof(tSemicolon));
 			}
 	#endif
-	        return new TagGreen(SeleniumUISyntaxKind.Tag, kTag, name, typeSpecifier, tSemicolon);
+	        return new TagGreen(SeleniumUISyntaxKind.Tag, kTag, typeSpecifier, name, htmlTagLocatorSpecifier, tSemicolon);
 	    }
 	
-		public TypeSpecifierGreen TypeSpecifier(InternalSyntaxToken tColon, QualifierGreen qualifier, bool errorNode = false)
+		public TypeSpecifierGreen TypeSpecifier(QualifierGreen qualifier, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
-				if (tColon == null) throw new ArgumentNullException(nameof(tColon));
-				if (tColon.RawKind != (int)SeleniumUISyntaxKind.TColon) throw new ArgumentException(nameof(tColon));
 				if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.TypeSpecifier, tColon, qualifier, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.TypeSpecifier, qualifier, out hash);
 			if (cached != null) return (TypeSpecifierGreen)cached;
-			var result = new TypeSpecifierGreen(SeleniumUISyntaxKind.TypeSpecifier, tColon, qualifier);
+			var result = new TypeSpecifierGreen(SeleniumUISyntaxKind.TypeSpecifier, qualifier);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -2599,21 +2930,31 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public PageGreen Page(InternalSyntaxToken kPage, NameGreen name, ElementBodyGreen elementBody, bool errorNode = false)
+		public ElementGreen Element(ElementOrPageGreen elementOrPage, NameGreen name, BaseElementGreen baseElement, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
 			{
-				if (kPage == null) throw new ArgumentNullException(nameof(kPage));
-				if (kPage.RawKind != (int)SeleniumUISyntaxKind.KPage) throw new ArgumentException(nameof(kPage));
+				if (elementOrPage == null) throw new ArgumentNullException(nameof(elementOrPage));
 				if (name == null) throw new ArgumentNullException(nameof(name));
 				if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
+			}
+	#endif
+	        return new ElementGreen(SeleniumUISyntaxKind.Element, elementOrPage, name, baseElement, htmlTagLocatorSpecifier, elementBody);
+	    }
+	
+		public ElementOrPageGreen ElementOrPage(InternalSyntaxToken elementOrPage, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (elementOrPage == null) throw new ArgumentNullException(nameof(elementOrPage));
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.Page, kPage, name, elementBody, out hash);
-			if (cached != null) return (PageGreen)cached;
-			var result = new PageGreen(SeleniumUISyntaxKind.Page, kPage, name, elementBody);
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.ElementOrPage, elementOrPage, out hash);
+			if (cached != null) return (ElementOrPageGreen)cached;
+			var result = new ElementOrPageGreen(SeleniumUISyntaxKind.ElementOrPage, elementOrPage);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -2621,22 +2962,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public ElementGreen Element(InternalSyntaxToken kElement, NameGreen name, TagSpecifierGreen tagSpecifier, LocatorSpecifierGreen locatorSpecifier, ElementBodyGreen elementBody, bool errorNode = false)
-	    {
-	#if DEBUG
-			if (!errorNode)
-			{
-				if (kElement == null) throw new ArgumentNullException(nameof(kElement));
-				if (kElement.RawKind != (int)SeleniumUISyntaxKind.KElement) throw new ArgumentException(nameof(kElement));
-				if (name == null) throw new ArgumentNullException(nameof(name));
-				if (locatorSpecifier == null) throw new ArgumentNullException(nameof(locatorSpecifier));
-				if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
-			}
-	#endif
-	        return new ElementGreen(SeleniumUISyntaxKind.Element, kElement, name, tagSpecifier, locatorSpecifier, elementBody);
-	    }
-	
-		public TagSpecifierGreen TagSpecifier(InternalSyntaxToken tColon, QualifierGreen qualifier, bool errorNode = false)
+		public BaseElementGreen BaseElement(InternalSyntaxToken tColon, QualifierGreen qualifier, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
@@ -2647,30 +2973,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.TagSpecifier, tColon, qualifier, out hash);
-			if (cached != null) return (TagSpecifierGreen)cached;
-			var result = new TagSpecifierGreen(SeleniumUISyntaxKind.TagSpecifier, tColon, qualifier);
-			if (hash >= 0)
-			{
-				SyntaxNodeCache.AddNode(result, hash);
-			}
-			return result;
-	    }
-	
-		public LocatorSpecifierGreen LocatorSpecifier(InternalSyntaxToken tAssign, StringGreen _string, bool errorNode = false)
-	    {
-	#if DEBUG
-			if (!errorNode)
-			{
-				if (tAssign == null) throw new ArgumentNullException(nameof(tAssign));
-				if (tAssign.RawKind != (int)SeleniumUISyntaxKind.TAssign) throw new ArgumentException(nameof(tAssign));
-				if (_string == null) throw new ArgumentNullException(nameof(_string));
-			}
-	#endif
-			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.LocatorSpecifier, tAssign, _string, out hash);
-			if (cached != null) return (LocatorSpecifierGreen)cached;
-			var result = new LocatorSpecifierGreen(SeleniumUISyntaxKind.LocatorSpecifier, tAssign, _string);
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.BaseElement, tColon, qualifier, out hash);
+			if (cached != null) return (BaseElementGreen)cached;
+			var result = new BaseElementGreen(SeleniumUISyntaxKind.BaseElement, tColon, qualifier);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -2736,7 +3041,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			return result;
 	    }
 	
-		public ChildElementsBodyGreen ChildElementsBody(InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList element, InternalSyntaxToken tCloseBrace, bool errorNode = false)
+		public ChildElementsBodyGreen ChildElementsBody(InternalSyntaxToken tOpenBrace, InternalSyntaxNodeList childElement, InternalSyntaxToken tCloseBrace, bool errorNode = false)
 	    {
 	#if DEBUG
 			if (!errorNode)
@@ -2748,9 +3053,102 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			}
 	#endif
 			int hash;
-			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.ChildElementsBody, tOpenBrace, element, tCloseBrace, out hash);
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.ChildElementsBody, tOpenBrace, childElement, tCloseBrace, out hash);
 			if (cached != null) return (ChildElementsBodyGreen)cached;
-			var result = new ChildElementsBodyGreen(SeleniumUISyntaxKind.ChildElementsBody, tOpenBrace, element, tCloseBrace);
+			var result = new ChildElementsBodyGreen(SeleniumUISyntaxKind.ChildElementsBody, tOpenBrace, childElement, tCloseBrace);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public ChildElementGreen ChildElement(ElementTypeSpecifierGreen elementTypeSpecifier, NameGreen name, HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier, ElementBodyGreen elementBody, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (name == null) throw new ArgumentNullException(nameof(name));
+				if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
+			}
+	#endif
+	        return new ChildElementGreen(SeleniumUISyntaxKind.ChildElement, elementTypeSpecifier, name, htmlTagLocatorSpecifier, elementBody);
+	    }
+	
+		public ElementTypeSpecifierGreen ElementTypeSpecifier(QualifierGreen qualifier, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.ElementTypeSpecifier, qualifier, out hash);
+			if (cached != null) return (ElementTypeSpecifierGreen)cached;
+			var result = new ElementTypeSpecifierGreen(SeleniumUISyntaxKind.ElementTypeSpecifier, qualifier);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public HtmlTagLocatorSpecifierGreen HtmlTagLocatorSpecifier(InternalSyntaxToken tAssign, HtmlTagSpecifierGreen htmlTagSpecifier, LocatorSpecifierGreen locatorSpecifier, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (tAssign == null) throw new ArgumentNullException(nameof(tAssign));
+				if (tAssign.RawKind != (int)SeleniumUISyntaxKind.TAssign) throw new ArgumentException(nameof(tAssign));
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.HtmlTagLocatorSpecifier, tAssign, htmlTagSpecifier, locatorSpecifier, out hash);
+			if (cached != null) return (HtmlTagLocatorSpecifierGreen)cached;
+			var result = new HtmlTagLocatorSpecifierGreen(SeleniumUISyntaxKind.HtmlTagLocatorSpecifier, tAssign, htmlTagSpecifier, locatorSpecifier);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public HtmlTagSpecifierGreen HtmlTagSpecifier(InternalSyntaxToken tOpenBracket, StringGreen _string, InternalSyntaxToken tCloseBracket, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (tOpenBracket == null) throw new ArgumentNullException(nameof(tOpenBracket));
+				if (tOpenBracket.RawKind != (int)SeleniumUISyntaxKind.TOpenBracket) throw new ArgumentException(nameof(tOpenBracket));
+				if (_string == null) throw new ArgumentNullException(nameof(_string));
+				if (tCloseBracket == null) throw new ArgumentNullException(nameof(tCloseBracket));
+				if (tCloseBracket.RawKind != (int)SeleniumUISyntaxKind.TCloseBracket) throw new ArgumentException(nameof(tCloseBracket));
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.HtmlTagSpecifier, tOpenBracket, _string, tCloseBracket, out hash);
+			if (cached != null) return (HtmlTagSpecifierGreen)cached;
+			var result = new HtmlTagSpecifierGreen(SeleniumUISyntaxKind.HtmlTagSpecifier, tOpenBracket, _string, tCloseBracket);
+			if (hash >= 0)
+			{
+				SyntaxNodeCache.AddNode(result, hash);
+			}
+			return result;
+	    }
+	
+		public LocatorSpecifierGreen LocatorSpecifier(StringGreen _string, bool errorNode = false)
+	    {
+	#if DEBUG
+			if (!errorNode)
+			{
+				if (_string == null) throw new ArgumentNullException(nameof(_string));
+			}
+	#endif
+			int hash;
+			var cached = SyntaxNodeCache.TryGetNode((int)SeleniumUISyntaxKind.LocatorSpecifier, _string, out hash);
+			if (cached != null) return (LocatorSpecifierGreen)cached;
+			var result = new LocatorSpecifierGreen(SeleniumUISyntaxKind.LocatorSpecifier, _string);
 			if (hash >= 0)
 			{
 				SyntaxNodeCache.AddNode(result, hash);
@@ -2862,13 +3260,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				typeof(DeclarationGreen),
 				typeof(TagGreen),
 				typeof(TypeSpecifierGreen),
-				typeof(PageGreen),
 				typeof(ElementGreen),
-				typeof(TagSpecifierGreen),
-				typeof(LocatorSpecifierGreen),
+				typeof(ElementOrPageGreen),
+				typeof(BaseElementGreen),
 				typeof(ElementBodyGreen),
 				typeof(EmptyElementBodyGreen),
 				typeof(ChildElementsBodyGreen),
+				typeof(ChildElementGreen),
+				typeof(ElementTypeSpecifierGreen),
+				typeof(HtmlTagLocatorSpecifierGreen),
+				typeof(HtmlTagSpecifierGreen),
+				typeof(LocatorSpecifierGreen),
 				typeof(QualifiedNameGreen),
 				typeof(NameGreen),
 				typeof(QualifierGreen),

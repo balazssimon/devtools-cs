@@ -14,22 +14,31 @@
 		containment list<Declaration> Declarations;
 	}
 
-	class Tag : Declaration
+	abstract class ElementType : Declaration
+	{
+		string DeclaredHtmlTag;
+		string DeclaredLocator;
+	}
+
+	class Tag : ElementType
 	{
 		string TypeName;
 	}
 
-	class Page : Element
-	{
-	}
-
 	[Scope]
-	class Element : Declaration
+	class Element : ElementType
 	{
-		string Locator;
-		Tag Tag;
+		[BaseScope]
+		Element Base;
+
 		Element Parent;
 		containment list<Element> Elements;
+
+		bool IsPage;
+
+		ElementType Tag;
+		derived string HtmlTag;
+		derived string Locator;
 	}
 
 	association Element.Parent with Element.Elements;

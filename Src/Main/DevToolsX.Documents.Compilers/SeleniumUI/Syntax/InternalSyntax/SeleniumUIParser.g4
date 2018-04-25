@@ -16,30 +16,43 @@ namespace : KNamespace qualifiedName namespaceBody;
 namespaceBody: TOpenBrace declaration* TCloseBrace;
 
                        
-declaration: tag | page;
+declaration: tag | element;
+
 
                
-tag: KTag name typeSpecifier? TSemicolon;
+tag: KTag typeSpecifier name htmlTagLocatorSpecifier? TSemicolon;
 
-typeSpecifier: TColon                            qualifier;
+typeSpecifier:                            qualifier;
 
-                
-page: KPage name elementBody;
 
                    
-                   
-element: KElement name tagSpecifier? locatorSpecifier elementBody;
+element: elementOrPage name baseElement? htmlTagLocatorSpecifier? elementBody;
 
-tagSpecifier: TColon                                qualifier;
+                 
+elementOrPage
+	:              KPage 
+	|               KElement
+	;
 
-locatorSpecifier: TAssign                           string;
+               
+baseElement: TColon                                        qualifier;
 
 elementBody: emptyElementBody | childElementsBody;
 
 emptyElementBody: TSemicolon;
 
      
-childElementsBody: TOpenBrace element* TCloseBrace;
+childElementsBody: TOpenBrace childElement* TCloseBrace;
+
+                   
+                   
+childElement: elementTypeSpecifier? name htmlTagLocatorSpecifier? elementBody;
+
+elementTypeSpecifier:                                         qualifier;
+
+htmlTagLocatorSpecifier: TAssign htmlTagSpecifier? locatorSpecifier?;
+htmlTagSpecifier: TOpenBracket                                   string TCloseBracket;
+locatorSpecifier:                                   string;
 
      
 qualifiedName: qualifier;

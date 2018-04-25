@@ -69,29 +69,23 @@ public interface ISeleniumUIParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypeSpecifier([NotNull] SeleniumUIParser.TypeSpecifierContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="SeleniumUIParser.page"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPage([NotNull] SeleniumUIParser.PageContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="SeleniumUIParser.element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitElement([NotNull] SeleniumUIParser.ElementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="SeleniumUIParser.tagSpecifier"/>.
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.elementOrPage"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTagSpecifier([NotNull] SeleniumUIParser.TagSpecifierContext context);
+	Result VisitElementOrPage([NotNull] SeleniumUIParser.ElementOrPageContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.baseElement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context);
+	Result VisitBaseElement([NotNull] SeleniumUIParser.BaseElementContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="SeleniumUIParser.elementBody"/>.
 	/// </summary>
@@ -110,6 +104,36 @@ public interface ISeleniumUIParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitChildElementsBody([NotNull] SeleniumUIParser.ChildElementsBodyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.childElement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitChildElement([NotNull] SeleniumUIParser.ChildElementContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.elementTypeSpecifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElementTypeSpecifier([NotNull] SeleniumUIParser.ElementTypeSpecifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.htmlTagLocatorSpecifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHtmlTagLocatorSpecifier([NotNull] SeleniumUIParser.HtmlTagLocatorSpecifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.htmlTagSpecifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHtmlTagSpecifier([NotNull] SeleniumUIParser.HtmlTagSpecifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="SeleniumUIParser.locatorSpecifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLocatorSpecifier([NotNull] SeleniumUIParser.LocatorSpecifierContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="SeleniumUIParser.qualifiedName"/>.
 	/// </summary>

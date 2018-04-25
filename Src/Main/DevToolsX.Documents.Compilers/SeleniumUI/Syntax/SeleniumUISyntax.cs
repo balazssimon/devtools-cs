@@ -390,7 +390,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	public sealed class DeclarationSyntax : SeleniumUISyntaxNode
 	{
 	    private TagSyntax tag;
-	    private PageSyntax page;
+	    private ElementSyntax element;
 	
 	    public DeclarationSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
@@ -406,9 +406,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 		{ 
 			get { return this.GetRed(ref this.tag, 0); } 
 		}
-	    public PageSyntax Page 
+	    public ElementSyntax Element 
 		{ 
-			get { return this.GetRed(ref this.page, 1); } 
+			get { return this.GetRed(ref this.element, 1); } 
 		}
 	
 	    public override SyntaxNode GetNodeSlot(int index)
@@ -416,7 +416,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	        switch (index)
 	        {
 				case 0: return this.GetRed(ref this.tag, 0);
-				case 1: return this.GetRed(ref this.page, 1);
+				case 1: return this.GetRed(ref this.element, 1);
 				default: return null;
 	        }
 	    }
@@ -426,7 +426,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	        switch (index)
 	        {
 				case 0: return this.tag;
-				case 1: return this.page;
+				case 1: return this.element;
 				default: return null;
 	        }
 	    }
@@ -436,9 +436,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 			return this.Update(tag);
 		}
 	
-	    public DeclarationSyntax WithPage(PageSyntax page)
+	    public DeclarationSyntax WithElement(ElementSyntax element)
 		{
-			return this.Update(page);
+			return this.Update(element);
 		}
 	
 	    public DeclarationSyntax Update(TagSyntax tag)
@@ -454,11 +454,11 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	        return this;
 	    }
 	
-	    public DeclarationSyntax Update(PageSyntax page)
+	    public DeclarationSyntax Update(ElementSyntax element)
 	    {
-	        if (this.Page != page)
+	        if (this.Element != element)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Declaration(page);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Declaration(element);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -480,8 +480,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	
 	public sealed class TagSyntax : SeleniumUISyntaxNode
 	{
-	    private NameSyntax name;
 	    private TypeSpecifierSyntax typeSpecifier;
+	    private NameSyntax name;
+	    private HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier;
 	
 	    public TagSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
@@ -502,13 +503,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
 			}
 		}
-	    public NameSyntax Name 
-		{ 
-			get { return this.GetRed(ref this.name, 1); } 
-		}
 	    public TypeSpecifierSyntax TypeSpecifier 
 		{ 
-			get { return this.GetRed(ref this.typeSpecifier, 2); } 
+			get { return this.GetRed(ref this.typeSpecifier, 1); } 
+		}
+	    public NameSyntax Name 
+		{ 
+			get { return this.GetRed(ref this.name, 2); } 
+		}
+	    public HtmlTagLocatorSpecifierSyntax HtmlTagLocatorSpecifier 
+		{ 
+			get { return this.GetRed(ref this.htmlTagLocatorSpecifier, 3); } 
 		}
 	    public SyntaxToken TSemicolon 
 		{ 
@@ -516,7 +521,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 			{ 
 				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.TagGreen)this.Green;
 				var greenToken = green.TSemicolon;
-				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(3), this.GetChildIndex(3)); 
+				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(4), this.GetChildIndex(4)); 
 			}
 		}
 	
@@ -524,8 +529,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
-				case 1: return this.GetRed(ref this.name, 1);
-				case 2: return this.GetRed(ref this.typeSpecifier, 2);
+				case 1: return this.GetRed(ref this.typeSpecifier, 1);
+				case 2: return this.GetRed(ref this.name, 2);
+				case 3: return this.GetRed(ref this.htmlTagLocatorSpecifier, 3);
 				default: return null;
 	        }
 	    }
@@ -534,40 +540,47 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
-				case 1: return this.name;
-				case 2: return this.typeSpecifier;
+				case 1: return this.typeSpecifier;
+				case 2: return this.name;
+				case 3: return this.htmlTagLocatorSpecifier;
 				default: return null;
 	        }
 	    }
 	
 	    public TagSyntax WithKTag(SyntaxToken kTag)
 		{
-			return this.Update(KTag, this.Name, this.TypeSpecifier, this.TSemicolon);
-		}
-	
-	    public TagSyntax WithName(NameSyntax name)
-		{
-			return this.Update(this.KTag, Name, this.TypeSpecifier, this.TSemicolon);
+			return this.Update(KTag, this.TypeSpecifier, this.Name, this.HtmlTagLocatorSpecifier, this.TSemicolon);
 		}
 	
 	    public TagSyntax WithTypeSpecifier(TypeSpecifierSyntax typeSpecifier)
 		{
-			return this.Update(this.KTag, this.Name, TypeSpecifier, this.TSemicolon);
+			return this.Update(this.KTag, TypeSpecifier, this.Name, this.HtmlTagLocatorSpecifier, this.TSemicolon);
+		}
+	
+	    public TagSyntax WithName(NameSyntax name)
+		{
+			return this.Update(this.KTag, this.TypeSpecifier, Name, this.HtmlTagLocatorSpecifier, this.TSemicolon);
+		}
+	
+	    public TagSyntax WithHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier)
+		{
+			return this.Update(this.KTag, this.TypeSpecifier, this.Name, HtmlTagLocatorSpecifier, this.TSemicolon);
 		}
 	
 	    public TagSyntax WithTSemicolon(SyntaxToken tSemicolon)
 		{
-			return this.Update(this.KTag, this.Name, this.TypeSpecifier, TSemicolon);
+			return this.Update(this.KTag, this.TypeSpecifier, this.Name, this.HtmlTagLocatorSpecifier, TSemicolon);
 		}
 	
-	    public TagSyntax Update(SyntaxToken kTag, NameSyntax name, TypeSpecifierSyntax typeSpecifier, SyntaxToken tSemicolon)
+	    public TagSyntax Update(SyntaxToken kTag, TypeSpecifierSyntax typeSpecifier, NameSyntax name, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, SyntaxToken tSemicolon)
 	    {
 	        if (this.KTag != kTag ||
-				this.Name != name ||
 				this.TypeSpecifier != typeSpecifier ||
+				this.Name != name ||
+				this.HtmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
 				this.TSemicolon != tSemicolon)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Tag(kTag, name, typeSpecifier, tSemicolon);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Tag(kTag, typeSpecifier, name, htmlTagLocatorSpecifier, tSemicolon);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -601,25 +614,16 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	    }
 	
-	    public SyntaxToken TColon 
-		{ 
-			get 
-			{ 
-				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.TypeSpecifierGreen)this.Green;
-				var greenToken = green.TColon;
-				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
-			}
-		}
 	    public QualifierSyntax Qualifier 
 		{ 
-			get { return this.GetRed(ref this.qualifier, 1); } 
+			get { return this.GetRed(ref this.qualifier, 0); } 
 		}
 	
 	    public override SyntaxNode GetNodeSlot(int index)
 	    {
 	        switch (index)
 	        {
-				case 1: return this.GetRed(ref this.qualifier, 1);
+				case 0: return this.GetRed(ref this.qualifier, 0);
 				default: return null;
 	        }
 	    }
@@ -628,27 +632,21 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
-				case 1: return this.qualifier;
+				case 0: return this.qualifier;
 				default: return null;
 	        }
 	    }
 	
-	    public TypeSpecifierSyntax WithTColon(SyntaxToken tColon)
-		{
-			return this.Update(TColon, this.Qualifier);
-		}
-	
 	    public TypeSpecifierSyntax WithQualifier(QualifierSyntax qualifier)
 		{
-			return this.Update(this.TColon, Qualifier);
+			return this.Update(Qualifier);
 		}
 	
-	    public TypeSpecifierSyntax Update(SyntaxToken tColon, QualifierSyntax qualifier)
+	    public TypeSpecifierSyntax Update(QualifierSyntax qualifier)
 	    {
-	        if (this.TColon != tColon ||
-				this.Qualifier != qualifier)
+	        if (this.Qualifier != qualifier)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.TypeSpecifier(tColon, qualifier);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.TypeSpecifier(qualifier);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -668,105 +666,12 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    }
 	}
 	
-	public sealed class PageSyntax : SeleniumUISyntaxNode
-	{
-	    private NameSyntax name;
-	    private ElementBodySyntax elementBody;
-	
-	    public PageSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
-	        : base(green, syntaxTree, position)
-	    {
-	    }
-	
-	    public PageSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
-	        : base(green, parent, position)
-	    {
-	    }
-	
-	    public SyntaxToken KPage 
-		{ 
-			get 
-			{ 
-				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.PageGreen)this.Green;
-				var greenToken = green.KPage;
-				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
-			}
-		}
-	    public NameSyntax Name 
-		{ 
-			get { return this.GetRed(ref this.name, 1); } 
-		}
-	    public ElementBodySyntax ElementBody 
-		{ 
-			get { return this.GetRed(ref this.elementBody, 2); } 
-		}
-	
-	    public override SyntaxNode GetNodeSlot(int index)
-	    {
-	        switch (index)
-	        {
-				case 1: return this.GetRed(ref this.name, 1);
-				case 2: return this.GetRed(ref this.elementBody, 2);
-				default: return null;
-	        }
-	    }
-	
-	    public override SyntaxNode GetCachedSlot(int index)
-	    {
-	        switch (index)
-	        {
-				case 1: return this.name;
-				case 2: return this.elementBody;
-				default: return null;
-	        }
-	    }
-	
-	    public PageSyntax WithKPage(SyntaxToken kPage)
-		{
-			return this.Update(KPage, this.Name, this.ElementBody);
-		}
-	
-	    public PageSyntax WithName(NameSyntax name)
-		{
-			return this.Update(this.KPage, Name, this.ElementBody);
-		}
-	
-	    public PageSyntax WithElementBody(ElementBodySyntax elementBody)
-		{
-			return this.Update(this.KPage, this.Name, ElementBody);
-		}
-	
-	    public PageSyntax Update(SyntaxToken kPage, NameSyntax name, ElementBodySyntax elementBody)
-	    {
-	        if (this.KPage != kPage ||
-				this.Name != name ||
-				this.ElementBody != elementBody)
-	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Page(kPage, name, elementBody);
-	            var annotations = this.GetAnnotations();
-	            if (annotations != null && annotations.Length > 0)
-	               newNode = newNode.WithAnnotations(annotations);
-				return (PageSyntax)newNode;
-	        }
-	        return this;
-	    }
-	
-	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
-	    {
-	        return visitor.VisitPage(this);
-	    }
-	
-	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
-	    {
-	        visitor.VisitPage(this);
-	    }
-	}
-	
 	public sealed class ElementSyntax : SeleniumUISyntaxNode
 	{
+	    private ElementOrPageSyntax elementOrPage;
 	    private NameSyntax name;
-	    private TagSpecifierSyntax tagSpecifier;
-	    private LocatorSpecifierSyntax locatorSpecifier;
+	    private BaseElementSyntax baseElement;
+	    private HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier;
 	    private ElementBodySyntax elementBody;
 	
 	    public ElementSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
@@ -779,26 +684,21 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	    }
 	
-	    public SyntaxToken KElement 
+	    public ElementOrPageSyntax ElementOrPage 
 		{ 
-			get 
-			{ 
-				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.ElementGreen)this.Green;
-				var greenToken = green.KElement;
-				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
-			}
+			get { return this.GetRed(ref this.elementOrPage, 0); } 
 		}
 	    public NameSyntax Name 
 		{ 
 			get { return this.GetRed(ref this.name, 1); } 
 		}
-	    public TagSpecifierSyntax TagSpecifier 
+	    public BaseElementSyntax BaseElement 
 		{ 
-			get { return this.GetRed(ref this.tagSpecifier, 2); } 
+			get { return this.GetRed(ref this.baseElement, 2); } 
 		}
-	    public LocatorSpecifierSyntax LocatorSpecifier 
+	    public HtmlTagLocatorSpecifierSyntax HtmlTagLocatorSpecifier 
 		{ 
-			get { return this.GetRed(ref this.locatorSpecifier, 3); } 
+			get { return this.GetRed(ref this.htmlTagLocatorSpecifier, 3); } 
 		}
 	    public ElementBodySyntax ElementBody 
 		{ 
@@ -809,9 +709,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
+				case 0: return this.GetRed(ref this.elementOrPage, 0);
 				case 1: return this.GetRed(ref this.name, 1);
-				case 2: return this.GetRed(ref this.tagSpecifier, 2);
-				case 3: return this.GetRed(ref this.locatorSpecifier, 3);
+				case 2: return this.GetRed(ref this.baseElement, 2);
+				case 3: return this.GetRed(ref this.htmlTagLocatorSpecifier, 3);
 				case 4: return this.GetRed(ref this.elementBody, 4);
 				default: return null;
 	        }
@@ -821,48 +722,49 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
+				case 0: return this.elementOrPage;
 				case 1: return this.name;
-				case 2: return this.tagSpecifier;
-				case 3: return this.locatorSpecifier;
+				case 2: return this.baseElement;
+				case 3: return this.htmlTagLocatorSpecifier;
 				case 4: return this.elementBody;
 				default: return null;
 	        }
 	    }
 	
-	    public ElementSyntax WithKElement(SyntaxToken kElement)
+	    public ElementSyntax WithElementOrPage(ElementOrPageSyntax elementOrPage)
 		{
-			return this.Update(KElement, this.Name, this.TagSpecifier, this.LocatorSpecifier, this.ElementBody);
+			return this.Update(ElementOrPage, this.Name, this.BaseElement, this.HtmlTagLocatorSpecifier, this.ElementBody);
 		}
 	
 	    public ElementSyntax WithName(NameSyntax name)
 		{
-			return this.Update(this.KElement, Name, this.TagSpecifier, this.LocatorSpecifier, this.ElementBody);
+			return this.Update(this.ElementOrPage, Name, this.BaseElement, this.HtmlTagLocatorSpecifier, this.ElementBody);
 		}
 	
-	    public ElementSyntax WithTagSpecifier(TagSpecifierSyntax tagSpecifier)
+	    public ElementSyntax WithBaseElement(BaseElementSyntax baseElement)
 		{
-			return this.Update(this.KElement, this.Name, TagSpecifier, this.LocatorSpecifier, this.ElementBody);
+			return this.Update(this.ElementOrPage, this.Name, BaseElement, this.HtmlTagLocatorSpecifier, this.ElementBody);
 		}
 	
-	    public ElementSyntax WithLocatorSpecifier(LocatorSpecifierSyntax locatorSpecifier)
+	    public ElementSyntax WithHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier)
 		{
-			return this.Update(this.KElement, this.Name, this.TagSpecifier, LocatorSpecifier, this.ElementBody);
+			return this.Update(this.ElementOrPage, this.Name, this.BaseElement, HtmlTagLocatorSpecifier, this.ElementBody);
 		}
 	
 	    public ElementSyntax WithElementBody(ElementBodySyntax elementBody)
 		{
-			return this.Update(this.KElement, this.Name, this.TagSpecifier, this.LocatorSpecifier, ElementBody);
+			return this.Update(this.ElementOrPage, this.Name, this.BaseElement, this.HtmlTagLocatorSpecifier, ElementBody);
 		}
 	
-	    public ElementSyntax Update(SyntaxToken kElement, NameSyntax name, TagSpecifierSyntax tagSpecifier, LocatorSpecifierSyntax locatorSpecifier, ElementBodySyntax elementBody)
+	    public ElementSyntax Update(ElementOrPageSyntax elementOrPage, NameSyntax name, BaseElementSyntax baseElement, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, ElementBodySyntax elementBody)
 	    {
-	        if (this.KElement != kElement ||
+	        if (this.ElementOrPage != elementOrPage ||
 				this.Name != name ||
-				this.TagSpecifier != tagSpecifier ||
-				this.LocatorSpecifier != locatorSpecifier ||
+				this.BaseElement != baseElement ||
+				this.HtmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
 				this.ElementBody != elementBody)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Element(kElement, name, tagSpecifier, locatorSpecifier, elementBody);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.Element(elementOrPage, name, baseElement, htmlTagLocatorSpecifier, elementBody);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -882,16 +784,84 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    }
 	}
 	
-	public sealed class TagSpecifierSyntax : SeleniumUISyntaxNode
+	public sealed class ElementOrPageSyntax : SeleniumUISyntaxNode
 	{
-	    private QualifierSyntax qualifier;
 	
-	    public TagSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	    public ElementOrPageSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
 	    {
 	    }
 	
-	    public TagSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	    public ElementOrPageSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public SyntaxToken ElementOrPage 
+		{ 
+			get 
+			{ 
+				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.ElementOrPageGreen)this.Green;
+				var greenToken = green.ElementOrPage;
+				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
+			}
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				default: return null;
+	        }
+	    }
+	
+	    public ElementOrPageSyntax WithElementOrPage(SyntaxToken elementOrPage)
+		{
+			return this.Update(ElementOrPage);
+		}
+	
+	    public ElementOrPageSyntax Update(SyntaxToken elementOrPage)
+	    {
+	        if (this.ElementOrPage != elementOrPage)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.ElementOrPage(elementOrPage);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ElementOrPageSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitElementOrPage(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitElementOrPage(this);
+	    }
+	}
+	
+	public sealed class BaseElementSyntax : SeleniumUISyntaxNode
+	{
+	    private QualifierSyntax qualifier;
+	
+	    public BaseElementSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public BaseElementSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
 	        : base(green, parent, position)
 	    {
 	    }
@@ -900,7 +870,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 		{ 
 			get 
 			{ 
-				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.TagSpecifierGreen)this.Green;
+				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.BaseElementGreen)this.Green;
 				var greenToken = green.TColon;
 				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
 			}
@@ -928,119 +898,38 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	        }
 	    }
 	
-	    public TagSpecifierSyntax WithTColon(SyntaxToken tColon)
+	    public BaseElementSyntax WithTColon(SyntaxToken tColon)
 		{
 			return this.Update(TColon, this.Qualifier);
 		}
 	
-	    public TagSpecifierSyntax WithQualifier(QualifierSyntax qualifier)
+	    public BaseElementSyntax WithQualifier(QualifierSyntax qualifier)
 		{
 			return this.Update(this.TColon, Qualifier);
 		}
 	
-	    public TagSpecifierSyntax Update(SyntaxToken tColon, QualifierSyntax qualifier)
+	    public BaseElementSyntax Update(SyntaxToken tColon, QualifierSyntax qualifier)
 	    {
 	        if (this.TColon != tColon ||
 				this.Qualifier != qualifier)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.TagSpecifier(tColon, qualifier);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.BaseElement(tColon, qualifier);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
-				return (TagSpecifierSyntax)newNode;
+				return (BaseElementSyntax)newNode;
 	        }
 	        return this;
 	    }
 	
 	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
 	    {
-	        return visitor.VisitTagSpecifier(this);
+	        return visitor.VisitBaseElement(this);
 	    }
 	
 	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
 	    {
-	        visitor.VisitTagSpecifier(this);
-	    }
-	}
-	
-	public sealed class LocatorSpecifierSyntax : SeleniumUISyntaxNode
-	{
-	    private StringSyntax _string;
-	
-	    public LocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
-	        : base(green, syntaxTree, position)
-	    {
-	    }
-	
-	    public LocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
-	        : base(green, parent, position)
-	    {
-	    }
-	
-	    public SyntaxToken TAssign 
-		{ 
-			get 
-			{ 
-				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.LocatorSpecifierGreen)this.Green;
-				var greenToken = green.TAssign;
-				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
-			}
-		}
-	    public StringSyntax String 
-		{ 
-			get { return this.GetRed(ref this._string, 1); } 
-		}
-	
-	    public override SyntaxNode GetNodeSlot(int index)
-	    {
-	        switch (index)
-	        {
-				case 1: return this.GetRed(ref this._string, 1);
-				default: return null;
-	        }
-	    }
-	
-	    public override SyntaxNode GetCachedSlot(int index)
-	    {
-	        switch (index)
-	        {
-				case 1: return this._string;
-				default: return null;
-	        }
-	    }
-	
-	    public LocatorSpecifierSyntax WithTAssign(SyntaxToken tAssign)
-		{
-			return this.Update(TAssign, this.String);
-		}
-	
-	    public LocatorSpecifierSyntax WithString(StringSyntax _string)
-		{
-			return this.Update(this.TAssign, String);
-		}
-	
-	    public LocatorSpecifierSyntax Update(SyntaxToken tAssign, StringSyntax _string)
-	    {
-	        if (this.TAssign != tAssign ||
-				this.String != _string)
-	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.LocatorSpecifier(tAssign, _string);
-	            var annotations = this.GetAnnotations();
-	            if (annotations != null && annotations.Length > 0)
-	               newNode = newNode.WithAnnotations(annotations);
-				return (LocatorSpecifierSyntax)newNode;
-	        }
-	        return this;
-	    }
-	
-	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
-	    {
-	        return visitor.VisitLocatorSpecifier(this);
-	    }
-	
-	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
-	    {
-	        visitor.VisitLocatorSpecifier(this);
+	        visitor.VisitBaseElement(this);
 	    }
 	}
 	
@@ -1205,7 +1094,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	
 	public sealed class ChildElementsBodySyntax : SeleniumUISyntaxNode
 	{
-	    private SyntaxNodeList element;
+	    private SyntaxNodeList childElement;
 	
 	    public ChildElementsBodySyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
 	        : base(green, syntaxTree, position)
@@ -1226,14 +1115,14 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
 			}
 		}
-	    public SyntaxNodeList<ElementSyntax> Element 
+	    public SyntaxNodeList<ChildElementSyntax> ChildElement 
 		{ 
 			get
 			{
-				var red = this.GetRed(ref this.element, 1);
+				var red = this.GetRed(ref this.childElement, 1);
 				if (red != null)
 				{
-					return new SyntaxNodeList<ElementSyntax>(red);
+					return new SyntaxNodeList<ChildElementSyntax>(red);
 				}
 				return null;
 			} 
@@ -1252,7 +1141,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
-				case 1: return this.GetRed(ref this.element, 1);
+				case 1: return this.GetRed(ref this.childElement, 1);
 				default: return null;
 	        }
 	    }
@@ -1261,38 +1150,38 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    {
 	        switch (index)
 	        {
-				case 1: return this.element;
+				case 1: return this.childElement;
 				default: return null;
 	        }
 	    }
 	
 	    public ChildElementsBodySyntax WithTOpenBrace(SyntaxToken tOpenBrace)
 		{
-			return this.Update(TOpenBrace, this.Element, this.TCloseBrace);
+			return this.Update(TOpenBrace, this.ChildElement, this.TCloseBrace);
 		}
 	
-	    public ChildElementsBodySyntax WithElement(SyntaxNodeList<ElementSyntax> element)
+	    public ChildElementsBodySyntax WithChildElement(SyntaxNodeList<ChildElementSyntax> childElement)
 		{
-			return this.Update(this.TOpenBrace, Element, this.TCloseBrace);
+			return this.Update(this.TOpenBrace, ChildElement, this.TCloseBrace);
 		}
 	
-	    public ChildElementsBodySyntax AddElement(params ElementSyntax[] element)
+	    public ChildElementsBodySyntax AddChildElement(params ChildElementSyntax[] childElement)
 		{
-			return this.WithElement(this.Element.AddRange(element));
+			return this.WithChildElement(this.ChildElement.AddRange(childElement));
 		}
 	
 	    public ChildElementsBodySyntax WithTCloseBrace(SyntaxToken tCloseBrace)
 		{
-			return this.Update(this.TOpenBrace, this.Element, TCloseBrace);
+			return this.Update(this.TOpenBrace, this.ChildElement, TCloseBrace);
 		}
 	
-	    public ChildElementsBodySyntax Update(SyntaxToken tOpenBrace, SyntaxNodeList<ElementSyntax> element, SyntaxToken tCloseBrace)
+	    public ChildElementsBodySyntax Update(SyntaxToken tOpenBrace, SyntaxNodeList<ChildElementSyntax> childElement, SyntaxToken tCloseBrace)
 	    {
 	        if (this.TOpenBrace != tOpenBrace ||
-				this.Element.Node != element.Node ||
+				this.ChildElement.Node != childElement.Node ||
 				this.TCloseBrace != tCloseBrace)
 	        {
-	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.ChildElementsBody(tOpenBrace, element, tCloseBrace);
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.ChildElementsBody(tOpenBrace, childElement, tCloseBrace);
 	            var annotations = this.GetAnnotations();
 	            if (annotations != null && annotations.Length > 0)
 	               newNode = newNode.WithAnnotations(annotations);
@@ -1309,6 +1198,433 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax
 	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
 	    {
 	        visitor.VisitChildElementsBody(this);
+	    }
+	}
+	
+	public sealed class ChildElementSyntax : SeleniumUISyntaxNode
+	{
+	    private ElementTypeSpecifierSyntax elementTypeSpecifier;
+	    private NameSyntax name;
+	    private HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier;
+	    private ElementBodySyntax elementBody;
+	
+	    public ChildElementSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public ChildElementSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public ElementTypeSpecifierSyntax ElementTypeSpecifier 
+		{ 
+			get { return this.GetRed(ref this.elementTypeSpecifier, 0); } 
+		}
+	    public NameSyntax Name 
+		{ 
+			get { return this.GetRed(ref this.name, 1); } 
+		}
+	    public HtmlTagLocatorSpecifierSyntax HtmlTagLocatorSpecifier 
+		{ 
+			get { return this.GetRed(ref this.htmlTagLocatorSpecifier, 2); } 
+		}
+	    public ElementBodySyntax ElementBody 
+		{ 
+			get { return this.GetRed(ref this.elementBody, 3); } 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.GetRed(ref this.elementTypeSpecifier, 0);
+				case 1: return this.GetRed(ref this.name, 1);
+				case 2: return this.GetRed(ref this.htmlTagLocatorSpecifier, 2);
+				case 3: return this.GetRed(ref this.elementBody, 3);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.elementTypeSpecifier;
+				case 1: return this.name;
+				case 2: return this.htmlTagLocatorSpecifier;
+				case 3: return this.elementBody;
+				default: return null;
+	        }
+	    }
+	
+	    public ChildElementSyntax WithElementTypeSpecifier(ElementTypeSpecifierSyntax elementTypeSpecifier)
+		{
+			return this.Update(ElementTypeSpecifier, this.Name, this.HtmlTagLocatorSpecifier, this.ElementBody);
+		}
+	
+	    public ChildElementSyntax WithName(NameSyntax name)
+		{
+			return this.Update(this.ElementTypeSpecifier, Name, this.HtmlTagLocatorSpecifier, this.ElementBody);
+		}
+	
+	    public ChildElementSyntax WithHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier)
+		{
+			return this.Update(this.ElementTypeSpecifier, this.Name, HtmlTagLocatorSpecifier, this.ElementBody);
+		}
+	
+	    public ChildElementSyntax WithElementBody(ElementBodySyntax elementBody)
+		{
+			return this.Update(this.ElementTypeSpecifier, this.Name, this.HtmlTagLocatorSpecifier, ElementBody);
+		}
+	
+	    public ChildElementSyntax Update(ElementTypeSpecifierSyntax elementTypeSpecifier, NameSyntax name, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, ElementBodySyntax elementBody)
+	    {
+	        if (this.ElementTypeSpecifier != elementTypeSpecifier ||
+				this.Name != name ||
+				this.HtmlTagLocatorSpecifier != htmlTagLocatorSpecifier ||
+				this.ElementBody != elementBody)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.ChildElement(elementTypeSpecifier, name, htmlTagLocatorSpecifier, elementBody);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ChildElementSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitChildElement(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitChildElement(this);
+	    }
+	}
+	
+	public sealed class ElementTypeSpecifierSyntax : SeleniumUISyntaxNode
+	{
+	    private QualifierSyntax qualifier;
+	
+	    public ElementTypeSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public ElementTypeSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public QualifierSyntax Qualifier 
+		{ 
+			get { return this.GetRed(ref this.qualifier, 0); } 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.GetRed(ref this.qualifier, 0);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.qualifier;
+				default: return null;
+	        }
+	    }
+	
+	    public ElementTypeSpecifierSyntax WithQualifier(QualifierSyntax qualifier)
+		{
+			return this.Update(Qualifier);
+		}
+	
+	    public ElementTypeSpecifierSyntax Update(QualifierSyntax qualifier)
+	    {
+	        if (this.Qualifier != qualifier)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.ElementTypeSpecifier(qualifier);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (ElementTypeSpecifierSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitElementTypeSpecifier(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitElementTypeSpecifier(this);
+	    }
+	}
+	
+	public sealed class HtmlTagLocatorSpecifierSyntax : SeleniumUISyntaxNode
+	{
+	    private HtmlTagSpecifierSyntax htmlTagSpecifier;
+	    private LocatorSpecifierSyntax locatorSpecifier;
+	
+	    public HtmlTagLocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public HtmlTagLocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public SyntaxToken TAssign 
+		{ 
+			get 
+			{ 
+				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.HtmlTagLocatorSpecifierGreen)this.Green;
+				var greenToken = green.TAssign;
+				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
+			}
+		}
+	    public HtmlTagSpecifierSyntax HtmlTagSpecifier 
+		{ 
+			get { return this.GetRed(ref this.htmlTagSpecifier, 1); } 
+		}
+	    public LocatorSpecifierSyntax LocatorSpecifier 
+		{ 
+			get { return this.GetRed(ref this.locatorSpecifier, 2); } 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 1: return this.GetRed(ref this.htmlTagSpecifier, 1);
+				case 2: return this.GetRed(ref this.locatorSpecifier, 2);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 1: return this.htmlTagSpecifier;
+				case 2: return this.locatorSpecifier;
+				default: return null;
+	        }
+	    }
+	
+	    public HtmlTagLocatorSpecifierSyntax WithTAssign(SyntaxToken tAssign)
+		{
+			return this.Update(TAssign, this.HtmlTagSpecifier, this.LocatorSpecifier);
+		}
+	
+	    public HtmlTagLocatorSpecifierSyntax WithHtmlTagSpecifier(HtmlTagSpecifierSyntax htmlTagSpecifier)
+		{
+			return this.Update(this.TAssign, HtmlTagSpecifier, this.LocatorSpecifier);
+		}
+	
+	    public HtmlTagLocatorSpecifierSyntax WithLocatorSpecifier(LocatorSpecifierSyntax locatorSpecifier)
+		{
+			return this.Update(this.TAssign, this.HtmlTagSpecifier, LocatorSpecifier);
+		}
+	
+	    public HtmlTagLocatorSpecifierSyntax Update(SyntaxToken tAssign, HtmlTagSpecifierSyntax htmlTagSpecifier, LocatorSpecifierSyntax locatorSpecifier)
+	    {
+	        if (this.TAssign != tAssign ||
+				this.HtmlTagSpecifier != htmlTagSpecifier ||
+				this.LocatorSpecifier != locatorSpecifier)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.HtmlTagLocatorSpecifier(tAssign, htmlTagSpecifier, locatorSpecifier);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (HtmlTagLocatorSpecifierSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitHtmlTagLocatorSpecifier(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitHtmlTagLocatorSpecifier(this);
+	    }
+	}
+	
+	public sealed class HtmlTagSpecifierSyntax : SeleniumUISyntaxNode
+	{
+	    private StringSyntax _string;
+	
+	    public HtmlTagSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public HtmlTagSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public SyntaxToken TOpenBracket 
+		{ 
+			get 
+			{ 
+				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.HtmlTagSpecifierGreen)this.Green;
+				var greenToken = green.TOpenBracket;
+				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(0), this.GetChildIndex(0)); 
+			}
+		}
+	    public StringSyntax String 
+		{ 
+			get { return this.GetRed(ref this._string, 1); } 
+		}
+	    public SyntaxToken TCloseBracket 
+		{ 
+			get 
+			{ 
+				var green = (global::DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax.HtmlTagSpecifierGreen)this.Green;
+				var greenToken = green.TCloseBracket;
+				return greenToken == null ? null : new SeleniumUISyntaxToken(greenToken, this, this.GetChildPosition(2), this.GetChildIndex(2)); 
+			}
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 1: return this.GetRed(ref this._string, 1);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 1: return this._string;
+				default: return null;
+	        }
+	    }
+	
+	    public HtmlTagSpecifierSyntax WithTOpenBracket(SyntaxToken tOpenBracket)
+		{
+			return this.Update(TOpenBracket, this.String, this.TCloseBracket);
+		}
+	
+	    public HtmlTagSpecifierSyntax WithString(StringSyntax _string)
+		{
+			return this.Update(this.TOpenBracket, String, this.TCloseBracket);
+		}
+	
+	    public HtmlTagSpecifierSyntax WithTCloseBracket(SyntaxToken tCloseBracket)
+		{
+			return this.Update(this.TOpenBracket, this.String, TCloseBracket);
+		}
+	
+	    public HtmlTagSpecifierSyntax Update(SyntaxToken tOpenBracket, StringSyntax _string, SyntaxToken tCloseBracket)
+	    {
+	        if (this.TOpenBracket != tOpenBracket ||
+				this.String != _string ||
+				this.TCloseBracket != tCloseBracket)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.HtmlTagSpecifier(tOpenBracket, _string, tCloseBracket);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (HtmlTagSpecifierSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitHtmlTagSpecifier(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitHtmlTagSpecifier(this);
+	    }
+	}
+	
+	public sealed class LocatorSpecifierSyntax : SeleniumUISyntaxNode
+	{
+	    private StringSyntax _string;
+	
+	    public LocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxTree syntaxTree, int position)
+	        : base(green, syntaxTree, position)
+	    {
+	    }
+	
+	    public LocatorSpecifierSyntax(InternalSyntaxNode green, SyntaxNode parent, int position)
+	        : base(green, parent, position)
+	    {
+	    }
+	
+	    public StringSyntax String 
+		{ 
+			get { return this.GetRed(ref this._string, 0); } 
+		}
+	
+	    public override SyntaxNode GetNodeSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this.GetRed(ref this._string, 0);
+				default: return null;
+	        }
+	    }
+	
+	    public override SyntaxNode GetCachedSlot(int index)
+	    {
+	        switch (index)
+	        {
+				case 0: return this._string;
+				default: return null;
+	        }
+	    }
+	
+	    public LocatorSpecifierSyntax WithString(StringSyntax _string)
+		{
+			return this.Update(String);
+		}
+	
+	    public LocatorSpecifierSyntax Update(StringSyntax _string)
+	    {
+	        if (this.String != _string)
+	        {
+	            SyntaxNode newNode = SeleniumUILanguage.Instance.SyntaxFactory.LocatorSpecifier(_string);
+	            var annotations = this.GetAnnotations();
+	            if (annotations != null && annotations.Length > 0)
+	               newNode = newNode.WithAnnotations(annotations);
+				return (LocatorSpecifierSyntax)newNode;
+	        }
+	        return this;
+	    }
+	
+	    public override TResult Accept<TResult>(ISeleniumUISyntaxVisitor<TResult> visitor)
+	    {
+	        return visitor.VisitLocatorSpecifier(this);
+	    }
+	
+	    public override void Accept(ISeleniumUISyntaxVisitor visitor)
+	    {
+	        visitor.VisitLocatorSpecifier(this);
 	    }
 	}
 	
@@ -1683,19 +1999,27 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		
 		void VisitTypeSpecifier(TypeSpecifierSyntax node);
 		
-		void VisitPage(PageSyntax node);
-		
 		void VisitElement(ElementSyntax node);
 		
-		void VisitTagSpecifier(TagSpecifierSyntax node);
+		void VisitElementOrPage(ElementOrPageSyntax node);
 		
-		void VisitLocatorSpecifier(LocatorSpecifierSyntax node);
+		void VisitBaseElement(BaseElementSyntax node);
 		
 		void VisitElementBody(ElementBodySyntax node);
 		
 		void VisitEmptyElementBody(EmptyElementBodySyntax node);
 		
 		void VisitChildElementsBody(ChildElementsBodySyntax node);
+		
+		void VisitChildElement(ChildElementSyntax node);
+		
+		void VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node);
+		
+		void VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node);
+		
+		void VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node);
+		
+		void VisitLocatorSpecifier(LocatorSpecifierSyntax node);
 		
 		void VisitQualifiedName(QualifiedNameSyntax node);
 		
@@ -1741,22 +2065,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		    this.DefaultVisit(node);
 		}
 		
-		public virtual void VisitPage(PageSyntax node)
-		{
-		    this.DefaultVisit(node);
-		}
-		
 		public virtual void VisitElement(ElementSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
 		
-		public virtual void VisitTagSpecifier(TagSpecifierSyntax node)
+		public virtual void VisitElementOrPage(ElementOrPageSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
 		
-		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		public virtual void VisitBaseElement(BaseElementSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
@@ -1772,6 +2091,31 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		}
 		
 		public virtual void VisitChildElementsBody(ChildElementsBodySyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitChildElement(ChildElementSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+		    this.DefaultVisit(node);
+		}
+		
+		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
 		{
 		    this.DefaultVisit(node);
 		}
@@ -1832,49 +2176,41 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		public virtual void VisitDeclaration(DeclarationSyntax node)
 		{
 			this.Visit(node.Tag);
-			this.Visit(node.Page);
+			this.Visit(node.Element);
 		}
 		
 		public virtual void VisitTag(TagSyntax node)
 		{
 			this.VisitToken(node.KTag);
-			this.Visit(node.Name);
 			this.Visit(node.TypeSpecifier);
+			this.Visit(node.Name);
+			this.Visit(node.HtmlTagLocatorSpecifier);
 			this.VisitToken(node.TSemicolon);
 		}
 		
 		public virtual void VisitTypeSpecifier(TypeSpecifierSyntax node)
 		{
-			this.VisitToken(node.TColon);
 			this.Visit(node.Qualifier);
-		}
-		
-		public virtual void VisitPage(PageSyntax node)
-		{
-			this.VisitToken(node.KPage);
-			this.Visit(node.Name);
-			this.Visit(node.ElementBody);
 		}
 		
 		public virtual void VisitElement(ElementSyntax node)
 		{
-			this.VisitToken(node.KElement);
+			this.Visit(node.ElementOrPage);
 			this.Visit(node.Name);
-			this.Visit(node.TagSpecifier);
-			this.Visit(node.LocatorSpecifier);
+			this.Visit(node.BaseElement);
+			this.Visit(node.HtmlTagLocatorSpecifier);
 			this.Visit(node.ElementBody);
 		}
 		
-		public virtual void VisitTagSpecifier(TagSpecifierSyntax node)
+		public virtual void VisitElementOrPage(ElementOrPageSyntax node)
+		{
+			this.VisitToken(node.ElementOrPage);
+		}
+		
+		public virtual void VisitBaseElement(BaseElementSyntax node)
 		{
 			this.VisitToken(node.TColon);
 			this.Visit(node.Qualifier);
-		}
-		
-		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
-		{
-			this.VisitToken(node.TAssign);
-			this.Visit(node.String);
 		}
 		
 		public virtual void VisitElementBody(ElementBodySyntax node)
@@ -1891,8 +2227,40 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		public virtual void VisitChildElementsBody(ChildElementsBodySyntax node)
 		{
 			this.VisitToken(node.TOpenBrace);
-			this.VisitList(node.Element);
+			this.VisitList(node.ChildElement);
 			this.VisitToken(node.TCloseBrace);
+		}
+		
+		public virtual void VisitChildElement(ChildElementSyntax node)
+		{
+			this.Visit(node.ElementTypeSpecifier);
+			this.Visit(node.Name);
+			this.Visit(node.HtmlTagLocatorSpecifier);
+			this.Visit(node.ElementBody);
+		}
+		
+		public virtual void VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+			this.Visit(node.Qualifier);
+		}
+		
+		public virtual void VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+			this.VisitToken(node.TAssign);
+			this.Visit(node.HtmlTagSpecifier);
+			this.Visit(node.LocatorSpecifier);
+		}
+		
+		public virtual void VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+			this.VisitToken(node.TOpenBracket);
+			this.Visit(node.String);
+			this.VisitToken(node.TCloseBracket);
+		}
+		
+		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		{
+			this.Visit(node.String);
 		}
 		
 		public virtual void VisitQualifiedName(QualifiedNameSyntax node)
@@ -1936,19 +2304,27 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		
 		TResult VisitTypeSpecifier(TypeSpecifierSyntax node);
 		
-		TResult VisitPage(PageSyntax node);
-		
 		TResult VisitElement(ElementSyntax node);
 		
-		TResult VisitTagSpecifier(TagSpecifierSyntax node);
+		TResult VisitElementOrPage(ElementOrPageSyntax node);
 		
-		TResult VisitLocatorSpecifier(LocatorSpecifierSyntax node);
+		TResult VisitBaseElement(BaseElementSyntax node);
 		
 		TResult VisitElementBody(ElementBodySyntax node);
 		
 		TResult VisitEmptyElementBody(EmptyElementBodySyntax node);
 		
 		TResult VisitChildElementsBody(ChildElementsBodySyntax node);
+		
+		TResult VisitChildElement(ChildElementSyntax node);
+		
+		TResult VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node);
+		
+		TResult VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node);
+		
+		TResult VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node);
+		
+		TResult VisitLocatorSpecifier(LocatorSpecifierSyntax node);
 		
 		TResult VisitQualifiedName(QualifiedNameSyntax node);
 		
@@ -1994,22 +2370,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		    return this.DefaultVisit(node);
 		}
 		
-		public virtual TResult VisitPage(PageSyntax node)
-		{
-		    return this.DefaultVisit(node);
-		}
-		
 		public virtual TResult VisitElement(ElementSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
 		
-		public virtual TResult VisitTagSpecifier(TagSpecifierSyntax node)
+		public virtual TResult VisitElementOrPage(ElementOrPageSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
 		
-		public virtual TResult VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		public virtual TResult VisitBaseElement(BaseElementSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
@@ -2025,6 +2396,31 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		}
 		
 		public virtual TResult VisitChildElementsBody(ChildElementsBodySyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitChildElement(ChildElementSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+		    return this.DefaultVisit(node);
+		}
+		
+		public virtual TResult VisitLocatorSpecifier(LocatorSpecifierSyntax node)
 		{
 		    return this.DefaultVisit(node);
 		}
@@ -2093,11 +2489,11 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 			    var newTag = (TagSyntax)this.Visit(oldTag);
 				return node.Update(newTag);
 			}
-			var oldPage = node.Page;
-			if (oldPage != null)
+			var oldElement = node.Element;
+			if (oldElement != null)
 			{
-			    var newPage = (PageSyntax)this.Visit(oldPage);
-				return node.Update(newPage);
+			    var newElement = (ElementSyntax)this.Visit(oldElement);
+				return node.Update(newElement);
 			}
 			return node;   
 		}
@@ -2105,49 +2501,40 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		public virtual SyntaxNode VisitTag(TagSyntax node)
 		{
 		    var kTag = this.VisitToken(node.KTag);
-		    var name = (NameSyntax)this.Visit(node.Name);
 		    var typeSpecifier = (TypeSpecifierSyntax)this.Visit(node.TypeSpecifier);
+		    var name = (NameSyntax)this.Visit(node.Name);
+		    var htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierSyntax)this.Visit(node.HtmlTagLocatorSpecifier);
 		    var tSemicolon = this.VisitToken(node.TSemicolon);
-			return node.Update(kTag, name, typeSpecifier, tSemicolon);
+			return node.Update(kTag, typeSpecifier, name, htmlTagLocatorSpecifier, tSemicolon);
 		}
 		
 		public virtual SyntaxNode VisitTypeSpecifier(TypeSpecifierSyntax node)
 		{
-		    var tColon = this.VisitToken(node.TColon);
 		    var qualifier = (QualifierSyntax)this.Visit(node.Qualifier);
-			return node.Update(tColon, qualifier);
-		}
-		
-		public virtual SyntaxNode VisitPage(PageSyntax node)
-		{
-		    var kPage = this.VisitToken(node.KPage);
-		    var name = (NameSyntax)this.Visit(node.Name);
-		    var elementBody = (ElementBodySyntax)this.Visit(node.ElementBody);
-			return node.Update(kPage, name, elementBody);
+			return node.Update(qualifier);
 		}
 		
 		public virtual SyntaxNode VisitElement(ElementSyntax node)
 		{
-		    var kElement = this.VisitToken(node.KElement);
+		    var elementOrPage = (ElementOrPageSyntax)this.Visit(node.ElementOrPage);
 		    var name = (NameSyntax)this.Visit(node.Name);
-		    var tagSpecifier = (TagSpecifierSyntax)this.Visit(node.TagSpecifier);
-		    var locatorSpecifier = (LocatorSpecifierSyntax)this.Visit(node.LocatorSpecifier);
+		    var baseElement = (BaseElementSyntax)this.Visit(node.BaseElement);
+		    var htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierSyntax)this.Visit(node.HtmlTagLocatorSpecifier);
 		    var elementBody = (ElementBodySyntax)this.Visit(node.ElementBody);
-			return node.Update(kElement, name, tagSpecifier, locatorSpecifier, elementBody);
+			return node.Update(elementOrPage, name, baseElement, htmlTagLocatorSpecifier, elementBody);
 		}
 		
-		public virtual SyntaxNode VisitTagSpecifier(TagSpecifierSyntax node)
+		public virtual SyntaxNode VisitElementOrPage(ElementOrPageSyntax node)
+		{
+		    var elementOrPage = this.VisitToken(node.ElementOrPage);
+			return node.Update(elementOrPage);
+		}
+		
+		public virtual SyntaxNode VisitBaseElement(BaseElementSyntax node)
 		{
 		    var tColon = this.VisitToken(node.TColon);
 		    var qualifier = (QualifierSyntax)this.Visit(node.Qualifier);
 			return node.Update(tColon, qualifier);
-		}
-		
-		public virtual SyntaxNode VisitLocatorSpecifier(LocatorSpecifierSyntax node)
-		{
-		    var tAssign = this.VisitToken(node.TAssign);
-		    var _string = (StringSyntax)this.Visit(node.String);
-			return node.Update(tAssign, _string);
 		}
 		
 		public virtual SyntaxNode VisitElementBody(ElementBodySyntax node)
@@ -2176,9 +2563,46 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		public virtual SyntaxNode VisitChildElementsBody(ChildElementsBodySyntax node)
 		{
 		    var tOpenBrace = this.VisitToken(node.TOpenBrace);
-		    var element = this.VisitList(node.Element);
+		    var childElement = this.VisitList(node.ChildElement);
 		    var tCloseBrace = this.VisitToken(node.TCloseBrace);
-			return node.Update(tOpenBrace, element, tCloseBrace);
+			return node.Update(tOpenBrace, childElement, tCloseBrace);
+		}
+		
+		public virtual SyntaxNode VisitChildElement(ChildElementSyntax node)
+		{
+		    var elementTypeSpecifier = (ElementTypeSpecifierSyntax)this.Visit(node.ElementTypeSpecifier);
+		    var name = (NameSyntax)this.Visit(node.Name);
+		    var htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierSyntax)this.Visit(node.HtmlTagLocatorSpecifier);
+		    var elementBody = (ElementBodySyntax)this.Visit(node.ElementBody);
+			return node.Update(elementTypeSpecifier, name, htmlTagLocatorSpecifier, elementBody);
+		}
+		
+		public virtual SyntaxNode VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+		    var qualifier = (QualifierSyntax)this.Visit(node.Qualifier);
+			return node.Update(qualifier);
+		}
+		
+		public virtual SyntaxNode VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+		    var tAssign = this.VisitToken(node.TAssign);
+		    var htmlTagSpecifier = (HtmlTagSpecifierSyntax)this.Visit(node.HtmlTagSpecifier);
+		    var locatorSpecifier = (LocatorSpecifierSyntax)this.Visit(node.LocatorSpecifier);
+			return node.Update(tAssign, htmlTagSpecifier, locatorSpecifier);
+		}
+		
+		public virtual SyntaxNode VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+		    var tOpenBracket = this.VisitToken(node.TOpenBracket);
+		    var _string = (StringSyntax)this.Visit(node.String);
+		    var tCloseBracket = this.VisitToken(node.TCloseBracket);
+			return node.Update(tOpenBracket, _string, tCloseBracket);
+		}
+		
+		public virtual SyntaxNode VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		{
+		    var _string = (StringSyntax)this.Visit(node.String);
+			return node.Update(_string);
 		}
 		
 		public virtual SyntaxNode VisitQualifiedName(QualifiedNameSyntax node)
@@ -2543,93 +2967,64 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 		    return (DeclarationSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Declaration((Syntax.InternalSyntax.TagGreen)tag.Green).CreateRed();
 		}
 		
-		public DeclarationSyntax Declaration(PageSyntax page)
+		public DeclarationSyntax Declaration(ElementSyntax element)
 		{
-		    if (page == null) throw new ArgumentNullException(nameof(page));
-		    return (DeclarationSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Declaration((Syntax.InternalSyntax.PageGreen)page.Green).CreateRed();
+		    if (element == null) throw new ArgumentNullException(nameof(element));
+		    return (DeclarationSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Declaration((Syntax.InternalSyntax.ElementGreen)element.Green).CreateRed();
 		}
 		
-		public TagSyntax Tag(SyntaxToken kTag, NameSyntax name, TypeSpecifierSyntax typeSpecifier, SyntaxToken tSemicolon)
+		public TagSyntax Tag(SyntaxToken kTag, TypeSpecifierSyntax typeSpecifier, NameSyntax name, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, SyntaxToken tSemicolon)
 		{
 		    if (kTag == null) throw new ArgumentNullException(nameof(kTag));
 		    if (kTag.RawKind != (int)SeleniumUISyntaxKind.KTag) throw new ArgumentException(nameof(kTag));
+		    if (typeSpecifier == null) throw new ArgumentNullException(nameof(typeSpecifier));
 		    if (name == null) throw new ArgumentNullException(nameof(name));
 		    if (tSemicolon == null) throw new ArgumentNullException(nameof(tSemicolon));
 		    if (tSemicolon.RawKind != (int)SeleniumUISyntaxKind.TSemicolon) throw new ArgumentException(nameof(tSemicolon));
-		    return (TagSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Tag((InternalSyntaxToken)kTag.Green, (Syntax.InternalSyntax.NameGreen)name.Green, typeSpecifier == null ? null : (Syntax.InternalSyntax.TypeSpecifierGreen)typeSpecifier.Green, (InternalSyntaxToken)tSemicolon.Green).CreateRed();
+		    return (TagSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Tag((InternalSyntaxToken)kTag.Green, (Syntax.InternalSyntax.TypeSpecifierGreen)typeSpecifier.Green, (Syntax.InternalSyntax.NameGreen)name.Green, htmlTagLocatorSpecifier == null ? null : (Syntax.InternalSyntax.HtmlTagLocatorSpecifierGreen)htmlTagLocatorSpecifier.Green, (InternalSyntaxToken)tSemicolon.Green).CreateRed();
 		}
 		
-		public TagSyntax Tag(NameSyntax name)
+		public TagSyntax Tag(TypeSpecifierSyntax typeSpecifier, NameSyntax name)
 		{
-			return this.Tag(this.Token(SeleniumUISyntaxKind.KTag), name, null, this.Token(SeleniumUISyntaxKind.TSemicolon));
-		}
-		
-		public TypeSpecifierSyntax TypeSpecifier(SyntaxToken tColon, QualifierSyntax qualifier)
-		{
-		    if (tColon == null) throw new ArgumentNullException(nameof(tColon));
-		    if (tColon.RawKind != (int)SeleniumUISyntaxKind.TColon) throw new ArgumentException(nameof(tColon));
-		    if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
-		    return (TypeSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.TypeSpecifier((InternalSyntaxToken)tColon.Green, (Syntax.InternalSyntax.QualifierGreen)qualifier.Green).CreateRed();
+			return this.Tag(this.Token(SeleniumUISyntaxKind.KTag), typeSpecifier, name, null, this.Token(SeleniumUISyntaxKind.TSemicolon));
 		}
 		
 		public TypeSpecifierSyntax TypeSpecifier(QualifierSyntax qualifier)
 		{
-			return this.TypeSpecifier(this.Token(SeleniumUISyntaxKind.TColon), qualifier);
+		    if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
+		    return (TypeSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.TypeSpecifier((Syntax.InternalSyntax.QualifierGreen)qualifier.Green).CreateRed();
 		}
 		
-		public PageSyntax Page(SyntaxToken kPage, NameSyntax name, ElementBodySyntax elementBody)
+		public ElementSyntax Element(ElementOrPageSyntax elementOrPage, NameSyntax name, BaseElementSyntax baseElement, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, ElementBodySyntax elementBody)
 		{
-		    if (kPage == null) throw new ArgumentNullException(nameof(kPage));
-		    if (kPage.RawKind != (int)SeleniumUISyntaxKind.KPage) throw new ArgumentException(nameof(kPage));
+		    if (elementOrPage == null) throw new ArgumentNullException(nameof(elementOrPage));
 		    if (name == null) throw new ArgumentNullException(nameof(name));
 		    if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
-		    return (PageSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Page((InternalSyntaxToken)kPage.Green, (Syntax.InternalSyntax.NameGreen)name.Green, (Syntax.InternalSyntax.ElementBodyGreen)elementBody.Green).CreateRed();
+		    return (ElementSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Element((Syntax.InternalSyntax.ElementOrPageGreen)elementOrPage.Green, (Syntax.InternalSyntax.NameGreen)name.Green, baseElement == null ? null : (Syntax.InternalSyntax.BaseElementGreen)baseElement.Green, htmlTagLocatorSpecifier == null ? null : (Syntax.InternalSyntax.HtmlTagLocatorSpecifierGreen)htmlTagLocatorSpecifier.Green, (Syntax.InternalSyntax.ElementBodyGreen)elementBody.Green).CreateRed();
 		}
 		
-		public PageSyntax Page(NameSyntax name, ElementBodySyntax elementBody)
+		public ElementSyntax Element(ElementOrPageSyntax elementOrPage, NameSyntax name, ElementBodySyntax elementBody)
 		{
-			return this.Page(this.Token(SeleniumUISyntaxKind.KPage), name, elementBody);
+			return this.Element(elementOrPage, name, null, null, elementBody);
 		}
 		
-		public ElementSyntax Element(SyntaxToken kElement, NameSyntax name, TagSpecifierSyntax tagSpecifier, LocatorSpecifierSyntax locatorSpecifier, ElementBodySyntax elementBody)
+		public ElementOrPageSyntax ElementOrPage(SyntaxToken elementOrPage)
 		{
-		    if (kElement == null) throw new ArgumentNullException(nameof(kElement));
-		    if (kElement.RawKind != (int)SeleniumUISyntaxKind.KElement) throw new ArgumentException(nameof(kElement));
-		    if (name == null) throw new ArgumentNullException(nameof(name));
-		    if (locatorSpecifier == null) throw new ArgumentNullException(nameof(locatorSpecifier));
-		    if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
-		    return (ElementSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.Element((InternalSyntaxToken)kElement.Green, (Syntax.InternalSyntax.NameGreen)name.Green, tagSpecifier == null ? null : (Syntax.InternalSyntax.TagSpecifierGreen)tagSpecifier.Green, (Syntax.InternalSyntax.LocatorSpecifierGreen)locatorSpecifier.Green, (Syntax.InternalSyntax.ElementBodyGreen)elementBody.Green).CreateRed();
+		    if (elementOrPage == null) throw new ArgumentNullException(nameof(elementOrPage));
+		    return (ElementOrPageSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.ElementOrPage((InternalSyntaxToken)elementOrPage.Green).CreateRed();
 		}
 		
-		public ElementSyntax Element(NameSyntax name, LocatorSpecifierSyntax locatorSpecifier, ElementBodySyntax elementBody)
-		{
-			return this.Element(this.Token(SeleniumUISyntaxKind.KElement), name, null, locatorSpecifier, elementBody);
-		}
-		
-		public TagSpecifierSyntax TagSpecifier(SyntaxToken tColon, QualifierSyntax qualifier)
+		public BaseElementSyntax BaseElement(SyntaxToken tColon, QualifierSyntax qualifier)
 		{
 		    if (tColon == null) throw new ArgumentNullException(nameof(tColon));
 		    if (tColon.RawKind != (int)SeleniumUISyntaxKind.TColon) throw new ArgumentException(nameof(tColon));
 		    if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
-		    return (TagSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.TagSpecifier((InternalSyntaxToken)tColon.Green, (Syntax.InternalSyntax.QualifierGreen)qualifier.Green).CreateRed();
+		    return (BaseElementSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.BaseElement((InternalSyntaxToken)tColon.Green, (Syntax.InternalSyntax.QualifierGreen)qualifier.Green).CreateRed();
 		}
 		
-		public TagSpecifierSyntax TagSpecifier(QualifierSyntax qualifier)
+		public BaseElementSyntax BaseElement(QualifierSyntax qualifier)
 		{
-			return this.TagSpecifier(this.Token(SeleniumUISyntaxKind.TColon), qualifier);
-		}
-		
-		public LocatorSpecifierSyntax LocatorSpecifier(SyntaxToken tAssign, StringSyntax _string)
-		{
-		    if (tAssign == null) throw new ArgumentNullException(nameof(tAssign));
-		    if (tAssign.RawKind != (int)SeleniumUISyntaxKind.TAssign) throw new ArgumentException(nameof(tAssign));
-		    if (_string == null) throw new ArgumentNullException(nameof(_string));
-		    return (LocatorSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.LocatorSpecifier((InternalSyntaxToken)tAssign.Green, (Syntax.InternalSyntax.StringGreen)_string.Green).CreateRed();
-		}
-		
-		public LocatorSpecifierSyntax LocatorSpecifier(StringSyntax _string)
-		{
-			return this.LocatorSpecifier(this.Token(SeleniumUISyntaxKind.TAssign), _string);
+			return this.BaseElement(this.Token(SeleniumUISyntaxKind.TColon), qualifier);
 		}
 		
 		public ElementBodySyntax ElementBody(EmptyElementBodySyntax emptyElementBody)
@@ -2656,18 +3051,69 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 			return this.EmptyElementBody(this.Token(SeleniumUISyntaxKind.TSemicolon));
 		}
 		
-		public ChildElementsBodySyntax ChildElementsBody(SyntaxToken tOpenBrace, SyntaxNodeList<ElementSyntax> element, SyntaxToken tCloseBrace)
+		public ChildElementsBodySyntax ChildElementsBody(SyntaxToken tOpenBrace, SyntaxNodeList<ChildElementSyntax> childElement, SyntaxToken tCloseBrace)
 		{
 		    if (tOpenBrace == null) throw new ArgumentNullException(nameof(tOpenBrace));
 		    if (tOpenBrace.RawKind != (int)SeleniumUISyntaxKind.TOpenBrace) throw new ArgumentException(nameof(tOpenBrace));
 		    if (tCloseBrace == null) throw new ArgumentNullException(nameof(tCloseBrace));
 		    if (tCloseBrace.RawKind != (int)SeleniumUISyntaxKind.TCloseBrace) throw new ArgumentException(nameof(tCloseBrace));
-		    return (ChildElementsBodySyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElementsBody((InternalSyntaxToken)tOpenBrace.Green, element == null ? null : element.Green, (InternalSyntaxToken)tCloseBrace.Green).CreateRed();
+		    return (ChildElementsBodySyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElementsBody((InternalSyntaxToken)tOpenBrace.Green, childElement == null ? null : childElement.Green, (InternalSyntaxToken)tCloseBrace.Green).CreateRed();
 		}
 		
 		public ChildElementsBodySyntax ChildElementsBody()
 		{
 			return this.ChildElementsBody(this.Token(SeleniumUISyntaxKind.TOpenBrace), null, this.Token(SeleniumUISyntaxKind.TCloseBrace));
+		}
+		
+		public ChildElementSyntax ChildElement(ElementTypeSpecifierSyntax elementTypeSpecifier, NameSyntax name, HtmlTagLocatorSpecifierSyntax htmlTagLocatorSpecifier, ElementBodySyntax elementBody)
+		{
+		    if (name == null) throw new ArgumentNullException(nameof(name));
+		    if (elementBody == null) throw new ArgumentNullException(nameof(elementBody));
+		    return (ChildElementSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.ChildElement(elementTypeSpecifier == null ? null : (Syntax.InternalSyntax.ElementTypeSpecifierGreen)elementTypeSpecifier.Green, (Syntax.InternalSyntax.NameGreen)name.Green, htmlTagLocatorSpecifier == null ? null : (Syntax.InternalSyntax.HtmlTagLocatorSpecifierGreen)htmlTagLocatorSpecifier.Green, (Syntax.InternalSyntax.ElementBodyGreen)elementBody.Green).CreateRed();
+		}
+		
+		public ChildElementSyntax ChildElement(NameSyntax name, ElementBodySyntax elementBody)
+		{
+			return this.ChildElement(null, name, null, elementBody);
+		}
+		
+		public ElementTypeSpecifierSyntax ElementTypeSpecifier(QualifierSyntax qualifier)
+		{
+		    if (qualifier == null) throw new ArgumentNullException(nameof(qualifier));
+		    return (ElementTypeSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.ElementTypeSpecifier((Syntax.InternalSyntax.QualifierGreen)qualifier.Green).CreateRed();
+		}
+		
+		public HtmlTagLocatorSpecifierSyntax HtmlTagLocatorSpecifier(SyntaxToken tAssign, HtmlTagSpecifierSyntax htmlTagSpecifier, LocatorSpecifierSyntax locatorSpecifier)
+		{
+		    if (tAssign == null) throw new ArgumentNullException(nameof(tAssign));
+		    if (tAssign.RawKind != (int)SeleniumUISyntaxKind.TAssign) throw new ArgumentException(nameof(tAssign));
+		    return (HtmlTagLocatorSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.HtmlTagLocatorSpecifier((InternalSyntaxToken)tAssign.Green, htmlTagSpecifier == null ? null : (Syntax.InternalSyntax.HtmlTagSpecifierGreen)htmlTagSpecifier.Green, locatorSpecifier == null ? null : (Syntax.InternalSyntax.LocatorSpecifierGreen)locatorSpecifier.Green).CreateRed();
+		}
+		
+		public HtmlTagLocatorSpecifierSyntax HtmlTagLocatorSpecifier()
+		{
+			return this.HtmlTagLocatorSpecifier(this.Token(SeleniumUISyntaxKind.TAssign), null, null);
+		}
+		
+		public HtmlTagSpecifierSyntax HtmlTagSpecifier(SyntaxToken tOpenBracket, StringSyntax _string, SyntaxToken tCloseBracket)
+		{
+		    if (tOpenBracket == null) throw new ArgumentNullException(nameof(tOpenBracket));
+		    if (tOpenBracket.RawKind != (int)SeleniumUISyntaxKind.TOpenBracket) throw new ArgumentException(nameof(tOpenBracket));
+		    if (_string == null) throw new ArgumentNullException(nameof(_string));
+		    if (tCloseBracket == null) throw new ArgumentNullException(nameof(tCloseBracket));
+		    if (tCloseBracket.RawKind != (int)SeleniumUISyntaxKind.TCloseBracket) throw new ArgumentException(nameof(tCloseBracket));
+		    return (HtmlTagSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.HtmlTagSpecifier((InternalSyntaxToken)tOpenBracket.Green, (Syntax.InternalSyntax.StringGreen)_string.Green, (InternalSyntaxToken)tCloseBracket.Green).CreateRed();
+		}
+		
+		public HtmlTagSpecifierSyntax HtmlTagSpecifier(StringSyntax _string)
+		{
+			return this.HtmlTagSpecifier(this.Token(SeleniumUISyntaxKind.TOpenBracket), _string, this.Token(SeleniumUISyntaxKind.TCloseBracket));
+		}
+		
+		public LocatorSpecifierSyntax LocatorSpecifier(StringSyntax _string)
+		{
+		    if (_string == null) throw new ArgumentNullException(nameof(_string));
+		    return (LocatorSpecifierSyntax)SeleniumUILanguage.Instance.InternalSyntaxFactory.LocatorSpecifier((Syntax.InternalSyntax.StringGreen)_string.Green).CreateRed();
 		}
 		
 		public QualifiedNameSyntax QualifiedName(QualifierSyntax qualifier)
@@ -2710,13 +3156,17 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI
 				typeof(DeclarationSyntax),
 				typeof(TagSyntax),
 				typeof(TypeSpecifierSyntax),
-				typeof(PageSyntax),
 				typeof(ElementSyntax),
-				typeof(TagSpecifierSyntax),
-				typeof(LocatorSpecifierSyntax),
+				typeof(ElementOrPageSyntax),
+				typeof(BaseElementSyntax),
 				typeof(ElementBodySyntax),
 				typeof(EmptyElementBodySyntax),
 				typeof(ChildElementsBodySyntax),
+				typeof(ChildElementSyntax),
+				typeof(ElementTypeSpecifierSyntax),
+				typeof(HtmlTagLocatorSpecifierSyntax),
+				typeof(HtmlTagSpecifierSyntax),
+				typeof(LocatorSpecifierSyntax),
 				typeof(QualifiedNameSyntax),
 				typeof(NameSyntax),
 				typeof(QualifierSyntax),

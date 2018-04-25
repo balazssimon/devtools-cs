@@ -16,30 +16,43 @@ $Body
 namespaceBody: TOpenBrace declaration* TCloseBrace;
 
 $Property(Declarations)
-declaration: tag | page;
+declaration: tag | element;
+
 
 $SymbolDef(Tag)
-tag: KTag name typeSpecifier? TSemicolon;
+tag: KTag typeSpecifier name htmlTagLocatorSpecifier? TSemicolon;
 
-typeSpecifier: TColon $Property(TypeName) $Value qualifier;
+typeSpecifier: $Property(TypeName) $Value qualifier;
 
-$SymbolDef(Page)
-page: KPage name elementBody;
 
-$Property(Elements)
 $SymbolDef(Element)
-element: KElement name tagSpecifier? locatorSpecifier elementBody;
+element: elementOrPage name baseElement? htmlTagLocatorSpecifier? elementBody;
 
-tagSpecifier: TColon $Property(Tag) $SymbolUse(Tag) qualifier;
+$Property(IsPage)
+elementOrPage
+	: $Value(true) KPage 
+	| $Value(false) KElement
+	;
 
-locatorSpecifier: TAssign $Property(Locator) $Value string;
+$Property(Base)
+baseElement: TColon $Property(Element) $SymbolUse(Element) qualifier;
 
 elementBody: emptyElementBody | childElementsBody;
 
 emptyElementBody: TSemicolon;
 
 $Body
-childElementsBody: TOpenBrace element* TCloseBrace;
+childElementsBody: TOpenBrace childElement* TCloseBrace;
+
+$Property(Elements)
+$SymbolDef(Element)
+childElement: elementTypeSpecifier? name htmlTagLocatorSpecifier? elementBody;
+
+elementTypeSpecifier: $Property(Type) $SymbolUse(ElementType) qualifier;
+
+htmlTagLocatorSpecifier: TAssign htmlTagSpecifier? locatorSpecifier?;
+htmlTagSpecifier: TOpenBracket $Property(DeclaredHtmlTag) $Value string TCloseBracket;
+locatorSpecifier: $Property(DeclaredLocator) $Value string;
 
 $Name
 qualifiedName: qualifier;

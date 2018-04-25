@@ -36,7 +36,7 @@ namespace DevToolsX.TempConsole
 
         static void Main(string[] args)
         {
-            CompileSeleniumUI("Test1.sui");
+            CompileSeleniumUI("Nyeny.sui");
 
             /*Options options = new Options(LoggerFactory);
             options.ImplicitWaitTimeout = TimeSpan.FromSeconds(3);
@@ -111,7 +111,13 @@ namespace DevToolsX.TempConsole
                 Documents.Compilers.SeleniumUI.Symbols.Element element = symbol as Documents.Compilers.SeleniumUI.Symbols.Element;
                 if (element != null)
                 {
-                    Console.WriteLine("  tag: "+element.Tag);
+                    Console.WriteLine("  page: "+element.IsPage);
+                    Console.WriteLine("  base: " + element.Base);
+                    Console.WriteLine("  tag: " + element.Tag);
+                    Console.WriteLine("  declared html tag: " + element.DeclaredHtmlTag);
+                    Console.WriteLine("  html tag: " + element.HtmlTag);
+                    Console.WriteLine("  declared locator: " + element.DeclaredLocator);
+                    Console.WriteLine("  locator: " + element.Locator);
                 }
             }
         }

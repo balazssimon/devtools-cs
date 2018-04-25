@@ -47,14 +47,17 @@ public partial class SeleniumUIParser : Parser {
 		SingleQuoteVerbatimStringLiteralStart=35, LCommentStart=36, LComment_Star=37;
 	public const int
 		RULE_main = 0, RULE_namespace = 1, RULE_namespaceBody = 2, RULE_declaration = 3, 
-		RULE_tag = 4, RULE_typeSpecifier = 5, RULE_page = 6, RULE_element = 7, 
-		RULE_tagSpecifier = 8, RULE_locatorSpecifier = 9, RULE_elementBody = 10, 
-		RULE_emptyElementBody = 11, RULE_childElementsBody = 12, RULE_qualifiedName = 13, 
-		RULE_name = 14, RULE_qualifier = 15, RULE_identifier = 16, RULE_string = 17;
+		RULE_tag = 4, RULE_typeSpecifier = 5, RULE_element = 6, RULE_elementOrPage = 7, 
+		RULE_baseElement = 8, RULE_elementBody = 9, RULE_emptyElementBody = 10, 
+		RULE_childElementsBody = 11, RULE_childElement = 12, RULE_elementTypeSpecifier = 13, 
+		RULE_htmlTagLocatorSpecifier = 14, RULE_htmlTagSpecifier = 15, RULE_locatorSpecifier = 16, 
+		RULE_qualifiedName = 17, RULE_name = 18, RULE_qualifier = 19, RULE_identifier = 20, 
+		RULE_string = 21;
 	public static readonly string[] ruleNames = {
 		"main", "namespace", "namespaceBody", "declaration", "tag", "typeSpecifier", 
-		"page", "element", "tagSpecifier", "locatorSpecifier", "elementBody", 
-		"emptyElementBody", "childElementsBody", "qualifiedName", "name", "qualifier", 
+		"element", "elementOrPage", "baseElement", "elementBody", "emptyElementBody", 
+		"childElementsBody", "childElement", "elementTypeSpecifier", "htmlTagLocatorSpecifier", 
+		"htmlTagSpecifier", "locatorSpecifier", "qualifiedName", "name", "qualifier", 
 		"identifier", "string"
 	};
 
@@ -142,20 +145,20 @@ public partial class SeleniumUIParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 39;
+			State = 47;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==KNamespace) {
 				{
 				{
-				State = 36; @namespace();
+				State = 44; @namespace();
 				}
 				}
-				State = 41;
+				State = 49;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 42; Match(Eof);
+			State = 50; Match(Eof);
 			}
 		}
 		catch (RecognitionException re) {
@@ -204,9 +207,9 @@ public partial class SeleniumUIParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 44; Match(KNamespace);
-			State = 45; qualifiedName();
-			State = 46; namespaceBody();
+			State = 52; Match(KNamespace);
+			State = 53; qualifiedName();
+			State = 54; namespaceBody();
 			}
 		}
 		catch (RecognitionException re) {
@@ -257,21 +260,21 @@ public partial class SeleniumUIParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 48; Match(TOpenBrace);
-			State = 52;
+			State = 56; Match(TOpenBrace);
+			State = 60;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==KPage || _la==KTag) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << KPage) | (1L << KElement) | (1L << KTag))) != 0)) {
 				{
 				{
-				State = 49; declaration();
+				State = 57; declaration();
 				}
 				}
-				State = 54;
+				State = 62;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 55; Match(TCloseBrace);
+			State = 63; Match(TCloseBrace);
 			}
 		}
 		catch (RecognitionException re) {
@@ -289,8 +292,8 @@ public partial class SeleniumUIParser : Parser {
 		public TagContext tag() {
 			return GetRuleContext<TagContext>(0);
 		}
-		public PageContext page() {
-			return GetRuleContext<PageContext>(0);
+		public ElementContext element() {
+			return GetRuleContext<ElementContext>(0);
 		}
 		public DeclarationContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -317,19 +320,20 @@ public partial class SeleniumUIParser : Parser {
 		DeclarationContext _localctx = new DeclarationContext(Context, State);
 		EnterRule(_localctx, 6, RULE_declaration);
 		try {
-			State = 59;
+			State = 67;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case KTag:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 57; tag();
+				State = 65; tag();
 				}
 				break;
 			case KPage:
+			case KElement:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 58; page();
+				State = 66; element();
 				}
 				break;
 			default:
@@ -349,12 +353,15 @@ public partial class SeleniumUIParser : Parser {
 
 	public partial class TagContext : ParserRuleContext {
 		public ITerminalNode KTag() { return GetToken(SeleniumUIParser.KTag, 0); }
+		public TypeSpecifierContext typeSpecifier() {
+			return GetRuleContext<TypeSpecifierContext>(0);
+		}
 		public NameContext name() {
 			return GetRuleContext<NameContext>(0);
 		}
 		public ITerminalNode TSemicolon() { return GetToken(SeleniumUIParser.TSemicolon, 0); }
-		public TypeSpecifierContext typeSpecifier() {
-			return GetRuleContext<TypeSpecifierContext>(0);
+		public HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifier() {
+			return GetRuleContext<HtmlTagLocatorSpecifierContext>(0);
 		}
 		public TagContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -384,18 +391,19 @@ public partial class SeleniumUIParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 61; Match(KTag);
-			State = 62; name();
-			State = 64;
+			State = 69; Match(KTag);
+			State = 70; typeSpecifier();
+			State = 71; name();
+			State = 73;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==TColon) {
+			if (_la==TAssign) {
 				{
-				State = 63; typeSpecifier();
+				State = 72; htmlTagLocatorSpecifier();
 				}
 			}
 
-			State = 66; Match(TSemicolon);
+			State = 75; Match(TSemicolon);
 			}
 		}
 		catch (RecognitionException re) {
@@ -410,7 +418,6 @@ public partial class SeleniumUIParser : Parser {
 	}
 
 	public partial class TypeSpecifierContext : ParserRuleContext {
-		public ITerminalNode TColon() { return GetToken(SeleniumUIParser.TColon, 0); }
 		public QualifierContext qualifier() {
 			return GetRuleContext<QualifierContext>(0);
 		}
@@ -441,59 +448,7 @@ public partial class SeleniumUIParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 68; Match(TColon);
-			State = 69; qualifier();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class PageContext : ParserRuleContext {
-		public ITerminalNode KPage() { return GetToken(SeleniumUIParser.KPage, 0); }
-		public NameContext name() {
-			return GetRuleContext<NameContext>(0);
-		}
-		public ElementBodyContext elementBody() {
-			return GetRuleContext<ElementBodyContext>(0);
-		}
-		public PageContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_page; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.EnterPage(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.ExitPage(this);
-		}
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPage(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public PageContext page() {
-		PageContext _localctx = new PageContext(Context, State);
-		EnterRule(_localctx, 12, RULE_page);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 71; Match(KPage);
-			State = 72; name();
-			State = 73; elementBody();
+			State = 77; qualifier();
 			}
 		}
 		catch (RecognitionException re) {
@@ -508,18 +463,20 @@ public partial class SeleniumUIParser : Parser {
 	}
 
 	public partial class ElementContext : ParserRuleContext {
-		public ITerminalNode KElement() { return GetToken(SeleniumUIParser.KElement, 0); }
+		public ElementOrPageContext elementOrPage() {
+			return GetRuleContext<ElementOrPageContext>(0);
+		}
 		public NameContext name() {
 			return GetRuleContext<NameContext>(0);
-		}
-		public LocatorSpecifierContext locatorSpecifier() {
-			return GetRuleContext<LocatorSpecifierContext>(0);
 		}
 		public ElementBodyContext elementBody() {
 			return GetRuleContext<ElementBodyContext>(0);
 		}
-		public TagSpecifierContext tagSpecifier() {
-			return GetRuleContext<TagSpecifierContext>(0);
+		public BaseElementContext baseElement() {
+			return GetRuleContext<BaseElementContext>(0);
+		}
+		public HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifier() {
+			return GetRuleContext<HtmlTagLocatorSpecifierContext>(0);
 		}
 		public ElementContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -544,24 +501,32 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public ElementContext element() {
 		ElementContext _localctx = new ElementContext(Context, State);
-		EnterRule(_localctx, 14, RULE_element);
+		EnterRule(_localctx, 12, RULE_element);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 75; Match(KElement);
-			State = 76; name();
-			State = 78;
+			State = 79; elementOrPage();
+			State = 80; name();
+			State = 82;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==TColon) {
 				{
-				State = 77; tagSpecifier();
+				State = 81; baseElement();
 				}
 			}
 
-			State = 80; locatorSpecifier();
-			State = 81; elementBody();
+			State = 85;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==TAssign) {
+				{
+				State = 84; htmlTagLocatorSpecifier();
+				}
+			}
+
+			State = 87; elementBody();
 			}
 		}
 		catch (RecognitionException re) {
@@ -575,87 +540,93 @@ public partial class SeleniumUIParser : Parser {
 		return _localctx;
 	}
 
-	public partial class TagSpecifierContext : ParserRuleContext {
+	public partial class ElementOrPageContext : ParserRuleContext {
+		public ITerminalNode KPage() { return GetToken(SeleniumUIParser.KPage, 0); }
+		public ITerminalNode KElement() { return GetToken(SeleniumUIParser.KElement, 0); }
+		public ElementOrPageContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_elementOrPage; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterElementOrPage(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitElementOrPage(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementOrPage(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ElementOrPageContext elementOrPage() {
+		ElementOrPageContext _localctx = new ElementOrPageContext(Context, State);
+		EnterRule(_localctx, 14, RULE_elementOrPage);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 89;
+			_la = TokenStream.LA(1);
+			if ( !(_la==KPage || _la==KElement) ) {
+			ErrorHandler.RecoverInline(this);
+			}
+			else {
+				ErrorHandler.ReportMatch(this);
+			    Consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class BaseElementContext : ParserRuleContext {
 		public ITerminalNode TColon() { return GetToken(SeleniumUIParser.TColon, 0); }
 		public QualifierContext qualifier() {
 			return GetRuleContext<QualifierContext>(0);
 		}
-		public TagSpecifierContext(ParserRuleContext parent, int invokingState)
+		public BaseElementContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_tagSpecifier; } }
+		public override int RuleIndex { get { return RULE_baseElement; } }
 		public override void EnterRule(IParseTreeListener listener) {
 			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.EnterTagSpecifier(this);
+			if (typedListener != null) typedListener.EnterBaseElement(this);
 		}
 		public override void ExitRule(IParseTreeListener listener) {
 			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.ExitTagSpecifier(this);
+			if (typedListener != null) typedListener.ExitBaseElement(this);
 		}
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTagSpecifier(this);
+			if (typedVisitor != null) return typedVisitor.VisitBaseElement(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public TagSpecifierContext tagSpecifier() {
-		TagSpecifierContext _localctx = new TagSpecifierContext(Context, State);
-		EnterRule(_localctx, 16, RULE_tagSpecifier);
+	public BaseElementContext baseElement() {
+		BaseElementContext _localctx = new BaseElementContext(Context, State);
+		EnterRule(_localctx, 16, RULE_baseElement);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 83; Match(TColon);
-			State = 84; qualifier();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class LocatorSpecifierContext : ParserRuleContext {
-		public ITerminalNode TAssign() { return GetToken(SeleniumUIParser.TAssign, 0); }
-		public StringContext @string() {
-			return GetRuleContext<StringContext>(0);
-		}
-		public LocatorSpecifierContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_locatorSpecifier; } }
-		public override void EnterRule(IParseTreeListener listener) {
-			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.EnterLocatorSpecifier(this);
-		}
-		public override void ExitRule(IParseTreeListener listener) {
-			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
-			if (typedListener != null) typedListener.ExitLocatorSpecifier(this);
-		}
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLocatorSpecifier(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public LocatorSpecifierContext locatorSpecifier() {
-		LocatorSpecifierContext _localctx = new LocatorSpecifierContext(Context, State);
-		EnterRule(_localctx, 18, RULE_locatorSpecifier);
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 86; Match(TAssign);
-			State = 87; @string();
+			State = 91; Match(TColon);
+			State = 92; qualifier();
 			}
 		}
 		catch (RecognitionException re) {
@@ -699,21 +670,21 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public ElementBodyContext elementBody() {
 		ElementBodyContext _localctx = new ElementBodyContext(Context, State);
-		EnterRule(_localctx, 20, RULE_elementBody);
+		EnterRule(_localctx, 18, RULE_elementBody);
 		try {
-			State = 91;
+			State = 96;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case TSemicolon:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 89; emptyElementBody();
+				State = 94; emptyElementBody();
 				}
 				break;
 			case TOpenBrace:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 90; childElementsBody();
+				State = 95; childElementsBody();
 				}
 				break;
 			default:
@@ -756,11 +727,11 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public EmptyElementBodyContext emptyElementBody() {
 		EmptyElementBodyContext _localctx = new EmptyElementBodyContext(Context, State);
-		EnterRule(_localctx, 22, RULE_emptyElementBody);
+		EnterRule(_localctx, 20, RULE_emptyElementBody);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 93; Match(TSemicolon);
+			State = 98; Match(TSemicolon);
 			}
 		}
 		catch (RecognitionException re) {
@@ -777,11 +748,11 @@ public partial class SeleniumUIParser : Parser {
 	public partial class ChildElementsBodyContext : ParserRuleContext {
 		public ITerminalNode TOpenBrace() { return GetToken(SeleniumUIParser.TOpenBrace, 0); }
 		public ITerminalNode TCloseBrace() { return GetToken(SeleniumUIParser.TCloseBrace, 0); }
-		public ElementContext[] element() {
-			return GetRuleContexts<ElementContext>();
+		public ChildElementContext[] childElement() {
+			return GetRuleContexts<ChildElementContext>();
 		}
-		public ElementContext element(int i) {
-			return GetRuleContext<ElementContext>(i);
+		public ChildElementContext childElement(int i) {
+			return GetRuleContext<ChildElementContext>(i);
 		}
 		public ChildElementsBodyContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -806,26 +777,307 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public ChildElementsBodyContext childElementsBody() {
 		ChildElementsBodyContext _localctx = new ChildElementsBodyContext(Context, State);
-		EnterRule(_localctx, 24, RULE_childElementsBody);
+		EnterRule(_localctx, 22, RULE_childElementsBody);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 95; Match(TOpenBrace);
-			State = 99;
+			State = 100; Match(TOpenBrace);
+			State = 104;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==KElement) {
+			while (_la==LIdentifier) {
 				{
 				{
-				State = 96; element();
+				State = 101; childElement();
 				}
 				}
-				State = 101;
+				State = 106;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 102; Match(TCloseBrace);
+			State = 107; Match(TCloseBrace);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ChildElementContext : ParserRuleContext {
+		public NameContext name() {
+			return GetRuleContext<NameContext>(0);
+		}
+		public ElementBodyContext elementBody() {
+			return GetRuleContext<ElementBodyContext>(0);
+		}
+		public ElementTypeSpecifierContext elementTypeSpecifier() {
+			return GetRuleContext<ElementTypeSpecifierContext>(0);
+		}
+		public HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifier() {
+			return GetRuleContext<HtmlTagLocatorSpecifierContext>(0);
+		}
+		public ChildElementContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_childElement; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterChildElement(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitChildElement(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitChildElement(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ChildElementContext childElement() {
+		ChildElementContext _localctx = new ChildElementContext(Context, State);
+		EnterRule(_localctx, 24, RULE_childElement);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 110;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
+			case 1:
+				{
+				State = 109; elementTypeSpecifier();
+				}
+				break;
+			}
+			State = 112; name();
+			State = 114;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==TAssign) {
+				{
+				State = 113; htmlTagLocatorSpecifier();
+				}
+			}
+
+			State = 116; elementBody();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ElementTypeSpecifierContext : ParserRuleContext {
+		public QualifierContext qualifier() {
+			return GetRuleContext<QualifierContext>(0);
+		}
+		public ElementTypeSpecifierContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_elementTypeSpecifier; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterElementTypeSpecifier(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitElementTypeSpecifier(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementTypeSpecifier(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ElementTypeSpecifierContext elementTypeSpecifier() {
+		ElementTypeSpecifierContext _localctx = new ElementTypeSpecifierContext(Context, State);
+		EnterRule(_localctx, 26, RULE_elementTypeSpecifier);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 118; qualifier();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class HtmlTagLocatorSpecifierContext : ParserRuleContext {
+		public ITerminalNode TAssign() { return GetToken(SeleniumUIParser.TAssign, 0); }
+		public HtmlTagSpecifierContext htmlTagSpecifier() {
+			return GetRuleContext<HtmlTagSpecifierContext>(0);
+		}
+		public LocatorSpecifierContext locatorSpecifier() {
+			return GetRuleContext<LocatorSpecifierContext>(0);
+		}
+		public HtmlTagLocatorSpecifierContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_htmlTagLocatorSpecifier; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterHtmlTagLocatorSpecifier(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitHtmlTagLocatorSpecifier(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitHtmlTagLocatorSpecifier(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifier() {
+		HtmlTagLocatorSpecifierContext _localctx = new HtmlTagLocatorSpecifierContext(Context, State);
+		EnterRule(_localctx, 28, RULE_htmlTagLocatorSpecifier);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 120; Match(TAssign);
+			State = 122;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==TOpenBracket) {
+				{
+				State = 121; htmlTagSpecifier();
+				}
+			}
+
+			State = 125;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LRegularString) | (1L << LDoubleQuoteVerbatimString) | (1L << LSingleQuoteVerbatimString))) != 0)) {
+				{
+				State = 124; locatorSpecifier();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class HtmlTagSpecifierContext : ParserRuleContext {
+		public ITerminalNode TOpenBracket() { return GetToken(SeleniumUIParser.TOpenBracket, 0); }
+		public StringContext @string() {
+			return GetRuleContext<StringContext>(0);
+		}
+		public ITerminalNode TCloseBracket() { return GetToken(SeleniumUIParser.TCloseBracket, 0); }
+		public HtmlTagSpecifierContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_htmlTagSpecifier; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterHtmlTagSpecifier(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitHtmlTagSpecifier(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitHtmlTagSpecifier(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public HtmlTagSpecifierContext htmlTagSpecifier() {
+		HtmlTagSpecifierContext _localctx = new HtmlTagSpecifierContext(Context, State);
+		EnterRule(_localctx, 30, RULE_htmlTagSpecifier);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 127; Match(TOpenBracket);
+			State = 128; @string();
+			State = 129; Match(TCloseBracket);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class LocatorSpecifierContext : ParserRuleContext {
+		public StringContext @string() {
+			return GetRuleContext<StringContext>(0);
+		}
+		public LocatorSpecifierContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_locatorSpecifier; } }
+		public override void EnterRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.EnterLocatorSpecifier(this);
+		}
+		public override void ExitRule(IParseTreeListener listener) {
+			ISeleniumUIParserListener typedListener = listener as ISeleniumUIParserListener;
+			if (typedListener != null) typedListener.ExitLocatorSpecifier(this);
+		}
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ISeleniumUIParserVisitor<TResult> typedVisitor = visitor as ISeleniumUIParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocatorSpecifier(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public LocatorSpecifierContext locatorSpecifier() {
+		LocatorSpecifierContext _localctx = new LocatorSpecifierContext(Context, State);
+		EnterRule(_localctx, 32, RULE_locatorSpecifier);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 131; @string();
 			}
 		}
 		catch (RecognitionException re) {
@@ -866,11 +1118,11 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public QualifiedNameContext qualifiedName() {
 		QualifiedNameContext _localctx = new QualifiedNameContext(Context, State);
-		EnterRule(_localctx, 26, RULE_qualifiedName);
+		EnterRule(_localctx, 34, RULE_qualifiedName);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 104; qualifier();
+			State = 133; qualifier();
 			}
 		}
 		catch (RecognitionException re) {
@@ -911,11 +1163,11 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public NameContext name() {
 		NameContext _localctx = new NameContext(Context, State);
-		EnterRule(_localctx, 28, RULE_name);
+		EnterRule(_localctx, 36, RULE_name);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 106; identifier();
+			State = 135; identifier();
 			}
 		}
 		catch (RecognitionException re) {
@@ -963,23 +1215,23 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public QualifierContext qualifier() {
 		QualifierContext _localctx = new QualifierContext(Context, State);
-		EnterRule(_localctx, 30, RULE_qualifier);
+		EnterRule(_localctx, 38, RULE_qualifier);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 108; identifier();
-			State = 113;
+			State = 137; identifier();
+			State = 142;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==TDot) {
 				{
 				{
-				State = 109; Match(TDot);
-				State = 110; identifier();
+				State = 138; Match(TDot);
+				State = 139; identifier();
 				}
 				}
-				State = 115;
+				State = 144;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1021,11 +1273,11 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public IdentifierContext identifier() {
 		IdentifierContext _localctx = new IdentifierContext(Context, State);
-		EnterRule(_localctx, 32, RULE_identifier);
+		EnterRule(_localctx, 40, RULE_identifier);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 116; Match(LIdentifier);
+			State = 145; Match(LIdentifier);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1066,12 +1318,12 @@ public partial class SeleniumUIParser : Parser {
 	[RuleVersion(0)]
 	public StringContext @string() {
 		StringContext _localctx = new StringContext(Context, State);
-		EnterRule(_localctx, 34, RULE_string);
+		EnterRule(_localctx, 42, RULE_string);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 118;
+			State = 147;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LRegularString) | (1L << LDoubleQuoteVerbatimString) | (1L << LSingleQuoteVerbatimString))) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -1095,94 +1347,119 @@ public partial class SeleniumUIParser : Parser {
 
 	private static char[] _serializedATN = {
 		'\x3', '\x608B', '\xA72A', '\x8133', '\xB9ED', '\x417C', '\x3BE7', '\x7786', 
-		'\x5964', '\x3', '\'', '{', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', '\t', 
-		'\x3', '\x4', '\x4', '\t', '\x4', '\x4', '\x5', '\t', '\x5', '\x4', '\x6', 
-		'\t', '\x6', '\x4', '\a', '\t', '\a', '\x4', '\b', '\t', '\b', '\x4', 
-		'\t', '\t', '\t', '\x4', '\n', '\t', '\n', '\x4', '\v', '\t', '\v', '\x4', 
-		'\f', '\t', '\f', '\x4', '\r', '\t', '\r', '\x4', '\xE', '\t', '\xE', 
-		'\x4', '\xF', '\t', '\xF', '\x4', '\x10', '\t', '\x10', '\x4', '\x11', 
-		'\t', '\x11', '\x4', '\x12', '\t', '\x12', '\x4', '\x13', '\t', '\x13', 
-		'\x3', '\x2', '\a', '\x2', '(', '\n', '\x2', '\f', '\x2', '\xE', '\x2', 
-		'+', '\v', '\x2', '\x3', '\x2', '\x3', '\x2', '\x3', '\x3', '\x3', '\x3', 
-		'\x3', '\x3', '\x3', '\x3', '\x3', '\x4', '\x3', '\x4', '\a', '\x4', '\x35', 
-		'\n', '\x4', '\f', '\x4', '\xE', '\x4', '\x38', '\v', '\x4', '\x3', '\x4', 
-		'\x3', '\x4', '\x3', '\x5', '\x3', '\x5', '\x5', '\x5', '>', '\n', '\x5', 
-		'\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x5', '\x6', '\x43', '\n', 
-		'\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\a', '\x3', '\a', '\x3', '\a', 
-		'\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x5', '\t', 'Q', '\n', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\v', '\x3', 
-		'\v', '\x3', '\v', '\x3', '\f', '\x3', '\f', '\x5', '\f', '^', '\n', '\f', 
-		'\x3', '\r', '\x3', '\r', '\x3', '\xE', '\x3', '\xE', '\a', '\xE', '\x64', 
-		'\n', '\xE', '\f', '\xE', '\xE', '\xE', 'g', '\v', '\xE', '\x3', '\xE', 
-		'\x3', '\xE', '\x3', '\xF', '\x3', '\xF', '\x3', '\x10', '\x3', '\x10', 
-		'\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\a', '\x11', 'r', '\n', 
-		'\x11', '\f', '\x11', '\xE', '\x11', 'u', '\v', '\x11', '\x3', '\x12', 
-		'\x3', '\x12', '\x3', '\x13', '\x3', '\x13', '\x3', '\x13', '\x2', '\x2', 
-		'\x14', '\x2', '\x4', '\x6', '\b', '\n', '\f', '\xE', '\x10', '\x12', 
-		'\x14', '\x16', '\x18', '\x1A', '\x1C', '\x1E', ' ', '\"', '$', '\x2', 
-		'\x3', '\x4', '\x2', '\x1B', '\x1B', '\"', '#', '\x2', 'p', '\x2', ')', 
-		'\x3', '\x2', '\x2', '\x2', '\x4', '.', '\x3', '\x2', '\x2', '\x2', '\x6', 
-		'\x32', '\x3', '\x2', '\x2', '\x2', '\b', '=', '\x3', '\x2', '\x2', '\x2', 
-		'\n', '?', '\x3', '\x2', '\x2', '\x2', '\f', '\x46', '\x3', '\x2', '\x2', 
-		'\x2', '\xE', 'I', '\x3', '\x2', '\x2', '\x2', '\x10', 'M', '\x3', '\x2', 
-		'\x2', '\x2', '\x12', 'U', '\x3', '\x2', '\x2', '\x2', '\x14', 'X', '\x3', 
-		'\x2', '\x2', '\x2', '\x16', ']', '\x3', '\x2', '\x2', '\x2', '\x18', 
-		'_', '\x3', '\x2', '\x2', '\x2', '\x1A', '\x61', '\x3', '\x2', '\x2', 
-		'\x2', '\x1C', 'j', '\x3', '\x2', '\x2', '\x2', '\x1E', 'l', '\x3', '\x2', 
-		'\x2', '\x2', ' ', 'n', '\x3', '\x2', '\x2', '\x2', '\"', 'v', '\x3', 
-		'\x2', '\x2', '\x2', '$', 'x', '\x3', '\x2', '\x2', '\x2', '&', '(', '\x5', 
-		'\x4', '\x3', '\x2', '\'', '&', '\x3', '\x2', '\x2', '\x2', '(', '+', 
-		'\x3', '\x2', '\x2', '\x2', ')', '\'', '\x3', '\x2', '\x2', '\x2', ')', 
-		'*', '\x3', '\x2', '\x2', '\x2', '*', ',', '\x3', '\x2', '\x2', '\x2', 
-		'+', ')', '\x3', '\x2', '\x2', '\x2', ',', '-', '\a', '\x2', '\x2', '\x3', 
-		'-', '\x3', '\x3', '\x2', '\x2', '\x2', '.', '/', '\a', '\x5', '\x2', 
-		'\x2', '/', '\x30', '\x5', '\x1C', '\xF', '\x2', '\x30', '\x31', '\x5', 
-		'\x6', '\x4', '\x2', '\x31', '\x5', '\x3', '\x2', '\x2', '\x2', '\x32', 
-		'\x36', '\a', '\x12', '\x2', '\x2', '\x33', '\x35', '\x5', '\b', '\x5', 
-		'\x2', '\x34', '\x33', '\x3', '\x2', '\x2', '\x2', '\x35', '\x38', '\x3', 
-		'\x2', '\x2', '\x2', '\x36', '\x34', '\x3', '\x2', '\x2', '\x2', '\x36', 
-		'\x37', '\x3', '\x2', '\x2', '\x2', '\x37', '\x39', '\x3', '\x2', '\x2', 
-		'\x2', '\x38', '\x36', '\x3', '\x2', '\x2', '\x2', '\x39', ':', '\a', 
-		'\x13', '\x2', '\x2', ':', '\a', '\x3', '\x2', '\x2', '\x2', ';', '>', 
-		'\x5', '\n', '\x6', '\x2', '<', '>', '\x5', '\xE', '\b', '\x2', '=', ';', 
-		'\x3', '\x2', '\x2', '\x2', '=', '<', '\x3', '\x2', '\x2', '\x2', '>', 
-		'\t', '\x3', '\x2', '\x2', '\x2', '?', '@', '\a', '\b', '\x2', '\x2', 
-		'@', '\x42', '\x5', '\x1E', '\x10', '\x2', '\x41', '\x43', '\x5', '\f', 
-		'\a', '\x2', '\x42', '\x41', '\x3', '\x2', '\x2', '\x2', '\x42', '\x43', 
-		'\x3', '\x2', '\x2', '\x2', '\x43', '\x44', '\x3', '\x2', '\x2', '\x2', 
-		'\x44', '\x45', '\a', '\t', '\x2', '\x2', '\x45', '\v', '\x3', '\x2', 
-		'\x2', '\x2', '\x46', 'G', '\a', '\n', '\x2', '\x2', 'G', 'H', '\x5', 
-		' ', '\x11', '\x2', 'H', '\r', '\x3', '\x2', '\x2', '\x2', 'I', 'J', '\a', 
-		'\x6', '\x2', '\x2', 'J', 'K', '\x5', '\x1E', '\x10', '\x2', 'K', 'L', 
-		'\x5', '\x16', '\f', '\x2', 'L', '\xF', '\x3', '\x2', '\x2', '\x2', 'M', 
-		'N', '\a', '\a', '\x2', '\x2', 'N', 'P', '\x5', '\x1E', '\x10', '\x2', 
-		'O', 'Q', '\x5', '\x12', '\n', '\x2', 'P', 'O', '\x3', '\x2', '\x2', '\x2', 
-		'P', 'Q', '\x3', '\x2', '\x2', '\x2', 'Q', 'R', '\x3', '\x2', '\x2', '\x2', 
-		'R', 'S', '\x5', '\x14', '\v', '\x2', 'S', 'T', '\x5', '\x16', '\f', '\x2', 
-		'T', '\x11', '\x3', '\x2', '\x2', '\x2', 'U', 'V', '\a', '\n', '\x2', 
-		'\x2', 'V', 'W', '\x5', ' ', '\x11', '\x2', 'W', '\x13', '\x3', '\x2', 
-		'\x2', '\x2', 'X', 'Y', '\a', '\r', '\x2', '\x2', 'Y', 'Z', '\x5', '$', 
-		'\x13', '\x2', 'Z', '\x15', '\x3', '\x2', '\x2', '\x2', '[', '^', '\x5', 
-		'\x18', '\r', '\x2', '\\', '^', '\x5', '\x1A', '\xE', '\x2', ']', '[', 
-		'\x3', '\x2', '\x2', '\x2', ']', '\\', '\x3', '\x2', '\x2', '\x2', '^', 
-		'\x17', '\x3', '\x2', '\x2', '\x2', '_', '`', '\a', '\t', '\x2', '\x2', 
-		'`', '\x19', '\x3', '\x2', '\x2', '\x2', '\x61', '\x65', '\a', '\x12', 
-		'\x2', '\x2', '\x62', '\x64', '\x5', '\x10', '\t', '\x2', '\x63', '\x62', 
-		'\x3', '\x2', '\x2', '\x2', '\x64', 'g', '\x3', '\x2', '\x2', '\x2', '\x65', 
-		'\x63', '\x3', '\x2', '\x2', '\x2', '\x65', '\x66', '\x3', '\x2', '\x2', 
-		'\x2', '\x66', 'h', '\x3', '\x2', '\x2', '\x2', 'g', '\x65', '\x3', '\x2', 
-		'\x2', '\x2', 'h', 'i', '\a', '\x13', '\x2', '\x2', 'i', '\x1B', '\x3', 
-		'\x2', '\x2', '\x2', 'j', 'k', '\x5', ' ', '\x11', '\x2', 'k', '\x1D', 
-		'\x3', '\x2', '\x2', '\x2', 'l', 'm', '\x5', '\"', '\x12', '\x2', 'm', 
-		'\x1F', '\x3', '\x2', '\x2', '\x2', 'n', 's', '\x5', '\"', '\x12', '\x2', 
-		'o', 'p', '\a', '\v', '\x2', '\x2', 'p', 'r', '\x5', '\"', '\x12', '\x2', 
-		'q', 'o', '\x3', '\x2', '\x2', '\x2', 'r', 'u', '\x3', '\x2', '\x2', '\x2', 
-		's', 'q', '\x3', '\x2', '\x2', '\x2', 's', 't', '\x3', '\x2', '\x2', '\x2', 
-		't', '!', '\x3', '\x2', '\x2', '\x2', 'u', 's', '\x3', '\x2', '\x2', '\x2', 
-		'v', 'w', '\a', '\x17', '\x2', '\x2', 'w', '#', '\x3', '\x2', '\x2', '\x2', 
-		'x', 'y', '\t', '\x2', '\x2', '\x2', 'y', '%', '\x3', '\x2', '\x2', '\x2', 
-		'\n', ')', '\x36', '=', '\x42', 'P', ']', '\x65', 's',
+		'\x5964', '\x3', '\'', '\x98', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', 
+		'\t', '\x3', '\x4', '\x4', '\t', '\x4', '\x4', '\x5', '\t', '\x5', '\x4', 
+		'\x6', '\t', '\x6', '\x4', '\a', '\t', '\a', '\x4', '\b', '\t', '\b', 
+		'\x4', '\t', '\t', '\t', '\x4', '\n', '\t', '\n', '\x4', '\v', '\t', '\v', 
+		'\x4', '\f', '\t', '\f', '\x4', '\r', '\t', '\r', '\x4', '\xE', '\t', 
+		'\xE', '\x4', '\xF', '\t', '\xF', '\x4', '\x10', '\t', '\x10', '\x4', 
+		'\x11', '\t', '\x11', '\x4', '\x12', '\t', '\x12', '\x4', '\x13', '\t', 
+		'\x13', '\x4', '\x14', '\t', '\x14', '\x4', '\x15', '\t', '\x15', '\x4', 
+		'\x16', '\t', '\x16', '\x4', '\x17', '\t', '\x17', '\x3', '\x2', '\a', 
+		'\x2', '\x30', '\n', '\x2', '\f', '\x2', '\xE', '\x2', '\x33', '\v', '\x2', 
+		'\x3', '\x2', '\x3', '\x2', '\x3', '\x3', '\x3', '\x3', '\x3', '\x3', 
+		'\x3', '\x3', '\x3', '\x4', '\x3', '\x4', '\a', '\x4', '=', '\n', '\x4', 
+		'\f', '\x4', '\xE', '\x4', '@', '\v', '\x4', '\x3', '\x4', '\x3', '\x4', 
+		'\x3', '\x5', '\x3', '\x5', '\x5', '\x5', '\x46', '\n', '\x5', '\x3', 
+		'\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x5', '\x6', 'L', '\n', 
+		'\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\a', '\x3', '\a', '\x3', '\b', 
+		'\x3', '\b', '\x3', '\b', '\x5', '\b', 'U', '\n', '\b', '\x3', '\b', '\x5', 
+		'\b', 'X', '\n', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\t', '\x3', '\t', 
+		'\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\v', '\x3', '\v', '\x5', 
+		'\v', '\x63', '\n', '\v', '\x3', '\f', '\x3', '\f', '\x3', '\r', '\x3', 
+		'\r', '\a', '\r', 'i', '\n', '\r', '\f', '\r', '\xE', '\r', 'l', '\v', 
+		'\r', '\x3', '\r', '\x3', '\r', '\x3', '\xE', '\x5', '\xE', 'q', '\n', 
+		'\xE', '\x3', '\xE', '\x3', '\xE', '\x5', '\xE', 'u', '\n', '\xE', '\x3', 
+		'\xE', '\x3', '\xE', '\x3', '\xF', '\x3', '\xF', '\x3', '\x10', '\x3', 
+		'\x10', '\x5', '\x10', '}', '\n', '\x10', '\x3', '\x10', '\x5', '\x10', 
+		'\x80', '\n', '\x10', '\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\x3', 
+		'\x11', '\x3', '\x12', '\x3', '\x12', '\x3', '\x13', '\x3', '\x13', '\x3', 
+		'\x14', '\x3', '\x14', '\x3', '\x15', '\x3', '\x15', '\x3', '\x15', '\a', 
+		'\x15', '\x8F', '\n', '\x15', '\f', '\x15', '\xE', '\x15', '\x92', '\v', 
+		'\x15', '\x3', '\x16', '\x3', '\x16', '\x3', '\x17', '\x3', '\x17', '\x3', 
+		'\x17', '\x2', '\x2', '\x18', '\x2', '\x4', '\x6', '\b', '\n', '\f', '\xE', 
+		'\x10', '\x12', '\x14', '\x16', '\x18', '\x1A', '\x1C', '\x1E', ' ', '\"', 
+		'$', '&', '(', '*', ',', '\x2', '\x4', '\x3', '\x2', '\x6', '\a', '\x4', 
+		'\x2', '\x1B', '\x1B', '\"', '#', '\x2', '\x8E', '\x2', '\x31', '\x3', 
+		'\x2', '\x2', '\x2', '\x4', '\x36', '\x3', '\x2', '\x2', '\x2', '\x6', 
+		':', '\x3', '\x2', '\x2', '\x2', '\b', '\x45', '\x3', '\x2', '\x2', '\x2', 
+		'\n', 'G', '\x3', '\x2', '\x2', '\x2', '\f', 'O', '\x3', '\x2', '\x2', 
+		'\x2', '\xE', 'Q', '\x3', '\x2', '\x2', '\x2', '\x10', '[', '\x3', '\x2', 
+		'\x2', '\x2', '\x12', ']', '\x3', '\x2', '\x2', '\x2', '\x14', '\x62', 
+		'\x3', '\x2', '\x2', '\x2', '\x16', '\x64', '\x3', '\x2', '\x2', '\x2', 
+		'\x18', '\x66', '\x3', '\x2', '\x2', '\x2', '\x1A', 'p', '\x3', '\x2', 
+		'\x2', '\x2', '\x1C', 'x', '\x3', '\x2', '\x2', '\x2', '\x1E', 'z', '\x3', 
+		'\x2', '\x2', '\x2', ' ', '\x81', '\x3', '\x2', '\x2', '\x2', '\"', '\x85', 
+		'\x3', '\x2', '\x2', '\x2', '$', '\x87', '\x3', '\x2', '\x2', '\x2', '&', 
+		'\x89', '\x3', '\x2', '\x2', '\x2', '(', '\x8B', '\x3', '\x2', '\x2', 
+		'\x2', '*', '\x93', '\x3', '\x2', '\x2', '\x2', ',', '\x95', '\x3', '\x2', 
+		'\x2', '\x2', '.', '\x30', '\x5', '\x4', '\x3', '\x2', '/', '.', '\x3', 
+		'\x2', '\x2', '\x2', '\x30', '\x33', '\x3', '\x2', '\x2', '\x2', '\x31', 
+		'/', '\x3', '\x2', '\x2', '\x2', '\x31', '\x32', '\x3', '\x2', '\x2', 
+		'\x2', '\x32', '\x34', '\x3', '\x2', '\x2', '\x2', '\x33', '\x31', '\x3', 
+		'\x2', '\x2', '\x2', '\x34', '\x35', '\a', '\x2', '\x2', '\x3', '\x35', 
+		'\x3', '\x3', '\x2', '\x2', '\x2', '\x36', '\x37', '\a', '\x5', '\x2', 
+		'\x2', '\x37', '\x38', '\x5', '$', '\x13', '\x2', '\x38', '\x39', '\x5', 
+		'\x6', '\x4', '\x2', '\x39', '\x5', '\x3', '\x2', '\x2', '\x2', ':', '>', 
+		'\a', '\x12', '\x2', '\x2', ';', '=', '\x5', '\b', '\x5', '\x2', '<', 
+		';', '\x3', '\x2', '\x2', '\x2', '=', '@', '\x3', '\x2', '\x2', '\x2', 
+		'>', '<', '\x3', '\x2', '\x2', '\x2', '>', '?', '\x3', '\x2', '\x2', '\x2', 
+		'?', '\x41', '\x3', '\x2', '\x2', '\x2', '@', '>', '\x3', '\x2', '\x2', 
+		'\x2', '\x41', '\x42', '\a', '\x13', '\x2', '\x2', '\x42', '\a', '\x3', 
+		'\x2', '\x2', '\x2', '\x43', '\x46', '\x5', '\n', '\x6', '\x2', '\x44', 
+		'\x46', '\x5', '\xE', '\b', '\x2', '\x45', '\x43', '\x3', '\x2', '\x2', 
+		'\x2', '\x45', '\x44', '\x3', '\x2', '\x2', '\x2', '\x46', '\t', '\x3', 
+		'\x2', '\x2', '\x2', 'G', 'H', '\a', '\b', '\x2', '\x2', 'H', 'I', '\x5', 
+		'\f', '\a', '\x2', 'I', 'K', '\x5', '&', '\x14', '\x2', 'J', 'L', '\x5', 
+		'\x1E', '\x10', '\x2', 'K', 'J', '\x3', '\x2', '\x2', '\x2', 'K', 'L', 
+		'\x3', '\x2', '\x2', '\x2', 'L', 'M', '\x3', '\x2', '\x2', '\x2', 'M', 
+		'N', '\a', '\t', '\x2', '\x2', 'N', '\v', '\x3', '\x2', '\x2', '\x2', 
+		'O', 'P', '\x5', '(', '\x15', '\x2', 'P', '\r', '\x3', '\x2', '\x2', '\x2', 
+		'Q', 'R', '\x5', '\x10', '\t', '\x2', 'R', 'T', '\x5', '&', '\x14', '\x2', 
+		'S', 'U', '\x5', '\x12', '\n', '\x2', 'T', 'S', '\x3', '\x2', '\x2', '\x2', 
+		'T', 'U', '\x3', '\x2', '\x2', '\x2', 'U', 'W', '\x3', '\x2', '\x2', '\x2', 
+		'V', 'X', '\x5', '\x1E', '\x10', '\x2', 'W', 'V', '\x3', '\x2', '\x2', 
+		'\x2', 'W', 'X', '\x3', '\x2', '\x2', '\x2', 'X', 'Y', '\x3', '\x2', '\x2', 
+		'\x2', 'Y', 'Z', '\x5', '\x14', '\v', '\x2', 'Z', '\xF', '\x3', '\x2', 
+		'\x2', '\x2', '[', '\\', '\t', '\x2', '\x2', '\x2', '\\', '\x11', '\x3', 
+		'\x2', '\x2', '\x2', ']', '^', '\a', '\n', '\x2', '\x2', '^', '_', '\x5', 
+		'(', '\x15', '\x2', '_', '\x13', '\x3', '\x2', '\x2', '\x2', '`', '\x63', 
+		'\x5', '\x16', '\f', '\x2', '\x61', '\x63', '\x5', '\x18', '\r', '\x2', 
+		'\x62', '`', '\x3', '\x2', '\x2', '\x2', '\x62', '\x61', '\x3', '\x2', 
+		'\x2', '\x2', '\x63', '\x15', '\x3', '\x2', '\x2', '\x2', '\x64', '\x65', 
+		'\a', '\t', '\x2', '\x2', '\x65', '\x17', '\x3', '\x2', '\x2', '\x2', 
+		'\x66', 'j', '\a', '\x12', '\x2', '\x2', 'g', 'i', '\x5', '\x1A', '\xE', 
+		'\x2', 'h', 'g', '\x3', '\x2', '\x2', '\x2', 'i', 'l', '\x3', '\x2', '\x2', 
+		'\x2', 'j', 'h', '\x3', '\x2', '\x2', '\x2', 'j', 'k', '\x3', '\x2', '\x2', 
+		'\x2', 'k', 'm', '\x3', '\x2', '\x2', '\x2', 'l', 'j', '\x3', '\x2', '\x2', 
+		'\x2', 'm', 'n', '\a', '\x13', '\x2', '\x2', 'n', '\x19', '\x3', '\x2', 
+		'\x2', '\x2', 'o', 'q', '\x5', '\x1C', '\xF', '\x2', 'p', 'o', '\x3', 
+		'\x2', '\x2', '\x2', 'p', 'q', '\x3', '\x2', '\x2', '\x2', 'q', 'r', '\x3', 
+		'\x2', '\x2', '\x2', 'r', 't', '\x5', '&', '\x14', '\x2', 's', 'u', '\x5', 
+		'\x1E', '\x10', '\x2', 't', 's', '\x3', '\x2', '\x2', '\x2', 't', 'u', 
+		'\x3', '\x2', '\x2', '\x2', 'u', 'v', '\x3', '\x2', '\x2', '\x2', 'v', 
+		'w', '\x5', '\x14', '\v', '\x2', 'w', '\x1B', '\x3', '\x2', '\x2', '\x2', 
+		'x', 'y', '\x5', '(', '\x15', '\x2', 'y', '\x1D', '\x3', '\x2', '\x2', 
+		'\x2', 'z', '|', '\a', '\r', '\x2', '\x2', '{', '}', '\x5', ' ', '\x11', 
+		'\x2', '|', '{', '\x3', '\x2', '\x2', '\x2', '|', '}', '\x3', '\x2', '\x2', 
+		'\x2', '}', '\x7F', '\x3', '\x2', '\x2', '\x2', '~', '\x80', '\x5', '\"', 
+		'\x12', '\x2', '\x7F', '~', '\x3', '\x2', '\x2', '\x2', '\x7F', '\x80', 
+		'\x3', '\x2', '\x2', '\x2', '\x80', '\x1F', '\x3', '\x2', '\x2', '\x2', 
+		'\x81', '\x82', '\a', '\x10', '\x2', '\x2', '\x82', '\x83', '\x5', ',', 
+		'\x17', '\x2', '\x83', '\x84', '\a', '\x11', '\x2', '\x2', '\x84', '!', 
+		'\x3', '\x2', '\x2', '\x2', '\x85', '\x86', '\x5', ',', '\x17', '\x2', 
+		'\x86', '#', '\x3', '\x2', '\x2', '\x2', '\x87', '\x88', '\x5', '(', '\x15', 
+		'\x2', '\x88', '%', '\x3', '\x2', '\x2', '\x2', '\x89', '\x8A', '\x5', 
+		'*', '\x16', '\x2', '\x8A', '\'', '\x3', '\x2', '\x2', '\x2', '\x8B', 
+		'\x90', '\x5', '*', '\x16', '\x2', '\x8C', '\x8D', '\a', '\v', '\x2', 
+		'\x2', '\x8D', '\x8F', '\x5', '*', '\x16', '\x2', '\x8E', '\x8C', '\x3', 
+		'\x2', '\x2', '\x2', '\x8F', '\x92', '\x3', '\x2', '\x2', '\x2', '\x90', 
+		'\x8E', '\x3', '\x2', '\x2', '\x2', '\x90', '\x91', '\x3', '\x2', '\x2', 
+		'\x2', '\x91', ')', '\x3', '\x2', '\x2', '\x2', '\x92', '\x90', '\x3', 
+		'\x2', '\x2', '\x2', '\x93', '\x94', '\a', '\x17', '\x2', '\x2', '\x94', 
+		'+', '\x3', '\x2', '\x2', '\x2', '\x95', '\x96', '\t', '\x3', '\x2', '\x2', 
+		'\x96', '-', '\x3', '\x2', '\x2', '\x2', '\xF', '\x31', '>', '\x45', 'K', 
+		'T', 'W', '\x62', 'j', 'p', 't', '|', '\x7F', '\x90',
 	};
 
 	public static readonly ATN _ATN =

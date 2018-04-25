@@ -23,6 +23,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
     {
 		public static object UseNamespace = new object();
 		public static object UseQualifier = new object();
+		public static object UseElementOrPage = new object();
 		public static object UseString = new object();
 
         public SeleniumUIBinderFactoryVisitor(BinderFactory symbolBuilder)
@@ -157,24 +158,6 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			return resultBinder;
 		}
 		
-		public Binder VisitPage(PageSyntax node)
-		{
-		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
-		    if (!node.FullSpan.Contains(this.Position))
-		    {
-		        return this.GetParentBinder(node);
-		    }
-			object use = null;
-			Binder resultBinder = null;
-			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
-			{
-				resultBinder = this.GetParentBinder(node);
-				resultBinder = this.CreateSymbolDefBinder(resultBinder, node, typeof(Symbols.Page));
-				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
-			}
-			return resultBinder;
-		}
-		
 		public Binder VisitElement(ElementSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
@@ -187,14 +170,50 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
 			{
 				resultBinder = this.GetParentBinder(node);
-				resultBinder = this.CreatePropertyBinder(resultBinder, node, "Elements");
 				resultBinder = this.CreateSymbolDefBinder(resultBinder, node, typeof(Symbols.Element));
 				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
 			}
 			return resultBinder;
 		}
 		
-		public Binder VisitTagSpecifier(TagSpecifierSyntax node)
+		public Binder VisitElementOrPage(ElementOrPageSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			if (this.ForChild)
+			{
+				if (LookupPosition.IsInNode(this.Position, node.ElementOrPage)) use = UseElementOrPage;
+			}
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				resultBinder = this.CreatePropertyBinder(resultBinder, node, "IsPage");
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+				if (use == UseElementOrPage)
+				{
+					switch (((SeleniumUISyntaxToken)node.ElementOrPage).Kind)
+					{
+						case SeleniumUISyntaxKind.KPage:
+							resultBinder = this.CreateValueBinder(resultBinder, node.ElementOrPage, true);
+							break;
+						case SeleniumUISyntaxKind.KElement:
+							resultBinder = this.CreateValueBinder(resultBinder, node.ElementOrPage, false);
+							break;
+						default:
+							break;
+					}
+					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
+				}
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitBaseElement(BaseElementSyntax node)
 		{
 		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
 		    if (!node.FullSpan.Contains(this.Position))
@@ -210,38 +229,12 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
 			{
 				resultBinder = this.GetParentBinder(node);
+				resultBinder = this.CreatePropertyBinder(resultBinder, node, "Base");
 				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
 				if (use == UseQualifier)
 				{
-					resultBinder = this.CreatePropertyBinder(resultBinder, node.Qualifier, "Tag");
-					resultBinder = this.CreateSymbolUseBinder(resultBinder, node.Qualifier, ImmutableArray.Create(typeof(Symbols.Tag)));
-					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
-				}
-			}
-			return resultBinder;
-		}
-		
-		public Binder VisitLocatorSpecifier(LocatorSpecifierSyntax node)
-		{
-		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
-		    if (!node.FullSpan.Contains(this.Position))
-		    {
-		        return this.GetParentBinder(node);
-		    }
-			object use = null;
-			if (this.ForChild)
-			{
-				if (LookupPosition.IsInNode(this.Position, node.String)) use = UseString;
-			}
-			Binder resultBinder = null;
-			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
-			{
-				resultBinder = this.GetParentBinder(node);
-				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
-				if (use == UseString)
-				{
-					resultBinder = this.CreatePropertyBinder(resultBinder, node.String, "Locator");
-					resultBinder = this.CreateValueBinder(resultBinder, node.String);
+					resultBinder = this.CreatePropertyBinder(resultBinder, node.Qualifier, "Element");
+					resultBinder = this.CreateSymbolUseBinder(resultBinder, node.Qualifier, ImmutableArray.Create(typeof(Symbols.Element)));
 					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
 				}
 			}
@@ -296,6 +289,123 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 				resultBinder = this.GetParentBinder(node);
 				resultBinder = this.CreateBodyBinder(resultBinder, node);
 				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitChildElement(ChildElementSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				resultBinder = this.CreatePropertyBinder(resultBinder, node, "Elements");
+				resultBinder = this.CreateSymbolDefBinder(resultBinder, node, typeof(Symbols.Element));
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			if (this.ForChild)
+			{
+				if (LookupPosition.IsInNode(this.Position, node.Qualifier)) use = UseQualifier;
+			}
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+				if (use == UseQualifier)
+				{
+					resultBinder = this.CreatePropertyBinder(resultBinder, node.Qualifier, "Type");
+					resultBinder = this.CreateSymbolUseBinder(resultBinder, node.Qualifier, ImmutableArray.Create(typeof(Symbols.ElementType)));
+					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
+				}
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			if (this.ForChild)
+			{
+				if (LookupPosition.IsInNode(this.Position, node.String)) use = UseString;
+			}
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+				if (use == UseString)
+				{
+					resultBinder = this.CreatePropertyBinder(resultBinder, node.String, "DeclaredHtmlTag");
+					resultBinder = this.CreateValueBinder(resultBinder, node.String);
+					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
+				}
+			}
+			return resultBinder;
+		}
+		
+		public Binder VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		{
+		    Debug.Assert(node.SyntaxTree == this.SyntaxTree);
+		    if (!node.FullSpan.Contains(this.Position))
+		    {
+		        return this.GetParentBinder(node);
+		    }
+			object use = null;
+			if (this.ForChild)
+			{
+				if (LookupPosition.IsInNode(this.Position, node.String)) use = UseString;
+			}
+			Binder resultBinder = null;
+			if (!this.BinderFactory.TryGetBinder(node, use, out resultBinder))
+			{
+				resultBinder = this.GetParentBinder(node);
+				this.BinderFactory.TryAddBinder(node, null, ref resultBinder);
+				if (use == UseString)
+				{
+					resultBinder = this.CreatePropertyBinder(resultBinder, node.String, "DeclaredLocator");
+					resultBinder = this.CreateValueBinder(resultBinder, node.String);
+					this.BinderFactory.TryAddBinder(node, use, ref resultBinder);
+				}
 			}
 			return resultBinder;
 		}

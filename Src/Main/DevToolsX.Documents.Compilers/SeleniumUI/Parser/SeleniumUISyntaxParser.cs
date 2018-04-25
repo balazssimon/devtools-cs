@@ -130,10 +130,10 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				{
 					return this.factory.Declaration((TagGreen)this.Visit(tagContext), true);
 				}
-				SeleniumUIParser.PageContext pageContext = context.page();
-				if (pageContext != null) 
+				SeleniumUIParser.ElementContext elementContext = context.element();
+				if (elementContext != null) 
 				{
-					return this.factory.Declaration((PageGreen)this.Visit(pageContext), true);
+					return this.factory.Declaration((ElementGreen)this.Visit(elementContext), true);
 				}
 				return null;
 			}
@@ -142,75 +142,66 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			{
 				if (context == null) return null;
 				InternalSyntaxToken kTag = (InternalSyntaxToken)this.VisitTerminal(context.KTag());
-				SeleniumUIParser.NameContext nameContext = context.name();
-				NameGreen name = null;
-				if (nameContext != null)
-				{
-					name = (NameGreen)this.Visit(nameContext);
-				}
 				SeleniumUIParser.TypeSpecifierContext typeSpecifierContext = context.typeSpecifier();
 				TypeSpecifierGreen typeSpecifier = null;
 				if (typeSpecifierContext != null)
 				{
 					typeSpecifier = (TypeSpecifierGreen)this.Visit(typeSpecifierContext);
 				}
+				SeleniumUIParser.NameContext nameContext = context.name();
+				NameGreen name = null;
+				if (nameContext != null)
+				{
+					name = (NameGreen)this.Visit(nameContext);
+				}
+				SeleniumUIParser.HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifierContext = context.htmlTagLocatorSpecifier();
+				HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier = null;
+				if (htmlTagLocatorSpecifierContext != null)
+				{
+					htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierGreen)this.Visit(htmlTagLocatorSpecifierContext);
+				}
 				InternalSyntaxToken tSemicolon = (InternalSyntaxToken)this.VisitTerminal(context.TSemicolon());
-				return this.factory.Tag(kTag, name, typeSpecifier, tSemicolon, true);
+				return this.factory.Tag(kTag, typeSpecifier, name, htmlTagLocatorSpecifier, tSemicolon, true);
 			}
 			
 			public override GreenNode VisitTypeSpecifier(SeleniumUIParser.TypeSpecifierContext context)
 			{
 				if (context == null) return null;
-				InternalSyntaxToken tColon = (InternalSyntaxToken)this.VisitTerminal(context.TColon());
 				SeleniumUIParser.QualifierContext qualifierContext = context.qualifier();
 				QualifierGreen qualifier = null;
 				if (qualifierContext != null)
 				{
 					qualifier = (QualifierGreen)this.Visit(qualifierContext);
 				}
-				return this.factory.TypeSpecifier(tColon, qualifier, true);
-			}
-			
-			public override GreenNode VisitPage(SeleniumUIParser.PageContext context)
-			{
-				if (context == null) return null;
-				InternalSyntaxToken kPage = (InternalSyntaxToken)this.VisitTerminal(context.KPage());
-				SeleniumUIParser.NameContext nameContext = context.name();
-				NameGreen name = null;
-				if (nameContext != null)
-				{
-					name = (NameGreen)this.Visit(nameContext);
-				}
-				SeleniumUIParser.ElementBodyContext elementBodyContext = context.elementBody();
-				ElementBodyGreen elementBody = null;
-				if (elementBodyContext != null)
-				{
-					elementBody = (ElementBodyGreen)this.Visit(elementBodyContext);
-				}
-				return this.factory.Page(kPage, name, elementBody, true);
+				return this.factory.TypeSpecifier(qualifier, true);
 			}
 			
 			public override GreenNode VisitElement(SeleniumUIParser.ElementContext context)
 			{
 				if (context == null) return null;
-				InternalSyntaxToken kElement = (InternalSyntaxToken)this.VisitTerminal(context.KElement());
+				SeleniumUIParser.ElementOrPageContext elementOrPageContext = context.elementOrPage();
+				ElementOrPageGreen elementOrPage = null;
+				if (elementOrPageContext != null)
+				{
+					elementOrPage = (ElementOrPageGreen)this.Visit(elementOrPageContext);
+				}
 				SeleniumUIParser.NameContext nameContext = context.name();
 				NameGreen name = null;
 				if (nameContext != null)
 				{
 					name = (NameGreen)this.Visit(nameContext);
 				}
-				SeleniumUIParser.TagSpecifierContext tagSpecifierContext = context.tagSpecifier();
-				TagSpecifierGreen tagSpecifier = null;
-				if (tagSpecifierContext != null)
+				SeleniumUIParser.BaseElementContext baseElementContext = context.baseElement();
+				BaseElementGreen baseElement = null;
+				if (baseElementContext != null)
 				{
-					tagSpecifier = (TagSpecifierGreen)this.Visit(tagSpecifierContext);
+					baseElement = (BaseElementGreen)this.Visit(baseElementContext);
 				}
-				SeleniumUIParser.LocatorSpecifierContext locatorSpecifierContext = context.locatorSpecifier();
-				LocatorSpecifierGreen locatorSpecifier = null;
-				if (locatorSpecifierContext != null)
+				SeleniumUIParser.HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifierContext = context.htmlTagLocatorSpecifier();
+				HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier = null;
+				if (htmlTagLocatorSpecifierContext != null)
 				{
-					locatorSpecifier = (LocatorSpecifierGreen)this.Visit(locatorSpecifierContext);
+					htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierGreen)this.Visit(htmlTagLocatorSpecifierContext);
 				}
 				SeleniumUIParser.ElementBodyContext elementBodyContext = context.elementBody();
 				ElementBodyGreen elementBody = null;
@@ -218,10 +209,25 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				{
 					elementBody = (ElementBodyGreen)this.Visit(elementBodyContext);
 				}
-				return this.factory.Element(kElement, name, tagSpecifier, locatorSpecifier, elementBody, true);
+				return this.factory.Element(elementOrPage, name, baseElement, htmlTagLocatorSpecifier, elementBody, true);
 			}
 			
-			public override GreenNode VisitTagSpecifier(SeleniumUIParser.TagSpecifierContext context)
+			public override GreenNode VisitElementOrPage(SeleniumUIParser.ElementOrPageContext context)
+			{
+				if (context == null) return null;
+				InternalSyntaxToken elementOrPage = null;
+				if (context.KPage() != null)
+				{
+					elementOrPage = (InternalSyntaxToken)this.VisitTerminal(context.KPage());
+				}
+				else 	if (context.KElement() != null)
+				{
+					elementOrPage = (InternalSyntaxToken)this.VisitTerminal(context.KElement());
+				}
+				return this.factory.ElementOrPage(elementOrPage, true);
+			}
+			
+			public override GreenNode VisitBaseElement(SeleniumUIParser.BaseElementContext context)
 			{
 				if (context == null) return null;
 				InternalSyntaxToken tColon = (InternalSyntaxToken)this.VisitTerminal(context.TColon());
@@ -231,20 +237,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 				{
 					qualifier = (QualifierGreen)this.Visit(qualifierContext);
 				}
-				return this.factory.TagSpecifier(tColon, qualifier, true);
-			}
-			
-			public override GreenNode VisitLocatorSpecifier(SeleniumUIParser.LocatorSpecifierContext context)
-			{
-				if (context == null) return null;
-				InternalSyntaxToken tAssign = (InternalSyntaxToken)this.VisitTerminal(context.TAssign());
-				SeleniumUIParser.StringContext _stringContext = context.@string();
-				StringGreen _string = null;
-				if (_stringContext != null)
-				{
-					_string = (StringGreen)this.Visit(_stringContext);
-				}
-				return this.factory.LocatorSpecifier(tAssign, _string, true);
+				return this.factory.BaseElement(tColon, qualifier, true);
 			}
 			
 			public override GreenNode VisitElementBody(SeleniumUIParser.ElementBodyContext context)
@@ -274,15 +267,102 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Syntax.InternalSyntax
 			{
 				if (context == null) return null;
 				InternalSyntaxToken tOpenBrace = (InternalSyntaxToken)this.VisitTerminal(context.TOpenBrace());
-			    SeleniumUIParser.ElementContext[] elementContext = context.element();
-			    ArrayBuilder<ElementGreen> elementBuilder = ArrayBuilder<ElementGreen>.GetInstance(elementContext.Length);
-			    for (int i = 0; i < elementContext.Length; i++)
+			    SeleniumUIParser.ChildElementContext[] childElementContext = context.childElement();
+			    ArrayBuilder<ChildElementGreen> childElementBuilder = ArrayBuilder<ChildElementGreen>.GetInstance(childElementContext.Length);
+			    for (int i = 0; i < childElementContext.Length; i++)
 			    {
-			        elementBuilder.Add((ElementGreen)this.Visit(elementContext[i]));
+			        childElementBuilder.Add((ChildElementGreen)this.Visit(childElementContext[i]));
 			    }
-				InternalSyntaxNodeList element = InternalSyntaxNodeList.Create(elementBuilder.ToArrayAndFree());
+				InternalSyntaxNodeList childElement = InternalSyntaxNodeList.Create(childElementBuilder.ToArrayAndFree());
 				InternalSyntaxToken tCloseBrace = (InternalSyntaxToken)this.VisitTerminal(context.TCloseBrace());
-				return this.factory.ChildElementsBody(tOpenBrace, element, tCloseBrace, true);
+				return this.factory.ChildElementsBody(tOpenBrace, childElement, tCloseBrace, true);
+			}
+			
+			public override GreenNode VisitChildElement(SeleniumUIParser.ChildElementContext context)
+			{
+				if (context == null) return null;
+				SeleniumUIParser.ElementTypeSpecifierContext elementTypeSpecifierContext = context.elementTypeSpecifier();
+				ElementTypeSpecifierGreen elementTypeSpecifier = null;
+				if (elementTypeSpecifierContext != null)
+				{
+					elementTypeSpecifier = (ElementTypeSpecifierGreen)this.Visit(elementTypeSpecifierContext);
+				}
+				SeleniumUIParser.NameContext nameContext = context.name();
+				NameGreen name = null;
+				if (nameContext != null)
+				{
+					name = (NameGreen)this.Visit(nameContext);
+				}
+				SeleniumUIParser.HtmlTagLocatorSpecifierContext htmlTagLocatorSpecifierContext = context.htmlTagLocatorSpecifier();
+				HtmlTagLocatorSpecifierGreen htmlTagLocatorSpecifier = null;
+				if (htmlTagLocatorSpecifierContext != null)
+				{
+					htmlTagLocatorSpecifier = (HtmlTagLocatorSpecifierGreen)this.Visit(htmlTagLocatorSpecifierContext);
+				}
+				SeleniumUIParser.ElementBodyContext elementBodyContext = context.elementBody();
+				ElementBodyGreen elementBody = null;
+				if (elementBodyContext != null)
+				{
+					elementBody = (ElementBodyGreen)this.Visit(elementBodyContext);
+				}
+				return this.factory.ChildElement(elementTypeSpecifier, name, htmlTagLocatorSpecifier, elementBody, true);
+			}
+			
+			public override GreenNode VisitElementTypeSpecifier(SeleniumUIParser.ElementTypeSpecifierContext context)
+			{
+				if (context == null) return null;
+				SeleniumUIParser.QualifierContext qualifierContext = context.qualifier();
+				QualifierGreen qualifier = null;
+				if (qualifierContext != null)
+				{
+					qualifier = (QualifierGreen)this.Visit(qualifierContext);
+				}
+				return this.factory.ElementTypeSpecifier(qualifier, true);
+			}
+			
+			public override GreenNode VisitHtmlTagLocatorSpecifier(SeleniumUIParser.HtmlTagLocatorSpecifierContext context)
+			{
+				if (context == null) return null;
+				InternalSyntaxToken tAssign = (InternalSyntaxToken)this.VisitTerminal(context.TAssign());
+				SeleniumUIParser.HtmlTagSpecifierContext htmlTagSpecifierContext = context.htmlTagSpecifier();
+				HtmlTagSpecifierGreen htmlTagSpecifier = null;
+				if (htmlTagSpecifierContext != null)
+				{
+					htmlTagSpecifier = (HtmlTagSpecifierGreen)this.Visit(htmlTagSpecifierContext);
+				}
+				SeleniumUIParser.LocatorSpecifierContext locatorSpecifierContext = context.locatorSpecifier();
+				LocatorSpecifierGreen locatorSpecifier = null;
+				if (locatorSpecifierContext != null)
+				{
+					locatorSpecifier = (LocatorSpecifierGreen)this.Visit(locatorSpecifierContext);
+				}
+				return this.factory.HtmlTagLocatorSpecifier(tAssign, htmlTagSpecifier, locatorSpecifier, true);
+			}
+			
+			public override GreenNode VisitHtmlTagSpecifier(SeleniumUIParser.HtmlTagSpecifierContext context)
+			{
+				if (context == null) return null;
+				InternalSyntaxToken tOpenBracket = (InternalSyntaxToken)this.VisitTerminal(context.TOpenBracket());
+				SeleniumUIParser.StringContext _stringContext = context.@string();
+				StringGreen _string = null;
+				if (_stringContext != null)
+				{
+					_string = (StringGreen)this.Visit(_stringContext);
+				}
+				InternalSyntaxToken tCloseBracket = (InternalSyntaxToken)this.VisitTerminal(context.TCloseBracket());
+				return this.factory.HtmlTagSpecifier(tOpenBracket, _string, tCloseBracket, true);
+			}
+			
+			public override GreenNode VisitLocatorSpecifier(SeleniumUIParser.LocatorSpecifierContext context)
+			{
+				if (context == null) return null;
+				SeleniumUIParser.StringContext _stringContext = context.@string();
+				StringGreen _string = null;
+				if (_stringContext != null)
+				{
+					_string = (StringGreen)this.Visit(_stringContext);
+				}
+				return this.factory.LocatorSpecifier(_string, true);
 			}
 			
 			public override GreenNode VisitQualifiedName(SeleniumUIParser.QualifiedNameContext context)

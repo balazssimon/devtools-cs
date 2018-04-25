@@ -80,7 +80,7 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			try
 			{
 				this.Visit(node.Tag);
-				this.Visit(node.Page);
+				this.Visit(node.Element);
 			}
 			finally
 			{
@@ -93,8 +93,9 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			this.BeginDeclaration(typeof(Symbols.Tag), node);
 			try
 			{
-				this.Visit(node.Name);
 				this.Visit(node.TypeSpecifier);
+				this.Visit(node.Name);
+				this.Visit(node.HtmlTagLocatorSpecifier);
 			}
 			finally
 			{
@@ -106,12 +107,15 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 		{
 		}
 		
-		public virtual void VisitPage(PageSyntax node)
+		public virtual void VisitElement(ElementSyntax node)
 		{
-			this.BeginDeclaration(typeof(Symbols.Page), node);
+			this.BeginDeclaration(typeof(Symbols.Element), node);
 			try
 			{
+				this.Visit(node.ElementOrPage);
 				this.Visit(node.Name);
+				this.Visit(node.BaseElement);
+				this.Visit(node.HtmlTagLocatorSpecifier);
 				this.Visit(node.ElementBody);
 			}
 			finally
@@ -120,22 +124,22 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			}
 		}
 		
-		public virtual void VisitElement(ElementSyntax node)
+		public virtual void VisitElementOrPage(ElementOrPageSyntax node)
 		{
-			this.BeginProperty("Elements");
+			this.BeginProperty("IsPage");
 			try
 			{
-				this.BeginDeclaration(typeof(Symbols.Element), node);
-				try
+				if (node.ElementOrPage != null)
 				{
-					this.Visit(node.Name);
-					this.Visit(node.TagSpecifier);
-					this.Visit(node.LocatorSpecifier);
-					this.Visit(node.ElementBody);
-				}
-				finally
-				{
-					this.EndDeclaration();
+					switch (((SeleniumUISyntaxToken)node.ElementOrPage).Kind)
+					{
+						case SeleniumUISyntaxKind.KPage:
+							break;
+						case SeleniumUISyntaxKind.KElement:
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			finally
@@ -144,12 +148,16 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 			}
 		}
 		
-		public virtual void VisitTagSpecifier(TagSpecifierSyntax node)
+		public virtual void VisitBaseElement(BaseElementSyntax node)
 		{
-		}
-		
-		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
-		{
+			this.BeginProperty("Base");
+			try
+			{
+			}
+			finally
+			{
+				this.EndProperty();
+			}
 		}
 		
 		public virtual void VisitElementBody(ElementBodySyntax node)
@@ -163,13 +171,55 @@ namespace DevToolsX.Documents.Compilers.SeleniumUI.Binding
 		
 		public virtual void VisitChildElementsBody(ChildElementsBodySyntax node)
 		{
-			if (node.Element != null)
+			if (node.ChildElement != null)
 			{
-				foreach (var child in node.Element)
+				foreach (var child in node.ChildElement)
 				{
 					this.Visit(child);
 				}
 			}
+		}
+		
+		public virtual void VisitChildElement(ChildElementSyntax node)
+		{
+			this.BeginProperty("Elements");
+			try
+			{
+				this.BeginDeclaration(typeof(Symbols.Element), node);
+				try
+				{
+					this.Visit(node.ElementTypeSpecifier);
+					this.Visit(node.Name);
+					this.Visit(node.HtmlTagLocatorSpecifier);
+					this.Visit(node.ElementBody);
+				}
+				finally
+				{
+					this.EndDeclaration();
+				}
+			}
+			finally
+			{
+				this.EndProperty();
+			}
+		}
+		
+		public virtual void VisitElementTypeSpecifier(ElementTypeSpecifierSyntax node)
+		{
+		}
+		
+		public virtual void VisitHtmlTagLocatorSpecifier(HtmlTagLocatorSpecifierSyntax node)
+		{
+			this.Visit(node.HtmlTagSpecifier);
+			this.Visit(node.LocatorSpecifier);
+		}
+		
+		public virtual void VisitHtmlTagSpecifier(HtmlTagSpecifierSyntax node)
+		{
+		}
+		
+		public virtual void VisitLocatorSpecifier(LocatorSpecifierSyntax node)
+		{
 		}
 		
 		public virtual void VisitQualifiedName(QualifiedNameSyntax node)
