@@ -183,7 +183,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindAncestorElement(string tag = null, bool required = false)
         {
-            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:ancestor::{0}", tag), null, required).FindElement();
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:./ancestor::{0}", tag ?? "*"), null, required).FindElement();
         }
 
         public Element GetAncestorElement(string tag = null)
@@ -193,7 +193,7 @@ namespace DevToolsX.Testing.Selenium
 
         public Element FindParentElement(string tag = null, bool required = false)
         {
-            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:parent::{0}", tag), null, required).FindElement();
+            return this.Options.CreateLocator(this.Browser, this, string.Format("xpath:./parent::{0}", tag ?? "*"), null, required).FindElement();
         }
 
         public Element GetParentElement(string tag = null)
@@ -307,8 +307,8 @@ namespace DevToolsX.Testing.Selenium
 
         public bool ContainsText(string text)
         {
-            string locator = string.Format("xpath://*[contains(., {0})]", Utils.EscapeXpathValue(text));
-            return this.InternalFindElement(locator) != null;
+            string locator = string.Format("xpath:.//*[contains(., '{0}')]", text.Replace("'", "\\'"));
+            return this.InternalFindElements(locator).Length > 0;
         }
 
         public string LogSource(Microsoft.Extensions.Logging.LogLevel level = Microsoft.Extensions.Logging.LogLevel.Debug)
@@ -495,8 +495,9 @@ namespace DevToolsX.Testing.Selenium
             this.Browser.JavaScript.Execute("arguments[0].focus();", this.WebElement);
         }
 
-        public void TypeText(string text)
+        public void TypeText(string text, bool clear = true)
         {
+            if (clear) this.ClearText();
             this.WebElement?.SendKeys(text);
         }
 
